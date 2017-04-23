@@ -1,4 +1,4 @@
-package com.zju.xiaoyou.view.activity;
+package com.zju.campustour.view.activity;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.zju.xiaoyou.MainActivity;
-import com.zju.xiaoyou.R;
-import com.zju.xiaoyou.model.common.Constants;
-import com.zju.xiaoyou.model.util.SpUtils;
+import com.zju.campustour.MainActivity;
+import com.zju.campustour.R;
+import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.util.SpUtils;
 
 public class SplashActivity extends BaseActivity {
 

@@ -1,4 +1,4 @@
-package com.zju.xiaoyou.view.fragment;
+package com.zju.campustour.view.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.zju.xiaoyou.R;
+import com.zju.campustour.R;
 
 /**
  * Created by HeyLink on 2017/4/1.

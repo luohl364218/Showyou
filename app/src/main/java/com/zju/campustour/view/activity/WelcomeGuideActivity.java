@@ -1,4 +1,4 @@
-package com.zju.xiaoyou.view.activity;
+package com.zju.campustour.view.activity;
 
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.zju.xiaoyou.MainActivity;
-import com.zju.xiaoyou.R;
-import com.zju.xiaoyou.view.adapter.GuideViewPagerAdapter;
-import com.zju.xiaoyou.model.common.Constants;
-import com.zju.xiaoyou.model.util.SpUtils;
+import com.zju.campustour.MainActivity;
+import com.zju.campustour.R;
+import com.zju.campustour.view.adapter.GuideViewPagerAdapter;
+import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.util.SpUtils;
 
 import java.util.ArrayList;
 import java.util.List;

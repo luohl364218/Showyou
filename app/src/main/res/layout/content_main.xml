@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.zju.xiaoyou.MainActivity"
+    tools:context="com.zju.campustour.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <com.zju.xiaoyou.view.widget.viewpager.SuperViewPager
+    <com.zju.campustour.view.widget.viewpager.SuperViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

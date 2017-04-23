@@ -1,4 +1,4 @@
-package com.zju.xiaoyou.view.adapter;
+package com.zju.campustour.view.adapter;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;

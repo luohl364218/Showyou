@@ -1,4 +1,4 @@
-package com.zju.xiaoyou.model.util;
+package com.zju.campustour.model.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

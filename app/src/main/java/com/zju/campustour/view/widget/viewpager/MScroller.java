@@ -1,4 +1,4 @@
-package com.zju.xiaoyou.view.widget.viewpager;
+package com.zju.campustour.view.widget.viewpager;
 
 import android.content.Context;
 import android.view.animation.Interpolator;

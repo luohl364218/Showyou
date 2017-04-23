@@ -1,11 +1,11 @@
-package com.zju.xiaoyou.view.activity;
+package com.zju.campustour.view.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.zju.xiaoyou.view.widget.ActivityCollector;
+import com.zju.campustour.view.widget.ActivityCollector;
 
 /**
  * Created by HeyLink on 2017/4/22.

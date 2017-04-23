@@ -1,4 +1,4 @@
-package com.zju.xiaoyou.view.widget;
+package com.zju.campustour.view.widget;
 
 import android.app.Activity;
 

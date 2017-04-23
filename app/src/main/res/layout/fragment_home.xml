@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-
-    <TextView
+    <com.cjj.MaterialRefreshLayout
+        android:id="@+id/refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="hahahahaha"/>
+        app:overlay="true"
+        app:wave_show="true"
+        app:wave_color="@color/transparent"
+        >
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_home_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+
+    </com.cjj.MaterialRefreshLayout>
 
 </LinearLayout>
