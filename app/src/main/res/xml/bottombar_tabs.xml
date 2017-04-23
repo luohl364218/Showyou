@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_home"
+        icon="@drawable/selector_icon_home"
+        title="首页"
+        barColorWhenSelected= "@color/colorPrimary"
+        />
+    <tab
+        id="@+id/tab_search"
+        icon="@drawable/selector_icon_search"
+        title="发现"
+        barColorWhenSelected= "@color/darkseagreen"/>
+    <tab
+        id="@+id/tab_info"
+        icon="@drawable/selector_icon_info"
+        title="消息"
+        barColorWhenSelected= "@color/login_button"/>
+</tabs>
