@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,15 +43,16 @@ public class MainActivity extends BaseActivity
     private CoordinatorLayout mCoordinator;
     private List<Fragment> fragmentList;
     private FloatingActionButton mFloatingActionButton;
+    private String TAG = "mainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initLayoutElements(savedInstanceState);
+        initLayoutElements();
     }
 
-    private void initLayoutElements(Bundle savedInstanceState) {
+    private void initLayoutElements() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
@@ -74,20 +76,25 @@ public class MainActivity extends BaseActivity
 
         mCoordinator = (CoordinatorLayout) findViewById(R.id.mCoordinator);
         mViewPager = (SuperViewPager) findViewById(R.id.viewPager);
-        initViewPager();
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        mBottomBar.setDefaultTabPosition(0);
+        mBottomBar.setDefaultTabPosition(1);
+        initViewPager();
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 switch (tabId) {
-                    case R.id.tab_home:
+                    case R.id.tab_search:
+                        Log.d(TAG,"tab search click--------------------");
                         mViewPager.setCurrentItemByTab(0, true);
                         break;
-                    case R.id.tab_search:
+
+                    case R.id.tab_home:
+                        Log.d(TAG,"tab home click--------------------");
                         mViewPager.setCurrentItemByTab(1, true);
                         break;
+
                     case R.id.tab_info:
+                        Log.d(TAG,"tab info click--------------------");
                         mViewPager.setCurrentItemByTab(2, true);
                         break;
                     default:
@@ -103,8 +110,9 @@ public class MainActivity extends BaseActivity
         fragmentList = new ArrayList<>();
         // 这里的添加顺序是否对 tab 页的前后顺序有影响
         //fragmentList.add(fragmentTabHost.getTabWidget().)
-        fragmentList.add(new HomeFragment());
+
         fragmentList.add(new SearchFragment());
+        fragmentList.add(new HomeFragment());
         fragmentList.add(new MessageFragment());
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -126,7 +134,7 @@ public class MainActivity extends BaseActivity
 
         mViewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(),
                 fragmentList));
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(1);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment {
     private int state = Constants.STATE_NORMAL;
     private MaterialRefreshLayout mMaterialRefreshLayout;
 
+    private String TAG = "HomeFragment";
     public HomeFragment() {
     }
 
@@ -43,15 +45,14 @@ public class HomeFragment extends Fragment {
             mRootView = inflater.inflate(R.layout.fragment_home, container, false);
             initRefreshLayout();
             initServiceItemInfoData();
-
-
+            Log.d(TAG,"first create view--------------------");
         }
 
         ViewGroup parent = (ViewGroup) mRootView.getParent();
         if (parent != null){
             parent.removeView(mRootView);
         }
-
+        Log.d(TAG,"second create view--------------------");
         return mRootView;
     }
 
@@ -192,8 +193,6 @@ public class HomeFragment extends Fragment {
         showRecycleView();
 
     }
-
-
 
 
 }
