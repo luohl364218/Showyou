@@ -1,6 +1,7 @@
 package com.zju.campustour.presenter.ipresenter;
 
 import com.zju.campustour.model.database.models.Project;
+import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface IProjectInfoOpPresenter {
 
     public void addOrUpdateProject(Project mProject);
 
-    public void queryProjectWithUserId(int userId);
+    public void queryProjectWithUserId(String userId);
 
     public void setProjectState(int projectId, ProjectStateType state);
 

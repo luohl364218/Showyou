@@ -1,5 +1,6 @@
 package com.zju.campustour.view.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,12 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.zju.campustour.R;
-import com.zju.campustour.model.bean.ServiceItemInfo;
+import com.zju.campustour.model.bean.ProviderUserItemInfo;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
@@ -48,8 +48,6 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
     ExpandableTextView expandableTextView;
     RecyclerView listViewLike;
     RecyclerView listViewRecommend;
-    RelativeLayout returnLayout;
-    RelativeLayout topLayout;
     ImageView color1ImageView;
     ImageView color2ImageView;
     ImageView color3ImageView;
@@ -59,7 +57,7 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
     CollapsingToolbarLayout mToolbarLayout;
     private String TAG = getClass().getSimpleName();
     IUserInfoOpPresenter mUserInfoOpPresenter;
-    private List<ServiceItemInfo> mServiceItemInfos;
+    private List<ProviderUserItemInfo> mProviderUserItemInfos;
 
 
     @Override
@@ -161,9 +159,9 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
         if (mUsers.size() != 0) {
             noResultTextView1.setVisibility(View.GONE);
 
-            mServiceItemInfos = new ArrayList<>();
+            mProviderUserItemInfos = new ArrayList<>();
             for (User user : mUsers) {
-                ServiceItemInfo mItemInfo = new ServiceItemInfo(
+                ProviderUserItemInfo mItemInfo = new ProviderUserItemInfo(
                         user.getId(),
                         user.getImgUrl(),
                         user.getUserName(),
@@ -172,12 +170,10 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
                         user.getMajor(),
                         user.getGrade(),
                         user.getFansNum());
-                mServiceItemInfos.add(mItemInfo);
+                mProviderUserItemInfos.add(mItemInfo);
             }
 
-            showSameMajorProvider(mServiceItemInfos);
-
-
+            showSameMajorProvider(mProviderUserItemInfos);
         }
         else {
             noResultTextView1.setVisibility(View.VISIBLE);
@@ -192,11 +188,21 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
 
     }
 
-    private void showSameMajorProvider(List<ServiceItemInfo> mServiceItemInfos) {
+    private void showSameMajorProvider(List<ProviderUserItemInfo> mProviderUserItemInfos) {
         listViewRecommend = (RecyclerView) findViewById(R.id.activity_major_info_listview_recommend);
+
+        listViewRecommend.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
-        mItemInfoAdapter = new ServiceItemInfoAdapter(mServiceItemInfos);
+        mItemInfoAdapter = new ServiceItemInfoAdapter(mProviderUserItemInfos);
+        mItemInfoAdapter.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
+            @Override
+            public void onClick(View v, int position, String studentId) {
+                Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);
+                mIntent.putExtra("provider_id",studentId);
+                startActivity(mIntent);
+            }
+        });
 
         listViewRecommend.setLayoutManager(layoutManager);
         listViewRecommend.setAdapter(mItemInfoAdapter);

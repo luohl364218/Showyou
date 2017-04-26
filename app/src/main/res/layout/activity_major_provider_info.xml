@@ -164,12 +164,15 @@
                 android:layout_height="2dp"
                 android:background="@color/divide_05_black" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/activity_major_info_listview_recommend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_major_info_listview_recommend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
 
-            </android.support.v7.widget.RecyclerView>
+                </android.support.v7.widget.RecyclerView>
+
+
             <TextView
                 android:id="@+id/activity_major_info_noresult_hint1"
                 android:padding="30dp"
@@ -224,10 +227,14 @@
                 android:layout_height="2dp"
                 android:background="@color/divide_05_black" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/activity_major_info_listview_like"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_major_info_listview_like"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                </android.support.v7.widget.RecyclerView>
+
             <TextView
                 android:id="@+id/activity_major_info_noresult_hint2"
                 android:padding="30dp"

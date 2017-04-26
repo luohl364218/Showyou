@@ -8,6 +8,10 @@ import com.zju.campustour.R;
 
 public class Constants {
 
+    public static final int FULL_VIEW = 0;
+    public static final int PART_VIEW = 1;
+
+
     public static final String First_Open = "isFirstOpen";
     public static final int STATE_NORMAL = 0;
     public static final int STATE_REFRESH = 1;

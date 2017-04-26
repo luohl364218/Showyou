@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
@@ -25,7 +26,9 @@ import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 import com.zju.campustour.view.activity.InfoWebActivity;
 import com.zju.campustour.view.activity.MajorListActivity;
+import com.zju.campustour.view.activity.ProviderHomePageActivity;
 import com.zju.campustour.view.adapter.RecommendProjectAdapter;
+import com.zju.campustour.view.adapter.ServiceItemInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 import com.zju.campustour.view.widget.FullyLinearLayoutManager;
 
@@ -59,6 +62,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     private RecyclerView mRecommendList;
     private List<ProjectItemInfo> mProjectItemInfos;
     private RecommendProjectAdapter mProjectAdapter;
+
+    private TextView noResultHint;
+
     //获取project信息的接口实现
     private ProjectInfoOpPresenterImpl mProjectInfoPresenter;
 
@@ -98,6 +104,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         //两大话题按钮入口
         hotMajorBtn = (Button)mRootView.findViewById(R.id.fragment_home_hotmajor_btn);
         remoteChatBtn = (Button)mRootView.findViewById(R.id.fragment_home_remotechat_btn);
+        noResultHint = (TextView) mRootView.findViewById(R.id.fragment_home_noResult_hint);
 
 
         renwenBtn.setOnClickListener(this);
@@ -223,10 +230,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     public void onGetProjectInfoDone(List<Project> mProjects) {
         //mRecommendList
         if (mProjects.size() != 0){
+            noResultHint.setVisibility(View.GONE);
             showCloudProjectItemInfoData(mProjects);
         }
         else {
             //showLocalProjectItemInfoData();
+            noResultHint.setVisibility(View.VISIBLE);
+            noResultHint.setText("请检查网络连接是否断开");
+
         }
     }
 
@@ -260,6 +271,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     private void showProjectRecycleView() {
         //专家推荐列表
         mRecommendList = (RecyclerView)mRootView.findViewById(R.id.fragment_home_recycle_view);
+
+
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getActivity()){
             @Override
             public boolean canScrollVertically() {
@@ -268,7 +281,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         };
         if (mProjectItemInfos == null)
             return;
-        mProjectAdapter = new RecommendProjectAdapter(mProjectItemInfos);
+        mProjectAdapter = new RecommendProjectAdapter(mProjectItemInfos,Constants.FULL_VIEW);
+        mProjectAdapter.setOnProjectItemClickListener(new RecommendProjectAdapter.onProjectItemClickListener() {
+            @Override
+            public void onClick(View v, int position, String providerId) {
+                Intent mIntent = new Intent(getActivity(), ProviderHomePageActivity.class);
+                mIntent.putExtra("provider_id",providerId);
+                startActivity(mIntent);
+            }
+
+        });
 
         mRecommendList.setLayoutManager(layoutManager);
         mRecommendList.setAdapter(mProjectAdapter);

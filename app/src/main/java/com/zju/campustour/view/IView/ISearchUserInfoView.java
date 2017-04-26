@@ -11,4 +11,5 @@ import java.util.List;
 public interface ISearchUserInfoView {
 
     public void onGetProviderUserDone(List<User> mUsers);
+
 }

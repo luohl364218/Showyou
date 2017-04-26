@@ -12,9 +12,20 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.parse.ParseObject;
+import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
+import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_STOP;
+import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_RUNNING;
+import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_STOP;
 
 /**
  * Created by HeyLink on 2017/4/26.
@@ -23,7 +34,7 @@ import com.zju.campustour.presenter.protocal.enumerate.UserType;
 public class DbUtils {
 
     @NonNull
-    public User getUser(ParseObject user) {
+    public static User getUser(ParseObject user) {
         String user_id = user.getObjectId();
         String userName = user.getString("userName");
         String loginName = user.getString("loginName");
@@ -60,5 +71,56 @@ public class DbUtils {
                 .setControllerListener(new BaseControllerListener<ImageInfo>())
                 .setImageRequest(request).build();
         mImg.setController(controller);
+    }
+
+    @NonNull
+    public static Project getProject(ParseObject project) {
+        String id = project.getObjectId();
+        User provider;
+        ParseObject providerObject = project.getParseObject("provider");
+        if (providerObject != null)
+            provider = getUser(providerObject);
+        else
+            provider = null;
+        String title = project.getString("title");
+        Date startTime = project.getDate("startTime");
+        String imgUrl = project.getString("imgUrl");
+        long price = project.getLong("price");
+        String description = project.getString("description");
+        int acceptNum = project.getInt("acceptNum");
+        ProjectStateType projectState;
+        switch (project.getInt("projectState")) {
+            case 0:
+                projectState = BOOK_ACCEPT;
+                break;
+            case 1:
+                projectState = BOOK_STOP;
+                break;
+            case 2:
+                projectState = PROJECT_RUNNING;
+                break;
+            case 3:
+                projectState = PROJECT_STOP;
+                break;
+            default:
+                projectState = BOOK_ACCEPT;
+        }
+
+        List<ParseObject> jsonFavorites = project.getList("favorites");
+        List<User> favorites;
+        if (jsonFavorites != null){
+            favorites = new ArrayList<User>();
+
+            for(ParseObject user: jsonFavorites){
+                User mUser = getUser(user);
+                favorites.add(mUser);
+            }
+        }
+        else {
+            favorites = null;
+        }
+
+        return new Project(id, provider, title, startTime,
+                imgUrl, price, description, acceptNum, projectState, favorites);
     }
 }

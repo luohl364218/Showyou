@@ -4,7 +4,7 @@ package com.zju.campustour.model.bean;
  * Created by HeyLink on 2017/4/24.
  */
 
-public class ServiceItemInfo {
+public class ProviderUserItemInfo {
 
     private String studentId;
     private String studentImg;
@@ -16,10 +16,10 @@ public class ServiceItemInfo {
     private int fansNum;
 
 
-    public ServiceItemInfo(String mStudentId, String mStudentImg,
-                            String mStudentName, String mShortDescription,
-                            String mStudentCollege, String mStudentMajor,
-                            String mStudentGrade, int mFansNum) {
+    public ProviderUserItemInfo(String mStudentId, String mStudentImg,
+                                String mStudentName, String mShortDescription,
+                                String mStudentCollege, String mStudentMajor,
+                                String mStudentGrade, int mFansNum) {
         studentId = mStudentId;
         studentImg = mStudentImg;
         studentName = mStudentName;

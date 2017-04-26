@@ -1,5 +1,6 @@
 package com.zju.campustour.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,12 +15,13 @@ import android.widget.Toast;
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.zju.campustour.R;
-import com.zju.campustour.model.bean.ServiceItemInfo;
+import com.zju.campustour.model.bean.ProviderUserItemInfo;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.activity.ProviderHomePageActivity;
 import com.zju.campustour.view.adapter.ServiceItemInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
@@ -34,7 +36,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView {
 
     private String TAG = "SearchFragment";
     private View mRootView;
-    private List<ServiceItemInfo> mServiceItemInfos;
+    private List<ProviderUserItemInfo> mProviderUserItemInfos;
     private RecyclerView mRecyclerView;
     private ServiceItemInfoAdapter mItemInfoAdapter;
     private int state = Constants.STATE_NORMAL;
@@ -49,6 +51,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mRootView == null){
             mRootView = inflater.inflate(R.layout.fragment_search, container, false);
+            mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_search_recycle_view);
             initRefreshLayout();
             mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this);
             mUserInfoOpPresenter.queryProviderUserWithConditions(null,null,0);
@@ -88,29 +91,37 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView {
         switch (state){
 
             case Constants.STATE_NORMAL:
-                mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_home_recycle_view);
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
 
-                mItemInfoAdapter = new ServiceItemInfoAdapter(mServiceItemInfos);
+                mItemInfoAdapter = new ServiceItemInfoAdapter(mProviderUserItemInfos);
+                mItemInfoAdapter.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
+                    @Override
+                    public void onClick(View v, int position, String studentId) {
+                        Intent mIntent = new Intent(getActivity(), ProviderHomePageActivity.class);
+                        mIntent.putExtra("provider_id",studentId);
+                        startActivity(mIntent);
+                    }
+                });
 
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setAdapter(mItemInfoAdapter);
                 mRecyclerView.addItemDecoration(new DividerItemDecortion());
+
                 break;
 
             case Constants.STATE_REFRESH:
                 mItemInfoAdapter.clearData();
-                mItemInfoAdapter.addData(mServiceItemInfos);
+                mItemInfoAdapter.addData(mProviderUserItemInfos);
                 mRecyclerView.scrollToPosition(0);
                 mMaterialRefreshLayout.finishRefresh();
                 break;
 
             case Constants.STATE_MORE:
-                mItemInfoAdapter.addData(mItemInfoAdapter.getDatas().size(), mServiceItemInfos);
+                mItemInfoAdapter.addData(mItemInfoAdapter.getDatas().size(), mProviderUserItemInfos);
                 mRecyclerView.scrollToPosition(mItemInfoAdapter.getDatas().size());
                 mMaterialRefreshLayout.finishRefreshLoadMore();
-                if (mServiceItemInfos.size() < 10){
+                if (mProviderUserItemInfos.size() < 10){
                     Toast.makeText(getActivity(), "已经到底部了", Toast.LENGTH_SHORT).show();
                     mMaterialRefreshLayout.setLoadMore(false);
                 }
@@ -122,54 +133,54 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView {
     /*本地测试版本，以后用网络接口获得*/
     private void showLocalServiceItemInfoData(){
 
-        mServiceItemInfos = new ArrayList<>();
+        mProviderUserItemInfos = new ArrayList<>();
 
         String url_1 = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
         String url_2 = "http://img.mp.itc.cn/upload/20170104/33e0d6708d3244b8a3563981a4d7c0c6_th.jpg";
         String url_3 = "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=246028538,2833419550&fm=21&gp=0.jpg";
         String url_4 = "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3334862492,180862699&fm=23&gp=0.jpg";
-        ServiceItemInfo mItemInfo_1 = new ServiceItemInfo("1",url_1,
+        ProviderUserItemInfo mItemInfo_1 = new ProviderUserItemInfo("1",url_1,
                 "梅长苏","带你走进浙大玉泉校区","浙江大学","测控技术与仪器","研究生", 115);
-        ServiceItemInfo mItemInfo_2 = new ServiceItemInfo("2",url_2,
+        ProviderUserItemInfo mItemInfo_2 = new ProviderUserItemInfo("2",url_2,
                 "何幸","想了解电气专业吗？","福州大学", "电力电子","研究生", 15);
-        ServiceItemInfo mItemInfo_3 = new ServiceItemInfo("3",url_3,
+        ProviderUserItemInfo mItemInfo_3 = new ProviderUserItemInfo("3",url_3,
                 "罗素芬","带你领略山东大学的美景","山东大学","药学专业" ,"大四",50);
-        ServiceItemInfo mItemInfo_4 = new ServiceItemInfo("4",url_4,
+        ProviderUserItemInfo mItemInfo_4 = new ProviderUserItemInfo("4",url_4,
                 "李思敏","清华大学的风景，你可别错过","清华大学","电子科学技术","研究生", 25);
 
 
         switch (state){
             case Constants.STATE_NORMAL:
-                mServiceItemInfos.add(mItemInfo_1);
-                mServiceItemInfos.add(mItemInfo_2);
-                mServiceItemInfos.add(mItemInfo_3);
-                mServiceItemInfos.add(mItemInfo_4);
-                mServiceItemInfos.add(mItemInfo_1);
-                mServiceItemInfos.add(mItemInfo_2);
-                mServiceItemInfos.add(mItemInfo_3);
-                mServiceItemInfos.add(mItemInfo_4);
+                mProviderUserItemInfos.add(mItemInfo_1);
+                mProviderUserItemInfos.add(mItemInfo_2);
+                mProviderUserItemInfos.add(mItemInfo_3);
+                mProviderUserItemInfos.add(mItemInfo_4);
+                mProviderUserItemInfos.add(mItemInfo_1);
+                mProviderUserItemInfos.add(mItemInfo_2);
+                mProviderUserItemInfos.add(mItemInfo_3);
+                mProviderUserItemInfos.add(mItemInfo_4);
                 break;
 
             case Constants.STATE_REFRESH:
-                mServiceItemInfos.add(mItemInfo_4);
-                mServiceItemInfos.add(mItemInfo_3);
-                mServiceItemInfos.add(mItemInfo_2);
-                mServiceItemInfos.add(mItemInfo_1);
-                mServiceItemInfos.add(mItemInfo_4);
-                mServiceItemInfos.add(mItemInfo_1);
-                mServiceItemInfos.add(mItemInfo_3);
-                mServiceItemInfos.add(mItemInfo_2);
+                mProviderUserItemInfos.add(mItemInfo_4);
+                mProviderUserItemInfos.add(mItemInfo_3);
+                mProviderUserItemInfos.add(mItemInfo_2);
+                mProviderUserItemInfos.add(mItemInfo_1);
+                mProviderUserItemInfos.add(mItemInfo_4);
+                mProviderUserItemInfos.add(mItemInfo_1);
+                mProviderUserItemInfos.add(mItemInfo_3);
+                mProviderUserItemInfos.add(mItemInfo_2);
                 break;
 
             case Constants.STATE_MORE:
-                mServiceItemInfos.add(mItemInfo_4);
-                mServiceItemInfos.add(mItemInfo_3);
-                mServiceItemInfos.add(mItemInfo_2);
-                mServiceItemInfos.add(mItemInfo_1);
-                mServiceItemInfos.add(mItemInfo_4);
-                mServiceItemInfos.add(mItemInfo_1);
-                mServiceItemInfos.add(mItemInfo_3);
-                mServiceItemInfos.add(mItemInfo_2);
+                mProviderUserItemInfos.add(mItemInfo_4);
+                mProviderUserItemInfos.add(mItemInfo_3);
+                mProviderUserItemInfos.add(mItemInfo_2);
+                mProviderUserItemInfos.add(mItemInfo_1);
+                mProviderUserItemInfos.add(mItemInfo_4);
+                mProviderUserItemInfos.add(mItemInfo_1);
+                mProviderUserItemInfos.add(mItemInfo_3);
+                mProviderUserItemInfos.add(mItemInfo_2);
                 break;
         }
 
@@ -205,9 +216,9 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView {
     }
 
     private void showCloudServiceItemInfoData(List<User> mUsers) {
-        mServiceItemInfos = new ArrayList<>();
+        mProviderUserItemInfos = new ArrayList<>();
         for (User user : mUsers){
-            ServiceItemInfo mItemInfo = new ServiceItemInfo(
+            ProviderUserItemInfo mItemInfo = new ProviderUserItemInfo(
                     user.getId(),
                     user.getImgUrl(),
                     user.getUserName(),
@@ -216,7 +227,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView {
                     user.getMajor(),
                     user.getGrade(),
                     user.getFansNum());
-            mServiceItemInfos.add(mItemInfo);
+            mProviderUserItemInfos.add(mItemInfo);
         }
 
         showRecycleView();

@@ -1,6 +1,5 @@
 package com.zju.campustour.view.adapter;
 
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
-import com.zju.campustour.model.bean.ServiceItemInfo;
+import com.zju.campustour.model.bean.ProviderUserItemInfo;
 import com.zju.campustour.model.util.DbUtils;
 
 import java.util.List;
@@ -21,11 +20,11 @@ import java.util.List;
 public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfoAdapter.ViewHolder> {
 
 
-    private List<ServiceItemInfo> mServiceItemInfos;
+    private List<ProviderUserItemInfo> mProviderUserItemInfos;
     private onCardViewItemClickListener mListener;
 
-    public ServiceItemInfoAdapter(List<ServiceItemInfo> mServiceItemInfos) {
-        this.mServiceItemInfos = mServiceItemInfos;
+    public ServiceItemInfoAdapter(List<ProviderUserItemInfo> mProviderUserItemInfos) {
+        this.mProviderUserItemInfos = mProviderUserItemInfos;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -56,7 +55,7 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
                 public void onClick(View v) {
                     if (mListener != null){
                         //return the student's id, so we can get the exact student info
-                        mListener.onClick(v, getLayoutPosition(), mServiceItemInfos.get(getLayoutPosition()).getStudentId());
+                        mListener.onClick(v, getLayoutPosition(), mProviderUserItemInfos.get(getLayoutPosition()).getStudentId());
                     }
                 }
             });
@@ -75,7 +74,7 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
     @Override
     public void onBindViewHolder(ServiceItemInfoAdapter.ViewHolder holder, int position) {
 
-        ServiceItemInfo mItemInfo = mServiceItemInfos.get(position);
+        ProviderUserItemInfo mItemInfo = mProviderUserItemInfos.get(position);
         holder.studentIdView.setText(mItemInfo.getStudentId());
         String url = mItemInfo.getStudentImg();
         if (url == null)
@@ -92,10 +91,10 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
 
     @Override
     public int getItemCount() {
-        return mServiceItemInfos.size();
+        return mProviderUserItemInfos.size();
     }
 
-    interface onCardViewItemClickListener{
+    public interface onCardViewItemClickListener{
         void onClick(View v,int position, String studentId);
     }
 
@@ -104,25 +103,25 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
     }
 
     public void clearData(){
-        int length = mServiceItemInfos.size();
-        mServiceItemInfos.clear();
+        int length = mProviderUserItemInfos.size();
+        mProviderUserItemInfos.clear();
         notifyItemRangeRemoved(0,length);
     }
 
-    public void addData(List<ServiceItemInfo> serviceInfos){
+    public void addData(List<ProviderUserItemInfo> serviceInfos){
         this.addData(0, serviceInfos);
     }
 
 
-    public void addData(int position, List<ServiceItemInfo> serviceInfos){
+    public void addData(int position, List<ProviderUserItemInfo> serviceInfos){
         if (serviceInfos != null && serviceInfos.size() > 0){
-            mServiceItemInfos.addAll(serviceInfos);
-            notifyItemRangeChanged(position, mServiceItemInfos.size());
+            mProviderUserItemInfos.addAll(serviceInfos);
+            notifyItemRangeChanged(position, mProviderUserItemInfos.size());
         }
     }
 
-    public List<ServiceItemInfo> getDatas(){
-        return mServiceItemInfos;
+    public List<ProviderUserItemInfo> getDatas(){
+        return mProviderUserItemInfos;
     }
 
 }

@@ -11,6 +11,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.ProjectItemInfo;
+import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.DbUtils;
 
 import java.util.List;
@@ -24,9 +25,11 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
 
     private List<ProjectItemInfo> mProjectItemInfos;
     private onProjectItemClickListener mListener;
+    private int state = Constants.FULL_VIEW;
 
-    public RecommendProjectAdapter(List<ProjectItemInfo> mProjectItemInfos) {
+    public RecommendProjectAdapter(List<ProjectItemInfo> mProjectItemInfos, int mState) {
         this.mProjectItemInfos = mProjectItemInfos;
+        this.state = mState;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -53,6 +56,11 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
             projectFavoritesNumView = (TextView) itemView.findViewById(R.id.cardview_project_favor_num);
             projectPriceView = (TextView) itemView.findViewById(R.id.cardview_project_price);
             projectEnrollNumView = (TextView) itemView.findViewById(R.id.cardview_project_join);
+            if (state == Constants.PART_VIEW){
+                providerImgView.setVisibility(View.GONE);
+                projectDescView.setMaxLines(20);
+            }
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,7 +113,7 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
         return mProjectItemInfos.size();
     }
 
-    interface onProjectItemClickListener{
+    public interface onProjectItemClickListener{
         void onClick(View v, int position, String providerId);
     }
 

@@ -13,7 +13,7 @@
         android:layout_height="250dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/major_provider_page_collapsing_toolbar"
+            android:id="@+id/activity_major_provider_page_collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -49,11 +49,13 @@
 
 
                         <ImageView
+                            android:id="@+id/icon_major_provider"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginRight="5dp"
                             android:scaleType="fitCenter"
+                            android:visibility="invisible"
                             android:src="@drawable/icon_user"/>
 
                         <TextView
@@ -64,6 +66,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:text="罗海林"
+                            android:visibility="invisible"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             />
@@ -74,6 +77,7 @@
                             android:layout_height="16dp"
                             android:layout_marginLeft="5dp"
                             android:scaleType="fitCenter"
+                            android:visibility="invisible"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/icon_man"/>
 
@@ -102,11 +106,13 @@
 
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:id="@+id/icon_provider_college"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="5dp"
                         android:scaleType="fitCenter"
+                        android:visibility="invisible"
                         android:src="@drawable/icon_college_white"/>
 
                     <TextView
@@ -117,15 +123,18 @@
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:text="浙江大学"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/alpha_70_white"
+                        android:textSize="15sp"
                         />
 
                     <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:id="@+id/icon_provider_major"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_marginLeft="5dp"
                         android:scaleType="fitCenter"
+                        android:visibility="invisible"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/icon_major_white"/>
 
@@ -136,16 +145,19 @@
                         android:layout_gravity="center_vertical"
                         android:ellipsize="end"
                         android:singleLine="true"
+                        android:visibility="invisible"
                         android:text="测控技术与仪器"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textColor="@color/alpha_70_white"
+                        android:textSize="15sp"
                         />
 
                     <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:id="@+id/icon_provider_grade"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_marginLeft="5dp"
                         android:scaleType="fitCenter"
+                        android:visibility="invisible"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/icon_grade_white"/>
 
@@ -156,9 +168,10 @@
                         android:layout_gravity="center_vertical"
                         android:ellipsize="end"
                         android:singleLine="true"
+                        android:visibility="invisible"
                         android:text="大三"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textColor="@color/alpha_70_white"
+                        android:textSize="15sp"
                         />
 
 
@@ -167,7 +180,7 @@
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/major_provider_page_toolbar"
+                android:id="@+id/activity_major_provider_page_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:navigationIcon="@drawable/icon_back_32"
@@ -205,7 +218,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="28dp"
                     android:layout_weight="3"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -331,7 +344,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/major_provider_page__chat_button"
+                        android:id="@+id/major_provider_page_chat_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -387,15 +400,15 @@
                 android:background="@color/divide_05_black"/>
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/major_provider_page_project_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </android.support.v7.widget.RecyclerView>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/major_provider_page_project_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                </android.support.v7.widget.RecyclerView>
 
             <TextView
-                android:id="@+id/major_provider_page_noresult_hint"
+                android:id="@+id/major_provider_page_noResult_hint"
                 android:padding="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

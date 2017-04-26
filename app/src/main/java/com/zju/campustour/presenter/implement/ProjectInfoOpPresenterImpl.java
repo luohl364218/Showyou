@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.zju.campustour.model.util.DbUtils.getUser;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_STOP;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_RUNNING;
@@ -49,7 +50,31 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
     }
 
     @Override
-    public void queryProjectWithUserId(int userId) {
+    public void queryProjectWithUserId(String userId) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project")
+                .whereEqualTo("userId",userId).include("provider").include("favorites");
+        mProjects = new ArrayList<>();
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> projectList, ParseException e) {
+                if (e == null) {
+                     /*信息转换*/
+                     if (projectList.size() != 0){
+                         for(ParseObject project: projectList) {
+                             Project mProject = DbUtils.getProject(project);
+                             mProjects.add(mProject);
+                         }
+                     }
+
+                } else {
+                    Log.d(TAG, "Error: " + e.getMessage());
+                }
+
+                mProjectInfoView.onGetProjectInfoDone(mProjects);
+
+            }
+        });
+
 
     }
 
@@ -61,7 +86,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
     @Override
     public void getLimitProjectInfo(int start, int count) {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project")
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").whereNotEqualTo("projectState",3)
                 .setSkip(start).setLimit(count).include("favorites").include("provider");
         mProjects = new ArrayList<>();
 
@@ -70,51 +95,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
                 if (e == null) {
                      /*信息转换*/
                     for(ParseObject project: projectList) {
-                        String id = project.getObjectId();
-                        String userId = project.getString("userId");
-                        ParseObject providerObject = project.getParseObject("provider");
-                        User provider = getUser(providerObject);
-                        String title = project.getString("title");
-                        Date startTime = project.getDate("startTime");
-                        String imgUrl = project.getString("imgUrl");
-                        long price = project.getLong("price");
-                        String description = project.getString("description");
-                        int acceptNum = project.getInt("acceptNum");
-                        ProjectStateType projectState;
-                        switch (project.getInt("projectState")) {
-                            case 0:
-                                projectState = BOOK_ACCEPT;
-                                break;
-                            case 1:
-                                projectState = BOOK_STOP;
-                                break;
-                            case 2:
-                                projectState = PROJECT_RUNNING;
-                                break;
-                            case 3:
-                                projectState = PROJECT_STOP;
-                                continue;
-                            default:
-                                projectState = BOOK_ACCEPT;
-                        }
-
-                        List<ParseObject> jsonFavorites = project.getList("favorites");
-                        List<User> favorites;
-                        if (jsonFavorites != null){
-                            favorites = new ArrayList<User>();
-
-                            for(ParseObject user: jsonFavorites){
-                                User mUser = getUser(user);
-                                favorites.add(mUser);
-                            }
-                        }
-                        else {
-                            favorites = null;
-                        }
-
-                        Project mProject = new Project(id, provider, title, startTime,
-                                imgUrl, price, description, acceptNum, projectState, favorites);
-
+                        Project mProject = DbUtils.getProject(project);
                         mProjects.add(mProject);
                     }
                 } else {
@@ -127,30 +108,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         });
     }
 
-    @NonNull
-    public User getUser(ParseObject user) {
-        String user_id = user.getObjectId();
-        String userName = user.getString("userName");
-        String loginName = user.getString("loginName");
-        String password =user.getString("password");
-        SexType sex = user.getInt("sex") == 0? SexType.MALE : SexType.FEMALE;
-        String school = user.getString("school");
-        String major = user.getString("major");
-        String grade = user.getString("grade");
-        int fansNum = user.getInt("fansNum");
-        boolean online = user.getBoolean("online");
-        String user_imgUrl = user.getString("imgUrl");
-        ;
-        String phoneNum = user.getString("phoneNum");
-        String emailAddr = user.getString("emailAddr");
-        UserType userType = user.getInt("userType") == 0? UserType.USER: UserType.PROVIDER;
-        String user_description = user.getString("description");
-        String shortDescription = user.getString("shortDescription");
 
-        return new User(user_id,userName, loginName, password, sex,
-                school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
-                userType, user_description, shortDescription);
-    }
 
 
 }

@@ -45,7 +45,8 @@
             android:name=".view.activity.MajorProviderInfoActivity"
             android:theme="@style/WelcomeNoActionBar">
         </activity>
-        <activity android:name=".view.activity.ProviderHomePageActivity">
+        <activity android:name=".view.activity.ProviderHomePageActivity"
+                  android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>
 

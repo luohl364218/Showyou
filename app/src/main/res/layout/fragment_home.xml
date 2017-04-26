@@ -325,6 +325,16 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/fragment_home_noResult_hint"
+                android:padding="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/gray"
+                android:text="Sorry 暂无服务结果"
+                android:visibility="gone"/>
+
 
         </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -16,6 +17,8 @@ import com.zju.campustour.view.IView.ISearchUserInfoView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.zju.campustour.model.util.DbUtils.getUser;
 
 /**
  * Created by HeyLink on 2017/4/24.
@@ -43,6 +46,23 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     @Override
     public void queryUserInfoWithId(String userId) {
+
+        userResults = new ArrayList<>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("User2");
+        query.getInBackground(userId, new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+
+                    User provider = getUser(object);
+                    userResults.add(provider);
+
+                } else {
+                    Log.d(TAG,"get user error!!!!");
+                }
+
+                mSearchInfoView.onGetProviderUserDone(userResults);
+            }
+        });
 
     }
 
@@ -94,29 +114,6 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     }
 
 
-    @NonNull
-    public User getUser(ParseObject user) {
-        String user_id = user.getObjectId();
-        String userName = user.getString("userName");
-        String loginName = user.getString("loginName");
-        String password =user.getString("password");
-        SexType sex = user.getInt("sex") == 0? SexType.MALE : SexType.FEMALE;
-        String school = user.getString("school");
-        String major = user.getString("major");
-        String grade = user.getString("grade");
-        int fansNum = user.getInt("fansNum");
-        boolean online = user.getBoolean("online");
-        String user_imgUrl = user.getString("imgUrl");
-        ;
-        String phoneNum = user.getString("phoneNum");
-        String emailAddr = user.getString("emailAddr");
-        UserType userType = user.getInt("userType") == 0? UserType.USER: UserType.PROVIDER;
-        String user_description = user.getString("description");
-        String shortDescription = user.getString("shortDescription");
 
-        return new User(user_id,userName, loginName, password, sex,
-                school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
-                userType, user_description, shortDescription);
-    }
 
 }
