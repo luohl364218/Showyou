@@ -25,6 +25,4 @@
         app:bb_behavior="shifting"
         app:bb_showShadow="true"/>
 
-
-
 </RelativeLayout>

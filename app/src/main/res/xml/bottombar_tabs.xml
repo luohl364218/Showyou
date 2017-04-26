@@ -2,18 +2,17 @@
 <tabs>
 
     <tab
-        id="@+id/tab_search"
-        icon="@drawable/selector_icon_search"
-        title="发现"
-        barColorWhenSelected= "@color/darkseagreen"/>
-
-    <tab
         id="@+id/tab_home"
         icon="@drawable/selector_icon_home"
         title="主页"
         barColorWhenSelected= "@color/colorPrimary"
         />
 
+    <tab
+        id="@+id/tab_search"
+        icon="@drawable/selector_icon_search"
+        title="发现"
+        barColorWhenSelected= "@color/darkseagreen"/>
 
     <tab
         id="@+id/tab_info"

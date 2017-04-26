@@ -1,10 +1,10 @@
 package com.zju.campustour;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
@@ -15,10 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.zju.campustour.model.database.dao.MajorFIlesDao;
+import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
@@ -27,6 +28,7 @@ import com.zju.campustour.view.fragment.SearchFragment;
 import com.zju.campustour.view.widget.viewpager.SuperViewPager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends BaseActivity
@@ -43,6 +45,13 @@ public class MainActivity extends BaseActivity
     private CoordinatorLayout mCoordinator;
     private List<Fragment> fragmentList;
     private FloatingActionButton mFloatingActionButton;
+    //专业列表相关信息
+    public static List<String> groupList = new ArrayList<>();
+    public static List<List> itemsList = new ArrayList<>();
+    //读取和记录是否初始化过
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     private String TAG = "mainActivity";
 
     @Override
@@ -50,20 +59,56 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initLayoutElements();
+        initMajorListViewData();
+        initDatabase();
+
+    }
+
+    /**
+     * 初始化数据库,本地化存储是否有初始过，保证只初始化一次
+     */
+    private void initDatabase() {
+
+        sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        Boolean hasInited = sharedPreferences.getBoolean("init_database",false);
+        if (!hasInited) {
+            MajorFIlesDao majorFIlesDao = new MajorFIlesDao(this);
+
+            majorFIlesDao.init();
+
+            Log.d(TAG,"init database");
+
+            editor.putBoolean("init_database",true);
+            editor.apply();
+        }
+
+
+    }
+
+    public  void initMajorListViewData(){
+
+        groupList = new ArrayList<>(Arrays.asList(MajorData.majorGroup));
+
+        for (int i = 0;i<MajorData.allMajorNames.length;i++){
+            List<String> majorList = new ArrayList<>(Arrays.asList((String[])MajorData.allMajorNames[i]));
+
+            itemsList.add(majorList);
+        }
     }
 
     private void initLayoutElements() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+      /*  mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -77,19 +122,19 @@ public class MainActivity extends BaseActivity
         mCoordinator = (CoordinatorLayout) findViewById(R.id.mCoordinator);
         mViewPager = (SuperViewPager) findViewById(R.id.viewPager);
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        mBottomBar.setDefaultTabPosition(1);
+        mBottomBar.setDefaultTabPosition(0);
         initViewPager();
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 switch (tabId) {
-                    case R.id.tab_search:
-                        Log.d(TAG,"tab search click--------------------");
+                    case R.id.tab_home:
+                        Log.d(TAG,"tab home click--------------------");
                         mViewPager.setCurrentItemByTab(0, true);
                         break;
 
-                    case R.id.tab_home:
-                        Log.d(TAG,"tab home click--------------------");
+                    case R.id.tab_search:
+                        Log.d(TAG,"tab search click--------------------");
                         mViewPager.setCurrentItemByTab(1, true);
                         break;
 
@@ -99,7 +144,6 @@ public class MainActivity extends BaseActivity
                         break;
                     default:
                         break;
-
                 }
             }
         });
@@ -111,8 +155,9 @@ public class MainActivity extends BaseActivity
         // 这里的添加顺序是否对 tab 页的前后顺序有影响
         //fragmentList.add(fragmentTabHost.getTabWidget().)
 
-        fragmentList.add(new SearchFragment());
+
         fragmentList.add(new HomeFragment());
+        fragmentList.add(new SearchFragment());
         fragmentList.add(new MessageFragment());
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -134,7 +179,7 @@ public class MainActivity extends BaseActivity
 
         mViewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(),
                 fragmentList));
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(0);
     }
 
     @Override

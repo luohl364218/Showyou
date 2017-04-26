@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.zju.campustour">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- if you want to load images from a file OR from the internet -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".view.application.CampusTourApplication"
         android:allowBackup="true"
-        android:name="com.zju.campustour.view.application.FrescoApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
         <activity
-            android:name="com.zju.campustour.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="com.zju.campustour.view.activity.SplashActivity"
+            android:name=".view.activity.SplashActivity"
             android:theme="@style/WelcomeNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -26,8 +30,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.zju.campustour.view.activity.WelcomeGuideActivity"
+            android:name=".view.activity.WelcomeGuideActivity"
             android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.InfoWebActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.MajorListActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.MajorProviderInfoActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.ProviderHomePageActivity">
         </activity>
     </application>
 

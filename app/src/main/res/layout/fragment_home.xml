@@ -1,29 +1,334 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadingEdge="none"
+                android:fillViewport="true"
+                >
 
-    <com.cjj.MaterialRefreshLayout
-        android:id="@+id/refresh_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:overlay="false"
-        app:wave_show="true"
-        app:wave_color="@color/transparent"
-        >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fragment_home_recycle_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </android.support.v7.widget.RecyclerView>
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
-    </com.cjj.MaterialRefreshLayout>
+
+            <com.daimajia.slider.library.SliderLayout
+                android:id="@+id/slider"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/divide_05_black"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout
+                android:id="@+id/fragment_home_subjects"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                >
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_renwen"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_renwen_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_major_wenxue"/>
+                    <TextView
+                        android:id="@+id/fragment_home_renwen_text"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="人文"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_yishuxue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_yishuxue_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_major_artist"/>
+                    <TextView
+                        android:id="@+id/fragment_home_yishuxue_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="艺术学"
+                        android:layout_weight="1"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_lixue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_lixue_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_major_lixue"/>
+                    <TextView
+                        android:id="@+id/fragment_home_lixue_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="理学"
+                        android:layout_weight="1"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_yixue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_yixue_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_major_yixue"/>
+                    <TextView
+                        android:id="@+id/fragment_home_yixue_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="医学"
+                        android:layout_weight="1"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_home_subject1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                >
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_nongxue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_nongxue_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_major_nongxue"/>
+                    <TextView
+                        android:id="@+id/fragment_home_nongxue_text"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="农学"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_jingjixue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_jingjixue_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_major_finance"/>
+                    <TextView
+                        android:id="@+id/fragment_home_jingjixue_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="经济学"
+                        android:layout_weight="1"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_gongxue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_gongxue_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_majorgongxue"/>
+                    <TextView
+                        android:id="@+id/fragment_home_gongxue_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="工学"
+                        android:layout_weight="1"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/fragment_home_allsubjects"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:id="@+id/fragment_home_allsubjects_src"
+                        android:layout_weight="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_major_all"/>
+                    <TextView
+                        android:id="@+id/fragment_home_allsubjects_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="全部分类"
+                        android:layout_weight="1"
+                        android:textColor="@color/tab_text_normal"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/divide_05_black"
+                android:layout_marginTop="10dp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/fragment_home_hotmajor_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="@string/hot_major"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@color/white"/>
+                <ImageView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/alpha_02_black"
+                    />
+                <Button
+                    android:id="@+id/fragment_home_remotechat_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="@string/remote_chat"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@color/white"/>
+            </LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/divide_05_black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_recommend"
+                    android:padding="2dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/recommend"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/fragment_home_recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </LinearLayout>

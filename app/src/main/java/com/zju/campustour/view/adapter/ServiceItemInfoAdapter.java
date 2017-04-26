@@ -5,12 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.ServiceItemInfo;
+import com.zju.campustour.model.util.DbUtils;
 
 import java.util.List;
 
@@ -33,8 +33,10 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
         TextView studentIdView;
         SimpleDraweeView studentImgView;
         TextView studentNameView;
-        TextView serviceNameView;
-        TextView studentShortInfoView;
+        TextView shortDescriptionView;
+        TextView studentCollegeView;
+        TextView studentMajorView;
+        TextView studentGradeView;
         TextView studentFansNumView;
 
         public ViewHolder(View itemView) {
@@ -43,8 +45,10 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
             studentIdView = (TextView) itemView.findViewById(R.id.cardview_user_id);
             studentImgView = (SimpleDraweeView) itemView.findViewById(R.id.cardview_user_image);
             studentNameView = (TextView) itemView.findViewById(R.id.cardview_user_name);
-            serviceNameView = (TextView) itemView.findViewById(R.id.cardview_describe);
-            studentShortInfoView = (TextView) itemView.findViewById(R.id.cardview_user_info);
+            shortDescriptionView = (TextView) itemView.findViewById(R.id.cardview_describe);
+            studentCollegeView = (TextView) itemView.findViewById(R.id.cardview_user_college);
+            studentMajorView = (TextView)itemView.findViewById(R.id.cardview_user_major);
+            studentGradeView = (TextView) itemView.findViewById(R.id.cardview_user_grade);
             studentFansNumView = (TextView) itemView.findViewById(R.id.cardview_user_fans_num);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -72,12 +76,17 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
     public void onBindViewHolder(ServiceItemInfoAdapter.ViewHolder holder, int position) {
 
         ServiceItemInfo mItemInfo = mServiceItemInfos.get(position);
-        holder.studentIdView.setText(mItemInfo.getStudentId()+"");
-        Uri uri = Uri.parse(mItemInfo.getStudentImg());
-        holder.studentImgView.setImageURI(uri);
+        holder.studentIdView.setText(mItemInfo.getStudentId());
+        String url = mItemInfo.getStudentImg();
+        if (url == null)
+            url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
+        DbUtils.setImg(holder.studentImgView,url,70);
+
         holder.studentNameView.setText(mItemInfo.getStudentName());
-        holder.serviceNameView.setText(mItemInfo.getServiceName());
-        holder.studentShortInfoView.setText(mItemInfo.getStudentShortInfo());
+        holder.shortDescriptionView.setText(mItemInfo.getShortDescription());
+        holder.studentCollegeView.setText(mItemInfo.getStudentCollege());
+        holder.studentMajorView.setText(mItemInfo.getStudentMajor());
+        holder.studentGradeView.setText(mItemInfo.getStudentGrade());
         holder.studentFansNumView.setText(mItemInfo.getFansNum() + "人关注");
     }
 
@@ -87,7 +96,7 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
     }
 
     interface onCardViewItemClickListener{
-        void onClick(View v,int position, int studentId);
+        void onClick(View v,int position, String studentId);
     }
 
     public void setOnCardViewItemClickListener(onCardViewItemClickListener listener){

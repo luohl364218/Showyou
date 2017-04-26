@@ -6,29 +6,35 @@ package com.zju.campustour.model.bean;
 
 public class ServiceItemInfo {
 
-    private int studentId;
+    private String studentId;
     private String studentImg;
     private String studentName;
-    private String serviceName;
-    private String studentShortInfo;
+    private String shortDescription;
+    private String studentCollege;
+    private String studentMajor;
+    private String studentGrade;
     private int fansNum;
 
 
-    public ServiceItemInfo(int mStudentId, String mStudentImg, String mStudentName,
-                            String mServiceName, String mStudentShortInfo, int mFansNum) {
+    public ServiceItemInfo(String mStudentId, String mStudentImg,
+                            String mStudentName, String mShortDescription,
+                            String mStudentCollege, String mStudentMajor,
+                            String mStudentGrade, int mFansNum) {
         studentId = mStudentId;
         studentImg = mStudentImg;
         studentName = mStudentName;
-        serviceName = mServiceName;
-        studentShortInfo = mStudentShortInfo;
+        shortDescription = mShortDescription;
+        studentCollege = mStudentCollege;
+        studentMajor = mStudentMajor;
+        studentGrade = mStudentGrade;
         fansNum = mFansNum;
     }
 
-    public int getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int mStudentId) {
+    public void setStudentId(String mStudentId) {
         studentId = mStudentId;
     }
 
@@ -48,20 +54,12 @@ public class ServiceItemInfo {
         studentName = mStudentName;
     }
 
-    public String getServiceName() {
-        return serviceName;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setServiceName(String mServiceName) {
-        serviceName = mServiceName;
-    }
-
-    public String getStudentShortInfo() {
-        return studentShortInfo;
-    }
-
-    public void setStudentShortInfo(String mStudentShortInfo) {
-        studentShortInfo = mStudentShortInfo;
+    public void setShortDescription(String mShortDescription) {
+        shortDescription = mShortDescription;
     }
 
     public int getFansNum() {
@@ -70,5 +68,29 @@ public class ServiceItemInfo {
 
     public void setFansNum(int mFansNum) {
         fansNum = mFansNum;
+    }
+
+    public String getStudentCollege() {
+        return studentCollege;
+    }
+
+    public void setStudentCollege(String mStudentCollege) {
+        studentCollege = mStudentCollege;
+    }
+
+    public String getStudentMajor() {
+        return studentMajor;
+    }
+
+    public void setStudentMajor(String mStudentMajor) {
+        studentMajor = mStudentMajor;
+    }
+
+    public String getStudentGrade() {
+        return studentGrade;
+    }
+
+    public void setStudentGrade(String mStudentGrade) {
+        studentGrade = mStudentGrade;
     }
 }

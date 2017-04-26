@@ -21,6 +21,7 @@ public class ActivityCollector {
         activities.remove(activity);
     }
 
+    //调用finishall方法实现清空activity
     public static void finishAll(){
         for (Activity activity : activities){
             if (!activity.isFinishing()){
