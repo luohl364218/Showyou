@@ -141,7 +141,7 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v.getTag().equals("enter")) {
+        if ("enter".equals(v.getTag())) {
             enterMainActivity();
             return;
         }

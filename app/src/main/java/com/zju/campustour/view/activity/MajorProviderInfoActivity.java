@@ -36,6 +36,8 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
 
     //行家推荐列表
     ServiceItemInfoAdapter mItemInfoAdapter;
+    //行家推荐列表
+    ServiceItemInfoAdapter mItemInfoAdapter_1;
     //数据库操作相关
     MajorFIlesDao majorFIlesDao;
 
@@ -57,7 +59,8 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
     CollapsingToolbarLayout mToolbarLayout;
     private String TAG = getClass().getSimpleName();
     IUserInfoOpPresenter mUserInfoOpPresenter;
-    private List<ProviderUserItemInfo> mProviderUserItemInfos;
+    private List<ProviderUserItemInfo> mTheSameMajorProviderUserItemInfos;
+    private List<ProviderUserItemInfo> mSimilarMajorProviderUserItemInfos;
 
 
     @Override
@@ -70,7 +73,7 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
             getBundleExtras(extras);
         }
         mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this);
-        mUserInfoOpPresenter.queryProviderUserWithConditions(null, selectedMajorName,0);
+        mUserInfoOpPresenter.queryProviderUserWithConditions(null, null,0,-1,selectedGroupID);
         initViewsAndEvents();
     }
 
@@ -95,6 +98,7 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
 
         expandableTextView = (ExpandableTextView) findViewById(R.id.expand_text_view);
         listViewLike = (RecyclerView) findViewById(R.id.activity_major_info_listview_like);
+        listViewRecommend = (RecyclerView) findViewById(R.id.activity_major_info_listview_recommend);
         color1ImageView = (ImageView) findViewById(R.id.activity_major_info_color1_imageview);
         color2ImageView = (ImageView) findViewById(R.id.activity_major_info_color2_imageview);
         color3ImageView = (ImageView) findViewById(R.id.activity_major_info_color3_imageview);
@@ -157,9 +161,9 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
         //-------------推荐列表:匹配专业---------------
 
         if (mUsers.size() != 0) {
-            noResultTextView1.setVisibility(View.GONE);
+            mSimilarMajorProviderUserItemInfos = new ArrayList<>();
+            mTheSameMajorProviderUserItemInfos = new ArrayList<>();
 
-            mProviderUserItemInfos = new ArrayList<>();
             for (User user : mUsers) {
                 ProviderUserItemInfo mItemInfo = new ProviderUserItemInfo(
                         user.getId(),
@@ -170,26 +174,59 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
                         user.getMajor(),
                         user.getGrade(),
                         user.getFansNum());
-                mProviderUserItemInfos.add(mItemInfo);
+
+                if (user.getMajor() != null){
+                    if (user.getMajor().equals(selectedMajorName)){
+                        mTheSameMajorProviderUserItemInfos.add(mItemInfo);
+                    }
+                    else {
+                        mSimilarMajorProviderUserItemInfos.add(mItemInfo);
+                    }
+                }
+
             }
 
-            showSameMajorProvider(mProviderUserItemInfos);
+        }
+
+        if (mTheSameMajorProviderUserItemInfos.size() != 0){
+            noResultTextView1.setVisibility(View.GONE);
+            showSameMajorProvider(mTheSameMajorProviderUserItemInfos);
         }
         else {
             noResultTextView1.setVisibility(View.VISIBLE);
         }
 
-        //-------------同类专业匹配列表---------------
+        if (mSimilarMajorProviderUserItemInfos.size() != 0){
+            noResultTextView2.setVisibility(View.GONE);
+            showSimilarMajorProvider(mSimilarMajorProviderUserItemInfos);
+        }
+        else {
+            noResultTextView2.setVisibility(View.VISIBLE);
+        }
 
+    }
 
-        //无精确匹配结果
-        noResultTextView2.setVisibility(View.VISIBLE);
-        listViewLike.setFocusable(false);
+    private void showSimilarMajorProvider(List<ProviderUserItemInfo> mSimilarMajorProviderUserItemInfos) {
+        listViewLike.setNestedScrollingEnabled(false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mItemInfoAdapter_1 = new ServiceItemInfoAdapter(mSimilarMajorProviderUserItemInfos);
+        mItemInfoAdapter_1.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
+            @Override
+            public void onClick(View v, int position, String studentId) {
+                Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);
+                mIntent.putExtra("provider_id",studentId);
+                startActivity(mIntent);
+            }
+        });
+
+        listViewLike.setLayoutManager(layoutManager);
+        listViewLike.setAdapter(mItemInfoAdapter_1);
+        listViewLike.addItemDecoration(new DividerItemDecortion());
 
     }
 
     private void showSameMajorProvider(List<ProviderUserItemInfo> mProviderUserItemInfos) {
-        listViewRecommend = (RecyclerView) findViewById(R.id.activity_major_info_listview_recommend);
+
 
         listViewRecommend.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

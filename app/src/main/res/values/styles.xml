@@ -19,8 +19,27 @@
         <!-- 设置原来的actionbar不显示 -->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+       <!-- <item name="android:actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
+
 
     </style>
+
+
+    <!--定制一个menu的style-->
+    <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:popupBackground">@color/colorPrimary</item>
+    </style>
+
+    <!--修改toolbar菜单按钮的style-->
+   <!-- <style name="OverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">
+        <item name="android:src">@mipmap/icon_more_white_s</item>
+    </style>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
@@ -42,5 +61,6 @@
         <item name="android:textSize">10sp</item>
 
     </style>
+
 
 </resources>

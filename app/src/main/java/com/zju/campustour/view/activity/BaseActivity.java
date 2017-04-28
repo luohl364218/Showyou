@@ -8,6 +8,8 @@ import android.util.Log;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.view.widget.ActivityCollector;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Log.d("BaseActivity", getClass().getSimpleName());
+
         ActivityCollector.addActivity(this);
 
 

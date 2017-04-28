@@ -1,6 +1,8 @@
 package com.zju.campustour.view.adapter;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +57,13 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
                 public void onClick(View v) {
                     if (mListener != null){
                         //return the student's id, so we can get the exact student info
-                        mListener.onClick(v, getLayoutPosition(), mProviderUserItemInfos.get(getLayoutPosition()).getStudentId());
+                        try{
+                            mListener.onClick(v, getLayoutPosition(), mProviderUserItemInfos.get(getLayoutPosition()).getStudentId());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            return;
+                        }
+
                     }
                 }
             });
@@ -79,7 +87,8 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
         String url = mItemInfo.getStudentImg();
         if (url == null)
             url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
-        DbUtils.setImg(holder.studentImgView,url,70);
+        Uri uri = Uri.parse(url);
+        holder.studentImgView.setImageURI(uri);
 
         holder.studentNameView.setText(mItemInfo.getStudentName());
         holder.shortDescriptionView.setText(mItemInfo.getShortDescription());

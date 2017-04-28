@@ -6,7 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="default_email">1124281072@qq.com</string>
-    <string name="default_username">HailinLuo</string>
+    <string name="default_username">第0行代码</string>
     <string name="welcomeGuid">点击进入</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
@@ -42,4 +42,5 @@
     <string name="remote_chat">大牛学长远程聊</string>
     <string name="recommend">为你推荐</string>
     <string name="major_title">专业列表</string>
+    <string name="school_title">学校列表</string>
 </resources>

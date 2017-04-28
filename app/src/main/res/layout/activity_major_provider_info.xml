@@ -43,6 +43,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -149,7 +150,7 @@
                         android:padding="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="为您推荐学生"
+                        android:text="专业学生推荐"
                         android:textSize="18sp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
@@ -212,7 +213,7 @@
                         android:padding="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="同类专业学生"
+                        android:text="学科学生推荐"
                         android:textSize="18sp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
@@ -227,13 +228,19 @@
                 android:layout_height="2dp"
                 android:background="@color/divide_05_black" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/activity_major_info_listview_like"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
 
-                </android.support.v7.widget.RecyclerView>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/activity_major_info_listview_like"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                    </android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/activity_major_info_noresult_hint2"

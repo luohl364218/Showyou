@@ -18,6 +18,7 @@ import com.zju.campustour.view.IView.ISearchUserInfoView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zju.campustour.model.database.data.SchoolData.allAreaSchoolList;
 import static com.zju.campustour.model.util.DbUtils.getUser;
 
 /**
@@ -82,26 +83,37 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     }
 
     @Override
-    public void queryProviderUserWithConditions(String mSchool, String mMajor,int start) {
+    public void queryProviderUserWithConditions(String mSchool, String mMajor,int start, int area, int categoryId) {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("User2")
-                .setSkip(start).setLimit(10);
+        Log.d(TAG, "enter method 【queryProviderUserWithConditions】-----------------: " );
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("User2").setSkip(start).setLimit(10);
+
         if (mSchool != null)
             query.whereEqualTo("school",mSchool);
         if (mMajor != null)
             query.whereEqualTo("major",mMajor);
+        if (categoryId >= 0){
+            query.whereEqualTo("categoryId",categoryId);
+        }
+        if (mSchool == null && area >= 0){
+            String[] schools = (String[]) allAreaSchoolList[area];
+            List<String> schoolList = new ArrayList<>();
+            for (int i = 1; i < schools.length; i++)
+                schoolList.add(schools[i]);
 
-
-        userResults = new ArrayList<>();
+            query.whereContainedIn("school",schoolList);
+        }
 
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> userList, ParseException e) {
                 if (e == null) {
                     /*信息转换*/
+                    userResults = new ArrayList<>();
                     for(ParseObject user: userList){
                         User provider = getUser(user);
                         userResults.add(provider);
                     }
+                    Log.d(TAG, "find user-----------------: " + userList.size());
 
                 } else {
                     Log.d(TAG, "Error: " + e.getMessage());
@@ -112,7 +124,6 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
             }
         });
     }
-
 
 
 

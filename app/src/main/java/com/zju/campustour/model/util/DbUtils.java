@@ -52,10 +52,11 @@ public class DbUtils {
         UserType userType = user.getInt("userType") == 0? UserType.USER: UserType.PROVIDER;
         String user_description = user.getString("description");
         String shortDescription = user.getString("shortDescription");
+        int categoryId = user.getInt("categoryId");
 
         return new User(user_id,userName, loginName, password, sex,
                 school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
-                userType, user_description, shortDescription);
+                userType, user_description, shortDescription,categoryId);
     }
 
     public static void setImg(SimpleDraweeView mImg, String url, int length)

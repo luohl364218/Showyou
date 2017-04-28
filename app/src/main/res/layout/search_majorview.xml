@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/search_major_allmajor"
+        android:padding="15dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="所有专业"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:src="@color/alpha_8_black"/>
+
+    <ExpandableListView
+        android:id="@+id/search_major_expandablelistview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/alpha_8_black"
+        android:dividerHeight="0.4dp"
+        android:groupIndicator="@null"
+        >
+    </ExpandableListView>
+
+</LinearLayout>

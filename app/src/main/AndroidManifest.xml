@@ -4,6 +4,7 @@
           package="com.zju.campustour">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- if you want to load images from a file OR from the internet -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
@@ -45,7 +46,11 @@
             android:name=".view.activity.MajorProviderInfoActivity"
             android:theme="@style/WelcomeNoActionBar">
         </activity>
-        <activity android:name=".view.activity.ProviderHomePageActivity"
+        <activity
+            android:name=".view.activity.ProviderHomePageActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.SchoolListActivity"
                   android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>

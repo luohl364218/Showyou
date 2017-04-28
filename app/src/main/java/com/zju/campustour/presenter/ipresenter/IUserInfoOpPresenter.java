@@ -22,5 +22,6 @@ public interface IUserInfoOpPresenter {
 
     public void userDelete(String userId);
 
-    public void queryProviderUserWithConditions(String school, String major,int start);
+    public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId);
+
 }

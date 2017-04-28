@@ -1,10 +1,15 @@
 package com.zju.campustour;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
@@ -13,26 +18,45 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.Parse;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
+import com.zju.campustour.model.database.data.SchoolData;
+import com.zju.campustour.presenter.protocal.event.SearchProviderEvent;
+import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
+import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
+import com.zju.campustour.view.adapter.MyExpandableListAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
 import com.zju.campustour.view.fragment.MessageFragment;
 import com.zju.campustour.view.fragment.SearchFragment;
 import com.zju.campustour.view.widget.viewpager.SuperViewPager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     private Toolbar mToolbar;
 
@@ -44,10 +68,20 @@ public class MainActivity extends BaseActivity
     private SuperViewPager mViewPager;
     private CoordinatorLayout mCoordinator;
     private List<Fragment> fragmentList;
-    private FloatingActionButton mFloatingActionButton;
+    //点击两次返回才退出程序
+    private long lastPressTime = 0;
+
     //专业列表相关信息
     public static List<String> groupList = new ArrayList<>();
     public static List<List> itemsList = new ArrayList<>();
+    //学校列表相关信息
+    public static List<String> areaGroup = new ArrayList<>();
+    public static List<List> schoolItemsList = new ArrayList<>();
+
+    //监听网络变化
+    private IntentFilter mIntentFilter;
+    private NetworkChangeReceiver mNetworkChangeReceiver;
+
     //读取和记录是否初始化过
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -58,10 +92,23 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
         initLayoutElements();
         initMajorListViewData();
+        initSchoolListViewData();
         initDatabase();
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        mNetworkChangeReceiver = new NetworkChangeReceiver();
+        registerReceiver(mNetworkChangeReceiver, mIntentFilter);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mNetworkChangeReceiver);
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -97,18 +144,20 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    public  void initSchoolListViewData(){
+        areaGroup = new ArrayList<>(Arrays.asList(SchoolData.allAreaGroup));
+        for (int i = 0; i< SchoolData.allAreaSchoolList.length; i++){
+            List<String> schoolList = new ArrayList<>(Arrays.asList((String[])SchoolData.allAreaSchoolList[i]));
+            schoolItemsList.add(schoolList);
+        }
+    }
+
     private void initLayoutElements() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        mToolbar.setTitle("校游 Show You");
 
-      /*  mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -121,6 +170,7 @@ public class MainActivity extends BaseActivity
 
         mCoordinator = (CoordinatorLayout) findViewById(R.id.mCoordinator);
         mViewPager = (SuperViewPager) findViewById(R.id.viewPager);
+
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
         mBottomBar.setDefaultTabPosition(0);
         initViewPager();
@@ -131,16 +181,21 @@ public class MainActivity extends BaseActivity
                     case R.id.tab_home:
                         Log.d(TAG,"tab home click--------------------");
                         mViewPager.setCurrentItemByTab(0, true);
+                        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
+                        mToolbar.setTitle("校游 Show You");
                         break;
 
                     case R.id.tab_search:
                         Log.d(TAG,"tab search click--------------------");
                         mViewPager.setCurrentItemByTab(1, true);
+                        mToolbar.setTitle("发现");
                         break;
 
                     case R.id.tab_info:
                         Log.d(TAG,"tab info click--------------------");
                         mViewPager.setCurrentItemByTab(2, true);
+                        mToolbar.setTitle("消息");
+                        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
                         break;
                     default:
                         break;
@@ -169,6 +224,23 @@ public class MainActivity extends BaseActivity
             @Override
             public void onPageSelected(int position) {
                 mBottomBar.selectTabAtPosition(position, true);
+
+                switch (position) {
+                    case 0:
+                        mToolbar.setTitle("校游 Show You");
+                        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
+                        break;
+                    case 1:
+                        mToolbar.setTitle("发现");
+                        break;
+                    case 2:
+                        mToolbar.setTitle("消息");
+
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
             @Override
@@ -207,7 +279,8 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.toolbar_scan) {
+            Toast.makeText(this, "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -220,23 +293,70 @@ public class MainActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.my_project) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.my_focus) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.my_interest) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.setting) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.build_project) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.share_project) {
 
         }
+
+        Toast.makeText(this, "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onToolbarTitleChangeEvent(ToolbarTitleChangeEvent event) {
+        if (mToolbar != null)
+            mToolbar.setTitle(event.getTitle());
+    }
+
+
+    class NetworkChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isAvailable()){
+                EventBus.getDefault().post(new onNetworkChangeEvent(true));
+            }
+            else {
+                EventBus.getDefault().post(new onNetworkChangeEvent(false));
+            }
+
+        }
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if (new Date().getTime() - lastPressTime < 2000)
+                this.finish();
+            else{
+                lastPressTime = new Date().getTime();
+                Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 }

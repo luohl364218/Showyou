@@ -1,5 +1,6 @@
 package com.zju.campustour.view.activity;
 
+import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
@@ -32,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProviderHomePageActivity extends AppCompatActivity implements ISearchUserInfoView,ISearchProjectInfoView {
+public class ProviderHomePageActivity extends AppCompatActivity implements ISearchUserInfoView,ISearchProjectInfoView, View.OnClickListener{
     private String selectedProviderId;
     private UserInfoOpPresenterImpl mUserInfoOpPresenter;
     private ProjectInfoOpPresenterImpl mProjectInfoOpPresenter;
@@ -144,7 +146,9 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
     }
 
     private void initUserInfoView() {
-        DbUtils.setImg(userImage, mUser.getImgUrl(), 100);
+
+        Uri uri = Uri.parse(mUser.getImgUrl());
+        userImage.setImageURI(uri);
         iconProvider.setVisibility(View.VISIBLE);
         providerName.setVisibility(View.VISIBLE);
         providerName.setText(mUser.getUserName());
@@ -236,5 +240,14 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         projectList.setAdapter(mProjectAdapter);
         projectList.addItemDecoration(new DividerItemDecortion());
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.major_provider_page_chat_button:
+                Toast.makeText(this, "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

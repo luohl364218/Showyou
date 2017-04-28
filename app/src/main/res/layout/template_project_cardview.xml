@@ -50,18 +50,20 @@
                 android:layout_weight="6"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/cardview_project_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:text="一句话业务描述"
-                    android:textColor="@color/alpha_70_black"
-                    android:textSize="18sp"
-                    />
+                    <TextView
+                        android:id="@+id/cardview_project_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:text="一句话业务描述"
+                        android:textColor="@color/alpha_70_black"
+                        android:textSize="18sp"
+                        />
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -83,7 +85,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:ellipsize="end"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:text="2017-5-10"
                         android:textColor="@color/alpha_40_black"
                         android:textSize="15sp"
@@ -138,7 +140,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_marginTop="2dp"
                 android:scaleType="centerCrop"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 fresco:failureImage="@drawable/project_default"
                 fresco:failureImageScaleType="centerInside"
 
@@ -171,7 +173,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:ellipsize="end"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:text="60人收藏"
                         android:textColor="@color/alpha_40_black"
                         android:textSize="15sp"

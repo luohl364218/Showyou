@@ -44,10 +44,12 @@ public class User extends DataSupport {
 
     private String shortDescription;
 
+    private int categoryId;
+
     public User(String mId, String mUserName, String mLoginName, String mPassword,
                 SexType mSex, String mSchool, String mMajor, String mGrade,
                 int mFansNum, boolean mOnline, String mImgUrl, String mPhoneNum,
-                String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription) {
+                String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription,int mCategoryId) {
         id = mId;
         userName = mUserName;
         loginName = mLoginName;
@@ -64,6 +66,7 @@ public class User extends DataSupport {
         userType = mUserType;
         description = mDescription;
         shortDescription = mShortDescription;
+        categoryId = mCategoryId;
     }
 
     public String getDescription() {
@@ -192,5 +195,14 @@ public class User extends DataSupport {
 
     public void setUserType(UserType mUserType) {
         userType = mUserType;
+    }
+
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int mCategoryId) {
+        categoryId = mCategoryId;
     }
 }

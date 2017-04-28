@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import com.parse.Parse;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.common.Constants;
@@ -58,7 +59,7 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
             projectEnrollNumView = (TextView) itemView.findViewById(R.id.cardview_project_join);
             if (state == Constants.PART_VIEW){
                 providerImgView.setVisibility(View.GONE);
-                projectDescView.setMaxLines(20);
+                projectDescView.setMaxLines(100);
             }
 
 
@@ -90,7 +91,7 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
         String url = mItemInfo.getProviderImg();
         if (url == null)
             url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
-        DbUtils.setImg(holder.providerImgView,url,60);
+        DbUtils.setImg(holder.providerImgView,url,70);
 
         holder.projectTitleView.setText(mItemInfo.getProjectTitle());
         holder.projectTimeView.setText(mItemInfo.getProjectTime());
@@ -101,7 +102,7 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
         if (url_1 == null)
             url_1 = "http://www.huedu.net/UploadFiles_2233/201505/2015050508445878.jpg";
 
-        DbUtils.setImg(holder.projectImgView,url_1,140);
+        DbUtils.setImg(holder.projectImgView,url_1,200);
 
         holder.projectFavoritesNumView.setText(mItemInfo.getFavoritesNum()+"人收藏");
         holder.projectPriceView.setText(mItemInfo.getProjectPrice()+"元/人");

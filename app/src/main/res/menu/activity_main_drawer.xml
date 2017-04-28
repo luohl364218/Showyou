@@ -3,33 +3,35 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import"/>
+            android:id="@+id/my_project"
+            android:icon="@mipmap/icon_my_project"
+            android:title="我的活动"/>
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery"/>
+            android:id="@+id/my_focus"
+            android:icon="@mipmap/icon_my_focus"
+            android:title="我的关注"/>
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow"/>
+            android:id="@+id/my_interest"
+            android:icon="@mipmap/icon_my_interest"
+            android:title="我的收藏"/>
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools"/>
+            android:id="@+id/setting"
+            android:icon="@mipmap/icon_setting"
+            android:title="设置"/>
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share"/>
+                android:id="@+id/build_project"
+                android:icon="@mipmap/icon_build_project"
+                android:title="发布活动"/>
+
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send"/>
+                android:id="@+id/share_project"
+                android:icon="@mipmap/icon_share_project"
+                android:title="分享活动"/>
+
         </menu>
     </item>
 

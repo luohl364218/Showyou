@@ -54,7 +54,6 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project")
                 .whereEqualTo("userId",userId).include("provider").include("favorites");
         mProjects = new ArrayList<>();
-
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> projectList, ParseException e) {
                 if (e == null) {
@@ -89,7 +88,6 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").whereNotEqualTo("projectState",3)
                 .setSkip(start).setLimit(count).include("favorites").include("provider");
         mProjects = new ArrayList<>();
-
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> projectList, ParseException e) {
                 if (e == null) {
