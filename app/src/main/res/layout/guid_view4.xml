@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/pic4" />
+        android:src="@drawable/pic_enter_v1" />
 
     <Button
         android:id="@+id/btn_login"
@@ -18,7 +18,7 @@
         android:layout_marginBottom="100dp"
         android:background="@drawable/shape_button"
         android:text="@string/welcomeGuid"
-        android:textColor="#ce102c"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:visibility="visible" />
 

@@ -103,12 +103,11 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
             query.whereContainedIn("school",schoolList);
         }
-
+        userResults = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> userList, ParseException e) {
                 if (e == null) {
                     /*信息转换*/
-                    userResults = new ArrayList<>();
                     for(ParseObject user: userList){
                         User provider = getUser(user);
                         userResults.add(provider);

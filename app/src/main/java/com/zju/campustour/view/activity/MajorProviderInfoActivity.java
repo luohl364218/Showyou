@@ -159,7 +159,6 @@ public class MajorProviderInfoActivity extends BaseActivity implements ISearchUs
     public void onGetProviderUserDone(List<User> mUsers) {
 
         //-------------推荐列表:匹配专业---------------
-
         if (mUsers.size() != 0) {
             mSimilarMajorProviderUserItemInfos = new ArrayList<>();
             mTheSameMajorProviderUserItemInfos = new ArrayList<>();

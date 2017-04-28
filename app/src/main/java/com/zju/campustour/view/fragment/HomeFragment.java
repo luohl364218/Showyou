@@ -293,6 +293,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
 
 
         switch (state) {
+
+
             case Constants.STATE_NORMAL:
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
                     @Override
@@ -302,6 +304,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                 };
                 if (mProjectItemInfos == null)
                     return;
+
                 mProjectAdapter = new RecommendProjectAdapter(mProjectItemInfos, Constants.FULL_VIEW);
                 mProjectAdapter.setOnProjectItemClickListener(new RecommendProjectAdapter.onProjectItemClickListener() {
                     @Override

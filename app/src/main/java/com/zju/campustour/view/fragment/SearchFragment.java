@@ -262,13 +262,18 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
         }
         else {
             mMaterialRefreshLayout.finishRefresh();
+            mMaterialRefreshLayout.finishRefreshLoadMore();
             noResultHint.setVisibility(View.VISIBLE);
             if (state == Constants.STATE_REFRESH ){
                 mItemInfoAdapter.clearData();
                 noResultHint.setText("报告，没找到符合条件的同学");
             }
             else
+            {
                 noResultHint.setText("已经为你找到所有符合条件的同学");
+                mMaterialRefreshLayout.setLoadMore(false);
+            }
+
         }
     }
 

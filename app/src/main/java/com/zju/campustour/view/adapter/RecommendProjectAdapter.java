@@ -91,8 +91,8 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
         String url = mItemInfo.getProviderImg();
         if (url == null)
             url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
-        DbUtils.setImg(holder.providerImgView,url,70);
-
+        Uri uri = Uri.parse(url);
+        holder.providerImgView.setImageURI(uri);
         holder.projectTitleView.setText(mItemInfo.getProjectTitle());
         holder.projectTimeView.setText(mItemInfo.getProjectTime());
         holder.projectAcceptNumView.setText("上限"+mItemInfo.getProjectAcceptNum()+"人");
