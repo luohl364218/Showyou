@@ -1,10 +1,12 @@
 package com.zju.campustour.model.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by HeyLink on 2017/4/24.
  */
 
-public class ProviderUserItemInfo {
+public class ProviderUserItemInfo implements Serializable {
 
     private String studentId;
     private String studentImg;

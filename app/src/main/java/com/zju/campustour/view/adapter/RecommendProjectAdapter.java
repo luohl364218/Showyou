@@ -102,8 +102,8 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
         if (url_1 == null)
             url_1 = "http://www.huedu.net/UploadFiles_2233/201505/2015050508445878.jpg";
 
-        DbUtils.setImg(holder.projectImgView,url_1,200);
-
+        Uri mUri = Uri.parse(url_1);
+        holder.projectImgView.setImageURI(mUri);
         holder.projectFavoritesNumView.setText(mItemInfo.getFavoritesNum()+"人收藏");
         holder.projectPriceView.setText(mItemInfo.getProjectPrice()+"元/人");
         holder.projectEnrollNumView.setText(mItemInfo.getProjectEnrollNum()+"人报名");

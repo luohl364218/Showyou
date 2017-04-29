@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MajorProviderInfoActivity extends BaseActivity implements ISearchUserInfoView {
+public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoView {
 
     //行家推荐列表
     ServiceItemInfoAdapter mItemInfoAdapter;

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="innerrect">
+        <attr name="inner_width" format="dimension"/><!-- 控制扫描框的宽度 -->
+        <attr name="inner_height" format="dimension"/><!-- 控制扫描框的高度 -->
+        <attr name="inner_margintop" format="dimension" /><!-- 控制扫描框距离顶部的距离 -->
+        <attr name="inner_corner_color" format="color" /><!-- 控制扫描框四角的颜色 -->
+        <attr name="inner_corner_length" format="dimension" /><!-- 控制扫描框四角的长度 -->
+        <attr name="inner_corner_width" format="dimension" /><!-- 控制扫描框四角的宽度 -->
+        <attr name="inner_scan_bitmap" format="reference" /><!-- 控制扫描图 -->
+        <attr name="inner_scan_speed" format="integer" /><!-- 控制扫描速度 -->
+        <attr name="inner_scan_iscircle" format="boolean"/><!-- 控制小圆点是否展示 -->
+    </declare-styleable>
+
+</resources>

@@ -8,6 +8,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.parse.Parse;
 import com.squareup.leakcanary.LeakCanary;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 /**
  * Created by HeyLink on 2017/4/23.
@@ -33,5 +34,7 @@ public class CampusTourApplication extends Application {
         Fresco.initialize(this,config);
 
         LeakCanary.install(this);
+
+        ZXingLibrary.initDisplayOpinion(this);
     }
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/capture_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:title=""
+                app:navigationIcon="@drawable/icon_back_32"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:text="校游扫码签到/签出"/>
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <SurfaceView
+                android:id="@+id/preview_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+
+            <com.uuzuche.lib_zxing.view.ViewfinderView
+                android:id="@+id/viewfinder_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:inner_width = "200dp"
+                app:inner_height = "200dp"
+                app:inner_margintop = "150dp"
+                app:inner_corner_color = "@color/colorPrimary"
+
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="400dp"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:text="请将活动开始/结束二维码放入框内扫描"
+                android:layout_gravity="center_horizontal"/>
+
+        </FrameLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

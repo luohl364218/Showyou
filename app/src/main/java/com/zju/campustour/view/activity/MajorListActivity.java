@@ -65,7 +65,7 @@ public class MajorListActivity extends BaseActivity{
                 String majorName = ((TextView)v.findViewById(R.id.activity_major_list_item_child_textview)).getText().toString();
                 String groupID = ((TextView)v.findViewById(R.id.activity_major_list_item_child_groupID)).getText().toString();
 
-                Intent intent = new Intent(MajorListActivity.this, MajorProviderInfoActivity.class);
+                Intent intent = new Intent(MajorListActivity.this, MajorInfoActivity.class);
                 intent.putExtra("major_name",majorName);
                 intent.putExtra("group_id",Integer.valueOf(groupID));
 

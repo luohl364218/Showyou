@@ -1,16 +1,21 @@
 package com.zju.campustour;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,6 +36,8 @@ import android.widget.Toast;
 import com.parse.Parse;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
@@ -70,6 +77,9 @@ public class MainActivity extends BaseActivity
     private List<Fragment> fragmentList;
     //点击两次返回才退出程序
     private long lastPressTime = 0;
+    //定义二维码扫描请求
+    private int REQUEST_CODE = 1;
+    private int CAMERA_REQUEST_CODE = 2;
 
     //专业列表相关信息
     public static List<String> groupList = new ArrayList<>();
@@ -278,10 +288,18 @@ public class MainActivity extends BaseActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //点击二维码扫描
         if (id == R.id.toolbar_scan) {
-            Toast.makeText(this, "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
-            return true;
+
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+            }else {
+                Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                return true;
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -358,5 +376,46 @@ public class MainActivity extends BaseActivity
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        /**
+         * 处理二维码扫描结果
+         */
+        if (requestCode == REQUEST_CODE) {
+            //处理扫描结果（在界面上显示）
+            if (null != data) {
+                Bundle bundle = data.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+                else {
+                    Toast.makeText(this, "相机被禁用，二维码扫描失败", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
