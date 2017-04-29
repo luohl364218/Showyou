@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ms.square.android.expandabletextview.ExpandableTextView;
+import com.parse.ParseException;
 import com.zju.campustour.R;
-import com.zju.campustour.model.bean.ProviderUserItemInfo;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
@@ -59,8 +59,8 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     CollapsingToolbarLayout mToolbarLayout;
     private String TAG = getClass().getSimpleName();
     IUserInfoOpPresenter mUserInfoOpPresenter;
-    private List<ProviderUserItemInfo> mTheSameMajorProviderUserItemInfos;
-    private List<ProviderUserItemInfo> mSimilarMajorProviderUserItemInfos;
+    private List<User> mTheSameMajorProviderUserItemInfos;
+    private List<User> mSimilarMajorProviderUserItemInfos;
 
 
     @Override
@@ -164,22 +164,13 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
             mTheSameMajorProviderUserItemInfos = new ArrayList<>();
 
             for (User user : mUsers) {
-                ProviderUserItemInfo mItemInfo = new ProviderUserItemInfo(
-                        user.getId(),
-                        user.getImgUrl(),
-                        user.getUserName(),
-                        user.getShortDescription(),
-                        user.getSchool(),
-                        user.getMajor(),
-                        user.getGrade(),
-                        user.getFansNum());
 
                 if (user.getMajor() != null){
                     if (user.getMajor().equals(selectedMajorName)){
-                        mTheSameMajorProviderUserItemInfos.add(mItemInfo);
+                        mTheSameMajorProviderUserItemInfos.add(user);
                     }
                     else {
-                        mSimilarMajorProviderUserItemInfos.add(mItemInfo);
+                        mSimilarMajorProviderUserItemInfos.add(user);
                     }
                 }
 
@@ -205,15 +196,25 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
 
     }
 
-    private void showSimilarMajorProvider(List<ProviderUserItemInfo> mSimilarMajorProviderUserItemInfos) {
+    @Override
+    public void onGetProviderUserError(ParseException e) {
+
+    }
+
+    @Override
+    public void refreshUserOnlineState(boolean isOnline) {
+
+    }
+
+    private void showSimilarMajorProvider(List<User> mSimilarMajorProviderUserItemInfos) {
         listViewLike.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mItemInfoAdapter_1 = new ServiceItemInfoAdapter(mSimilarMajorProviderUserItemInfos);
         mItemInfoAdapter_1.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
             @Override
-            public void onClick(View v, int position, String studentId) {
+            public void onClick(View v, int position, User provider) {
                 Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);
-                mIntent.putExtra("provider_id",studentId);
+                mIntent.putExtra("provider",provider);
                 startActivity(mIntent);
             }
         });
@@ -224,7 +225,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
 
     }
 
-    private void showSameMajorProvider(List<ProviderUserItemInfo> mProviderUserItemInfos) {
+    private void showSameMajorProvider(List<User> mProviderUserItemInfos) {
 
 
         listViewRecommend.setNestedScrollingEnabled(false);
@@ -233,9 +234,9 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
         mItemInfoAdapter = new ServiceItemInfoAdapter(mProviderUserItemInfos);
         mItemInfoAdapter.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
             @Override
-            public void onClick(View v, int position, String studentId) {
+            public void onClick(View v, int position, User provider) {
                 Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);
-                mIntent.putExtra("provider_id",studentId);
+                mIntent.putExtra("provider",provider);
                 startActivity(mIntent);
             }
         });

@@ -2,9 +2,8 @@ package com.zju.campustour.model.database.models;
 
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 
-import org.litepal.annotation.Column;
-import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
  * Created by HeyLink on 2017/4/24.
  */
 
-public class Project extends DataSupport {
+public class Project implements Serializable {
 
 
     private String id;

@@ -3,13 +3,13 @@ package com.zju.campustour.model.database.models;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 
-import org.litepal.crud.DataSupport;
+import java.io.Serializable;
 
 /**
  * Created by HeyLink on 2017/4/24.
  */
 
-public class User extends DataSupport {
+public class User implements Serializable {
 
 
     private String id;

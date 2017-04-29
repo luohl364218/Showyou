@@ -6,7 +6,7 @@ import com.zju.campustour.presenter.protocal.enumerate.SexType;
  * Created by HeyLink on 2017/4/24.
  */
 
-public class ProviderUser {
+public class SimpleUser {
 
     private int id;
 

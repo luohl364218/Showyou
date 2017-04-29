@@ -1,5 +1,6 @@
 package com.zju.campustour.view.IView;
 
+import com.parse.ParseException;
 import com.zju.campustour.model.database.models.User;
 
 import java.util.List;
@@ -11,5 +12,9 @@ import java.util.List;
 public interface ISearchUserInfoView {
 
     public void onGetProviderUserDone(List<User> mUsers);
+
+    public void onGetProviderUserError(ParseException e);
+
+    public void refreshUserOnlineState(boolean isOnline);
 
 }

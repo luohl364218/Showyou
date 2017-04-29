@@ -1,34 +1,21 @@
 package com.zju.campustour.presenter.implement;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.zju.campustour.model.database.models.Project;
-import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.ipresenter.IProjectInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
-import com.zju.campustour.presenter.protocal.enumerate.SexType;
-import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.zju.campustour.model.util.DbUtils.getUser;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_STOP;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_RUNNING;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_STOP;
 
 /**
  * Created by HeyLink on 2017/4/24.

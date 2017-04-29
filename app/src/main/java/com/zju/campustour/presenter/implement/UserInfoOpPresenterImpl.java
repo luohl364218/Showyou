@@ -1,6 +1,5 @@
 package com.zju.campustour.presenter.implement;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.parse.FindCallback;
@@ -9,10 +8,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.zju.campustour.model.database.models.User;
-import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
-import com.zju.campustour.presenter.protocal.enumerate.SexType;
-import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
 
 import java.util.ArrayList;
@@ -56,12 +52,11 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
                     User provider = getUser(object);
                     userResults.add(provider);
-
+                    mSearchInfoView.onGetProviderUserDone(userResults);
                 } else {
                     Log.d(TAG,"get user error!!!!");
+                    mSearchInfoView.onGetProviderUserError(e);
                 }
-
-                mSearchInfoView.onGetProviderUserDone(userResults);
             }
         });
 
@@ -113,12 +108,14 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                         userResults.add(provider);
                     }
                     Log.d(TAG, "find user-----------------: " + userList.size());
+                    mSearchInfoView.onGetProviderUserDone(userResults);
 
                 } else {
-                    Log.d(TAG, "Error: " + e.getMessage());
+                    Log.d(TAG,"get user error!!!!");
+                    mSearchInfoView.onGetProviderUserError(e);
                 }
 
-                mSearchInfoView.onGetProviderUserDone(userResults);
+
 
             }
         });

@@ -1,5 +1,6 @@
 package com.zju.campustour.view.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
@@ -8,19 +9,18 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.parse.ParseException;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
-import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
@@ -28,7 +28,6 @@ import com.zju.campustour.view.IView.ISearchProjectInfoView;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
 import com.zju.campustour.view.adapter.RecommendProjectAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
-import com.zju.campustour.view.widget.FullyLinearLayoutManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,8 +37,7 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
     private String selectedProviderId;
     private UserInfoOpPresenterImpl mUserInfoOpPresenter;
     private ProjectInfoOpPresenterImpl mProjectInfoOpPresenter;
-    private User mUser;
-    private List<ProjectItemInfo> mProjectItemInfos;
+    private User defaultUser;
     private RecommendProjectAdapter mProjectAdapter;
 
     private Toolbar mToolbar;
@@ -70,11 +68,9 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_major_provider_home_page);
 
-        Bundle extras = getIntent().getExtras();
-        if (null != extras) {
-            getBundleExtras(extras);
-        }
-
+        Intent mIntent = getIntent();
+        defaultUser = (User) mIntent.getSerializableExtra("provider");
+        selectedProviderId = defaultUser.getId();
         mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this);
         mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this);
 
@@ -82,19 +78,17 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
             mUserInfoOpPresenter.queryUserInfoWithId(selectedProviderId);
             mProjectInfoOpPresenter.queryProjectWithUserId(selectedProviderId);
         }
-        initViewsAndEvents();
+        initViewsAndEvents(defaultUser);
 
     }
 
 
-    protected void getBundleExtras(Bundle extras) {
-        selectedProviderId = extras.getString("provider_id");
-    }
-
-    protected void initViewsAndEvents() {
+    protected void initViewsAndEvents(User user) {
 
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         initBasicView();
+        initUserInfoView(user);
+
     }
 
     private void initBasicView() {
@@ -138,21 +132,38 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
 
     @Override
     public void onGetProviderUserDone(List<User> mUsers) {
-        if (mUsers.size() != 0){
-            mUser = mUsers.get(0);
-            initUserInfoView();
+
+    }
+
+    @Override
+    public void onGetProviderUserError(ParseException e) {
+
+    }
+
+    @Override
+    public void refreshUserOnlineState(boolean isOnline) {
+         /*只更新在线与否的状态*/
+        if (isOnline){
+            online.setVisibility(View.VISIBLE);
+            disOnline.setVisibility(View.GONE);
+            onlineTxt.setText("在线");
+        }
+        else {
+            onlineTxt.setText("下线");
+            disOnline.setVisibility(View.VISIBLE);
+            online.setVisibility(View.GONE);
         }
 
     }
 
-    private void initUserInfoView() {
+    private void initUserInfoView(User user) {
 
-        Uri uri = Uri.parse(mUser.getImgUrl());
+        Uri uri = Uri.parse(user.getImgUrl());
         userImage.setImageURI(uri);
         iconProvider.setVisibility(View.VISIBLE);
         providerName.setVisibility(View.VISIBLE);
-        providerName.setText(mUser.getUserName());
-        if (mUser.getSex() == SexType.MALE){
+        providerName.setText(user.getUserName());
+        if (user.getSex() == SexType.MALE){
             iconMan.setVisibility(View.VISIBLE);
             iconWoman.setVisibility(View.GONE);
         }
@@ -163,16 +174,16 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
 
         iconCollege.setVisibility(View.VISIBLE);
         college.setVisibility(View.VISIBLE);
-        college.setText(mUser.getSchool());
+        college.setText(user.getSchool());
 
         iconMajor.setVisibility(View.VISIBLE);
         major.setVisibility(View.VISIBLE);
-        major.setText(mUser.getMajor());
+        major.setText(user.getMajor());
         iconGrade.setVisibility(View.VISIBLE);
         grade.setVisibility(View.VISIBLE);
-        grade.setText(mUser.getGrade());
+        grade.setText(user.getGrade());
 
-        if (mUser.isOnline()){
+        if (user.isOnline()){
             online.setVisibility(View.VISIBLE);
             disOnline.setVisibility(View.GONE);
             onlineTxt.setText("在线");
@@ -184,15 +195,15 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         }
 
         dealNum.setText("20人成交");
-        focusNum.setText(mUser.getFansNum()+"人关注");
-        aboutHim.setText(mUser.getDescription());
+        focusNum.setText(user.getFansNum()+"人关注");
+        aboutHim.setText(user.getDescription());
     }
 
     @Override
     public void onGetProjectInfoDone(List<Project> mProjects) {
         if (mProjects.size() != 0){
             noResultHint.setVisibility(View.GONE);
-            showCloudProjectItemInfoData(mProjects);
+            showProjectRecycleView(mProjects);
         }
         else {
             noResultHint.setVisibility(View.VISIBLE);
@@ -201,40 +212,13 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         }
     }
 
-    private void showCloudProjectItemInfoData(List<Project> mProjects) {
-
-        mProjectItemInfos = new ArrayList<>();
-
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-
-        for (Project project : mProjects){
-
-            ProjectItemInfo projectItem = new ProjectItemInfo(
-                    project.getProvider().getId(),
-                    project.getId(),
-                    project.getProvider().getImgUrl(),
-                    project.getTitle(),
-                    sdf.format(project.getStartTime()),
-                    project.getAcceptNum(),
-                    project.getDescription(),
-                    project.getImgUrl(),
-                    project.getFavorites().size(),
-                    project.getPrice(),
-                    project.getAcceptNum()
-            );
-            mProjectItemInfos.add(projectItem);
-        }
-
-        showProjectRecycleView();
-    }
-
-    private void showProjectRecycleView() {
+    private void showProjectRecycleView(List<Project> mProjectList) {
         projectList = (RecyclerView) findViewById(R.id.major_provider_page_project_list);
         projectList.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        if (mProjectItemInfos == null)
+        if (mProjectList == null)
             return;
-        mProjectAdapter = new RecommendProjectAdapter(mProjectItemInfos, Constants.PART_VIEW);
+        mProjectAdapter = new RecommendProjectAdapter(mProjectList, Constants.PART_VIEW);
 
         projectList.setLayoutManager(layoutManager);
         projectList.setAdapter(mProjectAdapter);

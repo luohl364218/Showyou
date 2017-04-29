@@ -13,8 +13,11 @@ import com.parse.Parse;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.database.models.Project;
+import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -24,11 +27,11 @@ import java.util.List;
 public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProjectAdapter.ViewHolder> {
 
 
-    private List<ProjectItemInfo> mProjectItemInfos;
+    private List<Project> mProjectItemInfos;
     private onProjectItemClickListener mListener;
     private int state = Constants.FULL_VIEW;
 
-    public RecommendProjectAdapter(List<ProjectItemInfo> mProjectItemInfos, int mState) {
+    public RecommendProjectAdapter(List<Project> mProjectItemInfos, int mState) {
         this.mProjectItemInfos = mProjectItemInfos;
         this.state = mState;
     }
@@ -68,7 +71,7 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
                 public void onClick(View v) {
                     if (mListener != null){
                         //return the student's id, so we can get the exact student info
-                        mListener.onClick(v, getLayoutPosition(), mProjectItemInfos.get(getLayoutPosition()).getProviderId());
+                        mListener.onClick(v, getLayoutPosition(), mProjectItemInfos.get(getLayoutPosition()));
                     }
                 }
             });
@@ -87,26 +90,27 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
     @Override
     public void onBindViewHolder(RecommendProjectAdapter.ViewHolder holder, int position) {
 
-        ProjectItemInfo mItemInfo = mProjectItemInfos.get(position);
-        String url = mItemInfo.getProviderImg();
+        Project mItemInfo = mProjectItemInfos.get(position);
+        String url = mItemInfo.getProvider().getImgUrl();
         if (url == null)
             url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
         Uri uri = Uri.parse(url);
         holder.providerImgView.setImageURI(uri);
-        holder.projectTitleView.setText(mItemInfo.getProjectTitle());
-        holder.projectTimeView.setText(mItemInfo.getProjectTime());
-        holder.projectAcceptNumView.setText("上限"+mItemInfo.getProjectAcceptNum()+"人");
-        holder.projectDescView.setText(mItemInfo.getProjectInfo());
+        holder.projectTitleView.setText(mItemInfo.getTitle());
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        holder.projectTimeView.setText(sdf.format(mItemInfo.getStartTime()));
+        holder.projectAcceptNumView.setText("上限"+mItemInfo.getAcceptNum()+"人");
+        holder.projectDescView.setText(mItemInfo.getDescription());
 
-        String url_1 = mItemInfo.getProjectImg();
+        String url_1 = mItemInfo.getImgUrl();
         if (url_1 == null)
             url_1 = "http://www.huedu.net/UploadFiles_2233/201505/2015050508445878.jpg";
 
         Uri mUri = Uri.parse(url_1);
         holder.projectImgView.setImageURI(mUri);
-        holder.projectFavoritesNumView.setText(mItemInfo.getFavoritesNum()+"人收藏");
-        holder.projectPriceView.setText(mItemInfo.getProjectPrice()+"元/人");
-        holder.projectEnrollNumView.setText(mItemInfo.getProjectEnrollNum()+"人报名");
+        holder.projectFavoritesNumView.setText(mItemInfo.getFavorites().size()+"人收藏");
+        holder.projectPriceView.setText(mItemInfo.getPrice()+"元/人");
+        holder.projectEnrollNumView.setText(mItemInfo.getAcceptNum()+"人报名");
     }
 
     @Override
@@ -115,7 +119,7 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
     }
 
     public interface onProjectItemClickListener{
-        void onClick(View v, int position, String providerId);
+        void onClick(View v, int position, Project project);
     }
 
     public void setOnProjectItemClickListener(onProjectItemClickListener listener){
@@ -128,19 +132,19 @@ public class RecommendProjectAdapter extends RecyclerView.Adapter<RecommendProje
         notifyItemRangeRemoved(0,length);
     }
 
-    public void addData(List<ProjectItemInfo> serviceInfos){
+    public void addData(List<Project> serviceInfos){
         this.addData(0, serviceInfos);
     }
 
 
-    public void addData(int position, List<ProjectItemInfo> serviceInfos){
+    public void addData(int position, List<Project> serviceInfos){
         if (serviceInfos != null && serviceInfos.size() > 0){
             mProjectItemInfos.addAll(serviceInfos);
             notifyItemRangeChanged(position, mProjectItemInfos.size());
         }
     }
 
-    public List<ProjectItemInfo> getDatas(){
+    public List<Project> getDatas(){
         return mProjectItemInfos;
     }
 

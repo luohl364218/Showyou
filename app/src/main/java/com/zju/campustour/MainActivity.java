@@ -27,27 +27,19 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.Parse;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.model.database.data.SchoolData;
-import com.zju.campustour.presenter.protocal.event.SearchProviderEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
 import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
-import com.zju.campustour.view.adapter.MyExpandableListAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
 import com.zju.campustour.view.fragment.MessageFragment;
 import com.zju.campustour.view.fragment.SearchFragment;
@@ -73,7 +65,6 @@ public class MainActivity extends BaseActivity
 
     private BottomBar mBottomBar;
     private SuperViewPager mViewPager;
-    private CoordinatorLayout mCoordinator;
     private List<Fragment> fragmentList;
     //点击两次返回才退出程序
     private long lastPressTime = 0;
@@ -178,7 +169,6 @@ public class MainActivity extends BaseActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        mCoordinator = (CoordinatorLayout) findViewById(R.id.mCoordinator);
         mViewPager = (SuperViewPager) findViewById(R.id.viewPager);
 
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);

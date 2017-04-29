@@ -1,9 +1,6 @@
 package com.zju.campustour.view.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,7 +23,6 @@ import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
-import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
 import com.zju.campustour.presenter.protocal.event.onLoadingDone;
 import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
@@ -34,9 +30,7 @@ import com.zju.campustour.view.activity.InfoWebActivity;
 import com.zju.campustour.view.activity.MajorListActivity;
 import com.zju.campustour.view.activity.ProviderHomePageActivity;
 import com.zju.campustour.view.adapter.RecommendProjectAdapter;
-import com.zju.campustour.view.adapter.ServiceItemInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
-import com.zju.campustour.view.widget.FullyLinearLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -73,7 +67,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     private Button remoteChatBtn;
     //专家推荐列表
     private RecyclerView mRecommendList;
-    private List<ProjectItemInfo> mProjectItemInfos;
     private RecommendProjectAdapter mProjectAdapter;
 
     private TextView noResultHint;
@@ -252,7 +245,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                 state = STATE_REFRESH;
             else
                 state = STATE_NORMAL;
-            showCloudProjectItemInfoData(mProjects);
+            showProjectRecycleView(mProjects);
         }
         else {
             //showLocalProjectItemInfoData();
@@ -262,34 +255,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         }
     }
 
-    private void showCloudProjectItemInfoData(List<Project> mProjects) {
-        mProjectItemInfos = new ArrayList<>();
-
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-
-        for (Project project : mProjects){
-
-            ProjectItemInfo projectItem = new ProjectItemInfo(
-                    project.getProvider().getId(),
-                    project.getId(),
-                    project.getProvider().getImgUrl(),
-                    project.getTitle(),
-                    sdf.format(project.getStartTime()),
-                    project.getAcceptNum(),
-                    project.getDescription(),
-                    project.getImgUrl(),
-                    project.getFavorites().size(),
-                    project.getPrice(),
-                    project.getAcceptNum()
-            );
-            mProjectItemInfos.add(projectItem);
-        }
-
-        showProjectRecycleView();
-
-    }
-
-    private void showProjectRecycleView() {
+    private void showProjectRecycleView(List<Project> projectList) {
 
 
         switch (state) {
@@ -302,15 +268,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                         return false;
                     }
                 };
-                if (mProjectItemInfos == null)
+                if (projectList == null)
                     return;
 
-                mProjectAdapter = new RecommendProjectAdapter(mProjectItemInfos, Constants.FULL_VIEW);
+                mProjectAdapter = new RecommendProjectAdapter(projectList, Constants.FULL_VIEW);
                 mProjectAdapter.setOnProjectItemClickListener(new RecommendProjectAdapter.onProjectItemClickListener() {
                     @Override
-                    public void onClick(View v, int position, String providerId) {
+                    public void onClick(View v, int position, Project project) {
                         Intent mIntent = new Intent(getActivity(), ProviderHomePageActivity.class);
-                        mIntent.putExtra("provider_id", providerId);
+                        mIntent.putExtra("provider", project.getProvider());
                         startActivity(mIntent);
                     }
                 });
@@ -322,7 +288,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                 break;
             case STATE_REFRESH:
                 mProjectAdapter.clearData();
-                mProjectAdapter.addData(mProjectItemInfos);
+                mProjectAdapter.addData(projectList);
                 mRecommendList.scrollToPosition(0);
                 break;
             case STATE_MORE:

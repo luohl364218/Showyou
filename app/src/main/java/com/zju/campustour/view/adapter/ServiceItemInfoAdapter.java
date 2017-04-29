@@ -2,7 +2,6 @@ package com.zju.campustour.view.adapter;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
-import com.zju.campustour.model.bean.ProviderUserItemInfo;
-import com.zju.campustour.model.util.DbUtils;
+import com.zju.campustour.model.database.models.User;
+
 
 import java.util.List;
 
@@ -22,10 +21,10 @@ import java.util.List;
 public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfoAdapter.ViewHolder> {
 
 
-    private List<ProviderUserItemInfo> mProviderUserItemInfos;
+    private List<User> mProviderUserItemInfos;
     private onCardViewItemClickListener mListener;
 
-    public ServiceItemInfoAdapter(List<ProviderUserItemInfo> mProviderUserItemInfos) {
+    public ServiceItemInfoAdapter(List<User> mProviderUserItemInfos) {
         this.mProviderUserItemInfos = mProviderUserItemInfos;
     }
 
@@ -58,7 +57,7 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
                     if (mListener != null){
                         //return the student's id, so we can get the exact student info
                         try{
-                            mListener.onClick(v, getLayoutPosition(), mProviderUserItemInfos.get(getLayoutPosition()).getStudentId());
+                            mListener.onClick(v, getLayoutPosition(), mProviderUserItemInfos.get(getLayoutPosition()));
                         }catch (Exception e){
                             e.printStackTrace();
                             return;
@@ -82,19 +81,19 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
     @Override
     public void onBindViewHolder(ServiceItemInfoAdapter.ViewHolder holder, int position) {
 
-        ProviderUserItemInfo mItemInfo = mProviderUserItemInfos.get(position);
-        holder.studentIdView.setText(mItemInfo.getStudentId());
-        String url = mItemInfo.getStudentImg();
+        User mItemInfo = mProviderUserItemInfos.get(position);
+        holder.studentIdView.setText(mItemInfo.getId());
+        String url = mItemInfo.getImgUrl();
         if (url == null)
             url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
         Uri uri = Uri.parse(url);
         holder.studentImgView.setImageURI(uri);
 
-        holder.studentNameView.setText(mItemInfo.getStudentName());
+        holder.studentNameView.setText(mItemInfo.getUserName());
         holder.shortDescriptionView.setText(mItemInfo.getShortDescription());
-        holder.studentCollegeView.setText(mItemInfo.getStudentCollege());
-        holder.studentMajorView.setText(mItemInfo.getStudentMajor());
-        holder.studentGradeView.setText(mItemInfo.getStudentGrade());
+        holder.studentCollegeView.setText(mItemInfo.getSchool());
+        holder.studentMajorView.setText(mItemInfo.getMajor());
+        holder.studentGradeView.setText(mItemInfo.getGrade());
         holder.studentFansNumView.setText(mItemInfo.getFansNum() + "人关注");
     }
 
@@ -104,7 +103,7 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
     }
 
     public interface onCardViewItemClickListener{
-        void onClick(View v,int position, String studentId);
+        void onClick(View v,int position, User provider);
     }
 
     public void setOnCardViewItemClickListener(onCardViewItemClickListener listener){
@@ -117,19 +116,19 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
         notifyItemRangeRemoved(0,length);
     }
 
-    public void addData(List<ProviderUserItemInfo> serviceInfos){
+    public void addData(List<User> serviceInfos){
         this.addData(0, serviceInfos);
     }
 
 
-    public void addData(int position, List<ProviderUserItemInfo> serviceInfos){
+    public void addData(int position, List<User> serviceInfos){
         if (serviceInfos != null && serviceInfos.size() > 0){
             mProviderUserItemInfos.addAll(serviceInfos);
             notifyItemRangeChanged(position, mProviderUserItemInfos.size());
         }
     }
 
-    public List<ProviderUserItemInfo> getDatas(){
+    public List<User> getDatas(){
         return mProviderUserItemInfos;
     }
 
