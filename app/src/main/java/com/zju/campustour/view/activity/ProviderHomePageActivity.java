@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProviderHomePageActivity extends AppCompatActivity implements ISearchUserInfoView,ISearchProjectInfoView, View.OnClickListener{
     private String selectedProviderId;
     private UserInfoOpPresenterImpl mUserInfoOpPresenter;
@@ -43,10 +45,9 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mToolbarLayout;
     private SimpleDraweeView userImage;
-    private ImageView iconProvider;
     private TextView providerName;
-    private ImageView iconMan;
-    private ImageView iconWoman;
+    private CircleImageView iconMan;
+    private CircleImageView iconWoman;
     private ImageView iconCollege;
     private TextView college;
     private ImageView iconMajor;
@@ -95,10 +96,9 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         mToolbar = (Toolbar) findViewById(R.id.activity_major_provider_page_toolbar);
         mToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.activity_major_provider_page_collapsing_toolbar);
         userImage = (SimpleDraweeView) findViewById(R.id.major_provider_page_userimage);
-        iconProvider = (ImageView) findViewById(R.id.icon_major_provider);
         providerName = (TextView) findViewById(R.id.major_provider_page_providerName);
-        iconMan = (ImageView) findViewById(R.id.major_provider_page_sex_man);
-        iconWoman = (ImageView) findViewById(R.id.major_provider_page_sex_woman);
+        iconMan = (CircleImageView) findViewById(R.id.major_provider_page_sex_man);
+        iconWoman = (CircleImageView) findViewById(R.id.major_provider_page_sex_woman);
         iconCollege = (ImageView) findViewById(R.id.icon_provider_college);
         college = (TextView) findViewById(R.id.major_provider_page_college);
         iconMajor = (ImageView) findViewById(R.id.icon_provider_major);
@@ -160,7 +160,6 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
 
         Uri uri = Uri.parse(user.getImgUrl());
         userImage.setImageURI(uri);
-        iconProvider.setVisibility(View.VISIBLE);
         providerName.setVisibility(View.VISIBLE);
         providerName.setText(user.getUserName());
         mToolbarLayout.setTitle(user.getUserName());
