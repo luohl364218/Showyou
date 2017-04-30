@@ -163,6 +163,11 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         iconProvider.setVisibility(View.VISIBLE);
         providerName.setVisibility(View.VISIBLE);
         providerName.setText(user.getUserName());
+        mToolbarLayout.setTitle(user.getUserName());
+        mToolbarLayout.setCollapsedTitleGravity(View.SCROLL_INDICATOR_START);
+        mToolbarLayout.setExpandedTitleGravity(View.SCROLL_INDICATOR_TOP);
+        mToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
+        mToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
         if (user.getSex() == SexType.MALE){
             iconMan.setVisibility(View.VISIBLE);
             iconWoman.setVisibility(View.GONE);

@@ -21,8 +21,16 @@
         <item name="android:windowNoTitle">true</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
        <!-- <item name="android:actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
+    </style>
 
-
+    <style name="DiyNoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- 设置原来的actionbar不显示 -->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+        <!-- <item name="android:actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
     </style>
 
 

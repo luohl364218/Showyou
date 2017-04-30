@@ -101,11 +101,18 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
         mMaterialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
+                Log.d(TAG,"----------ready to refreshing!!!!!!---------network is "+isNetworkValid);
                 //下拉刷新...
-                if (isNetworkValid)
+                if (isNetworkValid){
+                    Log.d(TAG,"----------refreshing!!!!!!---------network is "+isNetworkValid);
                     refreshServiceItemInfoData();
-                //加载完所有后会禁止加载更多，需要通过下拉刷新恢复
-                mMaterialRefreshLayout.setLoadMore(true);
+                    //加载完所有后会禁止加载更多，需要通过下拉刷新恢复
+                    mMaterialRefreshLayout.setLoadMore(true);
+                }
+                else{
+                    mMaterialRefreshLayout.finishRefresh();
+                }
+
             }
 
             @Override
@@ -116,6 +123,9 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
                 if (!isRefreshing && isNetworkValid) {
                     isRefreshing = true;
                     loadMoreServiceInfoData();
+                }
+                else{
+                    mMaterialRefreshLayout.finishRefreshLoadMore();
                 }
 
             }
@@ -215,6 +225,9 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
     public void onGetProviderUserError(ParseException e) {
         noResultHint.setVisibility(View.VISIBLE);
         noResultHint.setText("报告,查询出错啦~请稍后再试~");
+        mMaterialRefreshLayout.finishRefresh();
+        mMaterialRefreshLayout.finishRefreshLoadMore();
+        mMaterialRefreshLayout.setLoadMore(false);
     }
 
     @Override
@@ -251,16 +264,20 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
         if (event.isValid()){
             noResultHint.setVisibility(View.GONE);
             isNetworkValid = true;
-            if (mItemInfoAdapter != null){
+            mMaterialRefreshLayout.setLoadMore(true);
+            /*if (mItemInfoAdapter != null){
                 state = Constants.STATE_REFRESH;
             }
             else{
                 state = Constants.STATE_NORMAL;
             }
-            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);
+            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);*/
         }
         else {
             isNetworkValid = false;
+            mMaterialRefreshLayout.finishRefresh();
+            mMaterialRefreshLayout.finishRefreshLoadMore();
+            mMaterialRefreshLayout.setLoadMore(false);
             noResultHint.setVisibility(View.VISIBLE);
             noResultHint.setText("网络连接已经断开");
         }

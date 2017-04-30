@@ -305,7 +305,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         if (event.isValid()){
             noResultHint.setVisibility(View.GONE);
 
-            mProjectInfoPresenter.getLimitProjectInfo(0,10);
+           /* mProjectInfoPresenter.getLimitProjectInfo(0,10);*/
         }
         else {
             noResultHint.setVisibility(View.VISIBLE);
