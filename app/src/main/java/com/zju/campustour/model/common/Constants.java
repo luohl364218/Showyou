@@ -19,13 +19,9 @@ public class Constants {
 
     public static final int DEFAULT_GET_NUM = 10;
 
-    public static final String URL_BASE = "http://112.124.22.238:8081/course_api/";
+    public static final String URL_DEFAULT_MAN_IMG = "http://imgtu.5011.net/uploads/content/20170323/8197471490255172.jpg";
 
-    public static final String URL_RECYCLE_VIEW = URL_BASE + "campaign/recommend";
-
-    public static final String URL_SLIDE_VIEW = URL_BASE + "banner/query?type=1";
-
-
+    public static final String URL_DEFAULT_WOMAN_IMG = "https://a-ssl.duitang.com/uploads/item/201605/24/20160524072338_CVLZB.thumb.700_0.jpeg";
     //待显示图片资源
     public static final int[] imageUrls = {
             R.drawable.home1,

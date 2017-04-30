@@ -157,9 +157,7 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
     }
 
     private void initUserInfoView(User user) {
-
-        Uri uri = Uri.parse(user.getImgUrl());
-        userImage.setImageURI(uri);
+        String url = user.getImgUrl();
         providerName.setVisibility(View.VISIBLE);
         providerName.setText(user.getUserName());
         mToolbarLayout.setTitle(user.getUserName());
@@ -168,13 +166,20 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         mToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
         mToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
         if (user.getSex() == SexType.MALE){
+            if (url == null)
+                url = Constants.URL_DEFAULT_MAN_IMG;
             iconMan.setVisibility(View.VISIBLE);
             iconWoman.setVisibility(View.GONE);
         }
         else {
+            if (url == null)
+                url = Constants.URL_DEFAULT_WOMAN_IMG;
             iconMan.setVisibility(View.GONE);
             iconWoman.setVisibility(View.VISIBLE);
         }
+
+        Uri uri = Uri.parse(url);
+        userImage.setImageURI(uri);
 
         iconCollege.setVisibility(View.VISIBLE);
         college.setVisibility(View.VISIBLE);
