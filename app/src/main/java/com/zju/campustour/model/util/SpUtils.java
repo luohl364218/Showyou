@@ -3,10 +3,19 @@ package com.zju.campustour.model.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * SharedPreference操作类
  */
 public class SpUtils {
+    static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static String ConvertDateToString(Date mDate){
+        return sdf.format(mDate);
+    }
+
     private static final String spFileName = "Xiaoyou";
 
 

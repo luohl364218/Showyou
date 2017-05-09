@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +29,7 @@ import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
 import com.zju.campustour.view.activity.ProviderHomePageActivity;
 import com.zju.campustour.view.activity.SchoolListActivity;
-import com.zju.campustour.view.adapter.ServiceItemInfoAdapter;
+import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,7 +48,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
     private String TAG = "SearchFragment";
     private View mRootView;
     private RecyclerView mRecyclerView;
-    private ServiceItemInfoAdapter mItemInfoAdapter;
+    private UserInfoAdapter mItemInfoAdapter;
     private int state = Constants.STATE_NORMAL;
     private MaterialRefreshLayout mMaterialRefreshLayout;
     IUserInfoOpPresenter mUserInfoOpPresenter;
@@ -112,7 +113,6 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
                 else{
                     mMaterialRefreshLayout.finishRefresh();
                 }
-
             }
 
             @Override
@@ -127,7 +127,6 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
                 else{
                     mMaterialRefreshLayout.finishRefreshLoadMore();
                 }
-
             }
         });
     }
@@ -137,11 +136,9 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
         switch (state){
 
             case Constants.STATE_NORMAL:
-
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-
-                mItemInfoAdapter = new ServiceItemInfoAdapter(mUsers);
-                mItemInfoAdapter.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
+                mItemInfoAdapter = new UserInfoAdapter(mUsers);
+                mItemInfoAdapter.setOnCardViewItemClickListener(new UserInfoAdapter.onCardViewItemClickListener() {
                     @Override
                     public void onClick(View v, int position, User provider) {
                         Intent mIntent = new Intent(getActivity(), ProviderHomePageActivity.class);

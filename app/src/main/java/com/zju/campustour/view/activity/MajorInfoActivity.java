@@ -25,7 +25,7 @@ import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
-import com.zju.campustour.view.adapter.ServiceItemInfoAdapter;
+import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
 import java.util.ArrayList;
@@ -35,9 +35,9 @@ import java.util.List;
 public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoView {
 
     //行家推荐列表
-    ServiceItemInfoAdapter mItemInfoAdapter;
+    UserInfoAdapter mItemInfoAdapter;
     //行家推荐列表
-    ServiceItemInfoAdapter mItemInfoAdapter_1;
+    UserInfoAdapter mItemInfoAdapter_1;
     //数据库操作相关
     MajorFIlesDao majorFIlesDao;
 
@@ -66,7 +66,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_major_provider_info);
+        setContentView(R.layout.activity_major_info);
 
         Bundle extras = getIntent().getExtras();
         if (null != extras) {
@@ -209,8 +209,8 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     private void showSimilarMajorProvider(List<User> mSimilarMajorProviderUserItemInfos) {
         listViewLike.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mItemInfoAdapter_1 = new ServiceItemInfoAdapter(mSimilarMajorProviderUserItemInfos);
-        mItemInfoAdapter_1.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
+        mItemInfoAdapter_1 = new UserInfoAdapter(mSimilarMajorProviderUserItemInfos);
+        mItemInfoAdapter_1.setOnCardViewItemClickListener(new UserInfoAdapter.onCardViewItemClickListener() {
             @Override
             public void onClick(View v, int position, User provider) {
                 Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);
@@ -231,8 +231,8 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
         listViewRecommend.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
-        mItemInfoAdapter = new ServiceItemInfoAdapter(mProviderUserItemInfos);
-        mItemInfoAdapter.setOnCardViewItemClickListener(new ServiceItemInfoAdapter.onCardViewItemClickListener() {
+        mItemInfoAdapter = new UserInfoAdapter(mProviderUserItemInfos);
+        mItemInfoAdapter.setOnCardViewItemClickListener(new UserInfoAdapter.onCardViewItemClickListener() {
             @Override
             public void onClick(View v, int position, User provider) {
                 Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);

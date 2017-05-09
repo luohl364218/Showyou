@@ -18,20 +18,20 @@ import java.util.List;
  * Created by HeyLink on 2017/4/22.
  */
 
-public class BaseActivity extends AppCompatActivity {
+        public class BaseActivity extends AppCompatActivity {
 
 
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+            @Override
+            protected void onCreate(@Nullable Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
 
-        Log.d("BaseActivity", getClass().getSimpleName());
+                Log.d("BaseActivity", getClass().getSimpleName());
 
-        ActivityCollector.addActivity(this);
+                ActivityCollector.addActivity(this);
 
 
-    }
+            }
 
 
     @Override

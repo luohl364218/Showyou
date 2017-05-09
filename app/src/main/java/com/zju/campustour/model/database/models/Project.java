@@ -32,12 +32,12 @@ public class Project implements Serializable {
 
     private ProjectStateType projectState;
 
-    private List<User> favorites;
+    private int collectorNum;
 
     public Project(String mId, User mProvider, String mTitle,
                     Date mStartTime, String mImgUrl, long mPrice,
                     String mDescription, int mAcceptNum,
-                    ProjectStateType mProjectState, List<User> mFavorites) {
+                    ProjectStateType mProjectState,int mCollectorNum) {
         id = mId;
         provider = mProvider;
         title = mTitle;
@@ -47,7 +47,7 @@ public class Project implements Serializable {
         description = mDescription;
         acceptNum = mAcceptNum;
         projectState = mProjectState;
-        favorites = mFavorites;
+        collectorNum = mCollectorNum;
     }
 
     public String getId() {
@@ -106,15 +106,6 @@ public class Project implements Serializable {
         projectState = mProjectState;
     }
 
-    public List<User> getFavorites() {
-        return favorites;
-    }
-
-    public void setFavorites(List<User> mFavorites) {
-        favorites = mFavorites;
-    }
-
-
     public String getImgUrl() {
         return imgUrl;
     }
@@ -131,5 +122,54 @@ public class Project implements Serializable {
     public void setProvider(User mProvider) {
         provider = mProvider;
     }
+
+
+    public int getCollectorNum() {
+        return collectorNum;
+    }
+
+    public void setCollectorNum(int mCollectorNum) {
+        collectorNum = mCollectorNum;
+    }
+
+
+    public void update(Project mProject){
+
+        if (this == mProject)return;
+        if (mProject == null || getClass() != mProject.getClass())return;
+
+        if (getTitle() != null? !getTitle().equals(mProject.getTitle()) : mProject.getTitle() != null){
+            setTitle(mProject.getTitle());
+        }
+
+        if (getStartTime() != null? !getStartTime().equals(mProject.getStartTime()) : mProject.getStartTime() != null){
+            setStartTime(mProject.getStartTime());
+        }
+
+        if (getImgUrl() != null? !getImgUrl().equals(mProject.getImgUrl()) : mProject.getImgUrl() != null){
+            setImgUrl(mProject.getImgUrl());
+        }
+
+        if (getPrice() >= 0? !(getPrice()== mProject.getPrice()) : mProject.getPrice() >= 0){
+            setPrice(mProject.getPrice());
+        }
+
+        if (getDescription() != null? !getDescription().equals(mProject.getDescription()) : mProject.getDescription() != null){
+            setDescription(mProject.getDescription());
+        }
+
+        if (getAcceptNum() >= 0? !(getAcceptNum()== mProject.getAcceptNum()) : mProject.getAcceptNum() >= 0){
+            setAcceptNum(mProject.getAcceptNum());
+        }
+
+        if (getProjectState() != null? !getProjectState().equals(mProject.getProjectState()) : mProject.getProjectState() != null){
+            setProjectState(mProject.getProjectState());
+        }
+
+        if (getCollectorNum() >= 0? !(getCollectorNum()== mProject.getCollectorNum()) : mProject.getCollectorNum() >= 0){
+            setCollectorNum(mProject.getCollectorNum());
+        }
+    }
+
 
 }

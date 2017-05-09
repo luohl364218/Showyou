@@ -5,11 +5,13 @@ import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by HeyLink on 2017/4/24.
  */
 
-public class ProjectUserMap extends DataSupport {
+public class ProjectUserMap implements Serializable{
 
 
     private String projectId;

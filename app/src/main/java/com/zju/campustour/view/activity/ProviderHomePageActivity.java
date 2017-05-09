@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseException;
 import com.zju.campustour.R;
-import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
@@ -26,11 +25,9 @@ import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
-import com.zju.campustour.view.adapter.RecommendProjectAdapter;
+import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -40,7 +37,7 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
     private UserInfoOpPresenterImpl mUserInfoOpPresenter;
     private ProjectInfoOpPresenterImpl mProjectInfoOpPresenter;
     private User defaultUser;
-    private RecommendProjectAdapter mProjectAdapter;
+    private ProjectInfoAdapter mProjectAdapter;
 
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mToolbarLayout;
@@ -67,7 +64,7 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_major_provider_home_page);
+        setContentView(R.layout.activity_provider_home_page);
 
         Intent mIntent = getIntent();
         defaultUser = (User) mIntent.getSerializableExtra("provider");
@@ -209,10 +206,10 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
     }
 
     @Override
-    public void onGetProjectInfoDone(List<Project> mProjects) {
+    public void onGetProjectInfoDone(List<? extends Object> mProjects) {
         if (mProjects.size() != 0){
             noResultHint.setVisibility(View.GONE);
-            showProjectRecycleView(mProjects);
+            showProjectRecycleView((List<Project>) mProjects);
         }
         else {
             noResultHint.setVisibility(View.VISIBLE);
@@ -221,14 +218,33 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         }
     }
 
+    @Override
+    public void onGetProjectInfoError(Exception e) {
+
+    }
+
     private void showProjectRecycleView(List<Project> mProjectList) {
         projectList = (RecyclerView) findViewById(R.id.major_provider_page_project_list);
         projectList.setNestedScrollingEnabled(false);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         if (mProjectList == null)
             return;
-        mProjectAdapter = new RecommendProjectAdapter(mProjectList, Constants.PART_VIEW);
+        mProjectAdapter = new ProjectInfoAdapter(mProjectList, Constants.PART_VIEW ,getBaseContext());
 
+        mProjectAdapter.setOnProjectItemClickListener(new ProjectInfoAdapter.onProjectItemClickListener() {
+            @Override
+            public void onClick(View v, int position, Project project) {
+                Intent mIntent = new Intent(ProviderHomePageActivity.this, ProjectActivity.class);
+                mIntent.putExtra("project", project);
+                mIntent.putExtra("position",position);
+                startActivity(mIntent);
+            }
+        });
         projectList.setLayoutManager(layoutManager);
         projectList.setAdapter(mProjectAdapter);
         projectList.addItemDecoration(new DividerItemDecortion());

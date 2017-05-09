@@ -10,5 +10,7 @@ import java.util.List;
 
 public interface ISearchProjectInfoView {
 
-    public void onGetProjectInfoDone(List<Project> mProjects);
+    public void onGetProjectInfoDone(List<? extends Object> mProjects);
+
+    public void onGetProjectInfoError(Exception e);
 }

@@ -43,4 +43,6 @@
     <string name="recommend">为你推荐</string>
     <string name="major_title">专业列表</string>
     <string name="school_title">学校列表</string>
+
+    <string name="scale_up_show_behavior">com.zju.campustour.view.widget.ScaleUpShowBehavior</string>
 </resources>

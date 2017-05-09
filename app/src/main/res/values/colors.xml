@@ -257,6 +257,8 @@
     <color name="turquoise">#40e0d0</color>
     <!-- 青绿色 -->
     <color name="mediumseagreen">#3cb371</color>
+
+    <color name="greetext">#0AAF19</color>
     <!-- 中海蓝 -->
     <color name="limegreen">#32cd32</color>
     <!-- 橙绿色 -->

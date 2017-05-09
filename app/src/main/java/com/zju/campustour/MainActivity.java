@@ -36,8 +36,10 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.model.database.data.SchoolData;
+import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
 import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
+import com.zju.campustour.presenter.protocal.event.onRecycleViewRefreshEvent;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
@@ -154,9 +156,9 @@ public class MainActivity extends BaseActivity
     }
 
     private void initLayoutElements() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle("校游 Show You");
+        mToolbar.setTitle("校游 Show You");*/
 
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -181,21 +183,21 @@ public class MainActivity extends BaseActivity
                     case R.id.tab_home:
                         Log.d(TAG,"tab home click--------------------");
                         mViewPager.setCurrentItemByTab(0, true);
-                        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
-                        mToolbar.setTitle("校游 Show You");
+                        /*mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
+                        mToolbar.setTitle("校游 Show You");*/
                         break;
 
                     case R.id.tab_search:
                         Log.d(TAG,"tab search click--------------------");
                         mViewPager.setCurrentItemByTab(1, true);
-                        mToolbar.setTitle("发现");
+                        /*mToolbar.setTitle("发现");*/
                         break;
 
                     case R.id.tab_info:
                         Log.d(TAG,"tab info click--------------------");
                         mViewPager.setCurrentItemByTab(2, true);
-                        mToolbar.setTitle("消息");
-                        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
+                        /*mToolbar.setTitle("消息");
+                        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);*/
                         break;
                     default:
                         break;
@@ -209,7 +211,6 @@ public class MainActivity extends BaseActivity
         fragmentList = new ArrayList<>();
         // 这里的添加顺序是否对 tab 页的前后顺序有影响
         //fragmentList.add(fragmentTabHost.getTabWidget().)
-
 
         fragmentList.add(new HomeFragment());
         fragmentList.add(new SearchFragment());
@@ -225,7 +226,7 @@ public class MainActivity extends BaseActivity
             public void onPageSelected(int position) {
                 mBottomBar.selectTabAtPosition(position, true);
 
-                switch (position) {
+               /* switch (position) {
                     case 0:
                         mToolbar.setTitle("校游 Show You");
                         mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
@@ -239,7 +240,7 @@ public class MainActivity extends BaseActivity
                         break;
                     default:
                         break;
-                }
+                }*/
 
             }
 
@@ -264,7 +265,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -293,7 +294,7 @@ public class MainActivity extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -334,6 +335,25 @@ public class MainActivity extends BaseActivity
             mToolbar.setTitle(event.getTitle());
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onToolbarItemClickEvent(ToolbarItemClickEvent event) {
+        int id = event.getItemId();
+
+        //点击二维码扫描
+        if (id == R.id.toolbar_scan) {
+
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+            }else {
+                Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+
+        }
+
+    }
+
 
     class NetworkChangeReceiver extends BroadcastReceiver {
         @Override
@@ -372,24 +392,32 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        /**
-         * 处理二维码扫描结果
-         */
-        if (requestCode == REQUEST_CODE) {
-            //处理扫描结果（在界面上显示）
-            if (null != data) {
-                Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
+        switch (requestCode){
+
+            case 1:
+                /**
+                 * 处理二维码扫描结果
+                 */
+                //处理扫描结果（在界面上显示）
+                if (null != data) {
+                    Bundle bundle = data.getExtras();
+                    if (bundle == null) {
+                        return;
+                    }
+                    if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                        String result = bundle.getString(CodeUtils.RESULT_STRING);
+                        Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                    } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                        Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
+                    }
                 }
-                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
-                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
-                }
-            }
+                break;
+
+            default:
+
         }
+
+
     }
 
     @Override

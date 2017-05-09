@@ -1,13 +1,23 @@
 package com.zju.campustour.view.fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,27 +28,34 @@ import android.widget.Toast;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.zju.campustour.R;
-import com.zju.campustour.model.bean.ProjectItemInfo;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
+import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
+import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.onLoadingDone;
 import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
+import com.zju.campustour.presenter.protocal.event.onRecycleViewRefreshEvent;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 import com.zju.campustour.view.activity.InfoWebActivity;
 import com.zju.campustour.view.activity.MajorListActivity;
+import com.zju.campustour.view.activity.ProjectActivity;
 import com.zju.campustour.view.activity.ProviderHomePageActivity;
-import com.zju.campustour.view.adapter.RecommendProjectAdapter;
+import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import static com.zju.campustour.model.common.Constants.STATE_MORE;
 import static com.zju.campustour.model.common.Constants.STATE_NORMAL;
@@ -52,7 +69,9 @@ import static com.zju.campustour.model.common.Constants.imageUrls;
 public class HomeFragment extends Fragment implements View.OnClickListener, ISearchProjectInfoView{
 
     private View mRootView;
+    private Toolbar mToolbar;
     private SliderLayout mSliderShow;
+   /* private PullToRefreshScrollView mMaterialRefreshLayout;*/
     //首页科目分类按钮
     private LinearLayout renwenBtn;
     private LinearLayout gongxueBtn;
@@ -66,14 +85,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     private Button hotMajorBtn;
     private Button remoteChatBtn;
     //专家推荐列表
-    private RecyclerView mRecommendList;
-    private RecommendProjectAdapter mProjectAdapter;
+    private RecyclerView mRecyclerView;
+    private ProjectInfoAdapter mProjectAdapter;
 
     private TextView noResultHint;
     private int state = STATE_NORMAL;
+    private boolean isNetworkValid = true;
+    private boolean isGotAllData = false;
 
     //获取project信息的接口实现
     private ProjectInfoOpPresenterImpl mProjectInfoPresenter;
+    //设置一个全局变量保存已有的project，只在单独更新某个item时使用
+    private List<Project> mProjectList;
+
+    //定义二维码扫描请求
+    private int REQUEST_CODE = 1;
+    private int CAMERA_REQUEST_CODE = 2;
 
     private String TAG = "HomeFragment";
     public HomeFragment() {
@@ -89,7 +116,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
             mProjectInfoPresenter = new ProjectInfoOpPresenterImpl(this);
             mProjectInfoPresenter.getLimitProjectInfo(0,10);
             EventBus.getDefault().register(this);
-
+            //initRefreshLayout();
 
         }
 
@@ -102,6 +129,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     }
 
     private void initView() {
+        mToolbar = (Toolbar) mRootView.findViewById(R.id.fragment_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        mToolbar.setTitle("校游 Show You");
+        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
+        setHasOptionsMenu(true);
+
+        //mMaterialRefreshLayout = (PullToRefreshScrollView) mRootView.findViewById(R.id.home_refresh_view);
         renwenBtn = (LinearLayout)mRootView.findViewById(R.id.fragment_home_renwen);
         gongxueBtn = (LinearLayout)mRootView.findViewById(R.id.fragment_home_gongxue);
         lixueBtn = (LinearLayout)mRootView.findViewById(R.id.fragment_home_lixue);
@@ -115,7 +149,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         remoteChatBtn = (Button)mRootView.findViewById(R.id.fragment_home_remotechat_btn);
         noResultHint = (TextView) mRootView.findViewById(R.id.fragment_home_noResult_hint);
         //专家推荐列表
-        mRecommendList = (RecyclerView)mRootView.findViewById(R.id.fragment_home_recycle_view);
+        mRecyclerView = (RecyclerView)mRootView.findViewById(R.id.fragment_home_recycle_view);
 
         renwenBtn.setOnClickListener(this);
         gongxueBtn.setOnClickListener(this);
@@ -128,6 +162,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
 
         hotMajorBtn.setOnClickListener(this);
         remoteChatBtn.setOnClickListener(this);
+
     }
 
     private void initSlideImages() {
@@ -158,13 +193,149 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         mSliderShow.setDuration(3000);
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
         if (mSliderShow!=null){
             mSliderShow.startAutoCycle();
         }
+    }
+
+    /**
+     * 跳转到对应的专业列表处
+     * @param position
+     */
+    void startActivityWithData(int position){
+
+        Intent intent = new Intent(getActivity(),MajorListActivity.class);
+        intent.putExtra("position",position);
+
+        startActivity(intent);
+    }
+
+    /**
+     * 云端获取project数据后显示
+     * @param mProjects
+     */
+    @Override
+    public void onGetProjectInfoDone(List<? extends Object> mProjects) {
+        //mRecyclerView
+        if (mProjects.size() != 0){
+            noResultHint.setVisibility(View.GONE);
+            if (mProjectAdapter == null)
+                state = STATE_NORMAL;
+            showProjectRecycleView((List<Project>) mProjects);
+        }
+        else {
+            //showLocalProjectItemInfoData();
+            //mMaterialRefreshLayout.onRefreshComplete();
+            noResultHint.setVisibility(View.VISIBLE);
+            noResultHint.setText("请检查网络连接是否断开");
+
+        }
+    }
+
+    @Override
+    public void onGetProjectInfoError(Exception e) {
+
+    }
+
+    private void showProjectRecycleView(List<Project> projectList) {
+
+        switch (state) {
+            case Constants.STATE_NORMAL:
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
+                    @Override
+                    public boolean canScrollVertically() {
+                        return false;
+                    }
+                };
+                if (projectList == null)
+                    return;
+
+                mProjectAdapter = new ProjectInfoAdapter(projectList, Constants.FULL_VIEW,getContext());
+                mProjectAdapter.setOnProjectItemClickListener(new ProjectInfoAdapter.onProjectItemClickListener() {
+                    @Override
+                    public void onClick(View v, int position, Project project) {
+                        Intent mIntent = new Intent(getActivity(), ProjectActivity.class);
+                        mIntent.putExtra("project", project);
+                        mIntent.putExtra("position",position);
+                        startActivity(mIntent);
+                    }
+                });
+                mProjectAdapter.setOnProjectProviderClickListener(new ProjectInfoAdapter.onProjectProviderClickListener() {
+                    @Override
+                    public void onClick(View v, int position, User user) {
+                        Intent mIntent = new Intent(getActivity(), ProviderHomePageActivity.class);
+                        mIntent.putExtra("provider",user);
+                        startActivity(mIntent);
+                    }
+                });
+                mRecyclerView.setLayoutManager(layoutManager);
+                mRecyclerView.setAdapter(mProjectAdapter);
+                mRecyclerView.addItemDecoration(new DividerItemDecortion());
+                Log.d(TAG, "------------loading project info done----------");
+                EventBus.getDefault().post(new onLoadingDone(true));
+                break;
+            case STATE_REFRESH:
+                //mMaterialRefreshLayout.onRefreshComplete();
+                //mMaterialRefreshLayout.finishRefresh();
+                mProjectAdapter.clearData();
+                mProjectAdapter.addData(projectList);
+                mRecyclerView.scrollToPosition(0);
+                break;
+            case STATE_MORE:
+                //mMaterialRefreshLayout.onRefreshComplete();
+                //mMaterialRefreshLayout.finishRefreshLoadMore();
+                mProjectAdapter.addData(mProjectAdapter.getDatas().size(), projectList);
+                mRecyclerView.scrollToPosition(mProjectAdapter.getDatas().size());
+
+                if (projectList.size() < 10){
+                    Toast.makeText(getActivity(), "已经获取全部数据", Toast.LENGTH_SHORT).show();
+                    isGotAllData = true;
+                }
+                break;
+            default:
+                break;
+
+        }
+
+        mProjectList = mProjectAdapter.getDatas();
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onNetworkChangeEvent(onNetworkChangeEvent event) {
+        if (event.isValid()){
+            noResultHint.setVisibility(View.GONE);
+            isNetworkValid = true;
+           /* mProjectInfoPresenter.getLimitProjectInfo(0,10);*/
+        }
+        else {
+            isNetworkValid = false;
+            noResultHint.setVisibility(View.VISIBLE);
+            noResultHint.setText("网络连接已经断开");
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onRecycleViewRefreshEvent(onRecycleViewRefreshEvent event) {
+        int selectedPosition = event.getPosition();
+        if (selectedPosition >= 0 && mProjectList != null){
+            ParseQuery<ParseObject> query_project = ParseQuery.getQuery("Project").include("provider")
+                    .whereEqualTo("objectId",mProjectList.get(selectedPosition).getId());
+            query_project.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    if (e == null && objects.size() != 0){
+                        ((DefaultItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+                        Project mProject = DbUtils.getProject(objects.get(0));
+                        mProjectAdapter.refreshSelectedData(selectedPosition,mProject);
+                    }
+                }
+            });
+        }
+
     }
 
     @Override
@@ -219,103 +390,70 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         }
     }
 
-
-    /**
-     * 跳转到对应的专业列表处
-     * @param position
-     */
-    void startActivityWithData(int position){
-
-        Intent intent = new Intent(getActivity(),MajorListActivity.class);
-        intent.putExtra("position",position);
-
-        startActivity(intent);
-    }
-
-    /**
-     * 云端获取project数据后显示
-     * @param mProjects
-     */
-    @Override
-    public void onGetProjectInfoDone(List<Project> mProjects) {
-        //mRecommendList
-        if (mProjects.size() != 0){
-            noResultHint.setVisibility(View.GONE);
-            if (mProjectAdapter != null)
-                state = STATE_REFRESH;
-            else
-                state = STATE_NORMAL;
-            showProjectRecycleView(mProjects);
-        }
-        else {
-            //showLocalProjectItemInfoData();
-            noResultHint.setVisibility(View.VISIBLE);
-            noResultHint.setText("请检查网络连接是否断开");
-
-        }
-    }
-
-    private void showProjectRecycleView(List<Project> projectList) {
-
-
-        switch (state) {
-
-
-            case Constants.STATE_NORMAL:
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
-                    @Override
-                    public boolean canScrollVertically() {
-                        return false;
-                    }
-                };
-                if (projectList == null)
-                    return;
-
-                mProjectAdapter = new RecommendProjectAdapter(projectList, Constants.FULL_VIEW);
-                mProjectAdapter.setOnProjectItemClickListener(new RecommendProjectAdapter.onProjectItemClickListener() {
-                    @Override
-                    public void onClick(View v, int position, Project project) {
-                        Intent mIntent = new Intent(getActivity(), ProviderHomePageActivity.class);
-                        mIntent.putExtra("provider", project.getProvider());
-                        startActivity(mIntent);
-                    }
-                });
-                mRecommendList.setLayoutManager(layoutManager);
-                mRecommendList.setAdapter(mProjectAdapter);
-                mRecommendList.addItemDecoration(new DividerItemDecortion());
-                Log.d(TAG, "------------loading project info done----------");
-                EventBus.getDefault().post(new onLoadingDone(true));
-                break;
-            case STATE_REFRESH:
-                mProjectAdapter.clearData();
-                mProjectAdapter.addData(projectList);
-                mRecommendList.scrollToPosition(0);
-                break;
-            case STATE_MORE:
-                break;
-            default:
-                break;
-
-        }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onNetworkChangeEvent(onNetworkChangeEvent event) {
-        if (event.isValid()){
-            noResultHint.setVisibility(View.GONE);
-
-           /* mProjectInfoPresenter.getLimitProjectInfo(0,10);*/
-        }
-        else {
-            noResultHint.setVisibility(View.VISIBLE);
-            noResultHint.setText("网络连接已经断开");
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);//解除订阅
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater mInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menu.clear();
+        mInflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //点击二维码扫描
+        EventBus.getDefault().post(new ToolbarItemClickEvent(id));
+        return true;
+    }
+
+    private void initRefreshLayout() {
+       /* mMaterialRefreshLayout.setMode(PullToRefreshBase.Mode.BOTH);
+        mMaterialRefreshLayout.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                Log.d(TAG,"----------ready to refreshing!!!!!!---------network is "+isNetworkValid);
+                //下拉刷新...
+                if (isNetworkValid){
+                    Log.d(TAG,"----------refreshing!!!!!!---------network is "+isNetworkValid);
+                    refreshProjectItemInfoData();
+                    //加载完所有后会禁止加载更多，需要通过下拉刷新恢复
+                    isGotAllData = false;
+                }
+                else{
+                    mMaterialRefreshLayout.onRefreshComplete();
+                }
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                Log.d(TAG,"onRefreshLoadMore");
+
+                if (!isGotAllData && isNetworkValid) {
+                    loadMoreProjectInfoData();
+                }
+                else{
+                    mMaterialRefreshLayout.onRefreshComplete();
+                }
+            }
+        });*/
+    }
+
+    private void loadMoreProjectInfoData() {
+        state = Constants.STATE_MORE;
+        mProjectInfoPresenter.getLimitProjectInfo(mProjectAdapter.getDatas().size(),10);
+    }
+
+    private void refreshProjectItemInfoData() {
+        state = Constants.STATE_REFRESH;
+        mProjectInfoPresenter.getLimitProjectInfo(0,10);
     }
 }

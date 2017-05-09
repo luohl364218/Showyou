@@ -117,6 +117,7 @@
 
 
         <LinearLayout
+            android:id="@+id/project_cardview_body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -125,7 +126,7 @@
                 android:id="@+id/cardview_project_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/alpha_70_black"
+                android:textColor="@color/alpha_50_black"
                 android:padding="5dp"
                 android:maxLines="3"
                 android:ellipsize="end"
@@ -147,6 +148,7 @@
                 />
 
             <LinearLayout
+                android:id="@+id/project_cardview_tail"
                 android:orientation="horizontal"
                 android:paddingTop="5dp"
                 android:layout_width="match_parent"

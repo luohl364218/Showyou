@@ -185,7 +185,7 @@
                 android:id="@+id/activity_major_provider_page_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:navigationIcon="@drawable/icon_back_32"
+                app:navigationIcon="@mipmap/icon_return"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:layout_collapseMode="pin">
             </android.support.v7.widget.Toolbar>
@@ -401,6 +401,10 @@
                 android:layout_height="2dp"
                 android:background="@color/divide_05_black"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/major_provider_page_project_list"
@@ -408,6 +412,7 @@
                     android:layout_height="wrap_content"
                     >
                 </android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/major_provider_page_noResult_hint"

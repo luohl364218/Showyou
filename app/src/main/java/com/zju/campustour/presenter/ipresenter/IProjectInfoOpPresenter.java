@@ -17,4 +17,8 @@ public interface IProjectInfoOpPresenter {
 
     public void getLimitProjectInfo(int start, int count);
 
+    public void queryProjectWithId(String projectId);
+
+    public void queryProjectSaleInfoWithId(String projectId);
+
 }

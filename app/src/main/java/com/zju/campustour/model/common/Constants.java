@@ -2,6 +2,10 @@ package com.zju.campustour.model.common;
 
 import com.zju.campustour.R;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
 /**
  * Created by HeyLink on 2017/4/22.
  */
@@ -22,7 +26,9 @@ public class Constants {
     public static final String URL_DEFAULT_MAN_IMG = "http://imgtu.5011.net/uploads/content/20170323/8197471490255172.jpg";
 
     public static final String URL_DEFAULT_WOMAN_IMG = "https://a-ssl.duitang.com/uploads/item/201605/24/20160524072338_CVLZB.thumb.700_0.jpeg";
-    //待显示图片资源
+
+    public static final String URL_DEFAULT_PROJECT_IMG = "http://mmbiz.qpic.cn/mmbiz/TT9v08cQf2Svq1UswDp5NCQu3Q14cDtWDCicLk8icBbkmDhvxic8peFmyKtiakDWTXicZfkA3KOSkK7ukIoxE7uECUw/640?wx_fmt=jpeg";
+
     public static final int[] imageUrls = {
             R.drawable.home1,
             R.drawable.home2,
@@ -68,4 +74,25 @@ public class Constants {
             MAJOR_JIAOYUXUE_TABLE_NAME, MAJOR_WENXUE_TABLE_NAME, MAJOR_LISHIXUE_TABLE_NAME, MAJOR_LIXUE_TABLE_NAME,
             MAJOR_GONGXUE_TABLE_NAME, MAJOR_NONGXUE_TABLE_NAME, MAJOR_YIXUE_TABLE_NAME, MAJOR_GUANLIXUE_TABLE_NAME, MAJOR_YISHUXUE_TABLE_NAME};
 
+
+
+    public final static List<String> projectDefaultKeys = asList(
+           "id",
+           "provider",
+           "title",
+           "startTime",
+           "imgUrl",
+           "price",
+           "description",
+           "acceptNum",
+           "projectState",
+           "collectorNum");
+
+    public final static List<String> projectSaleKeys = asList(
+            "refundable",
+            "identified",
+            "score",
+            "rateCount",
+            "salePrice",
+            "comments");
 }

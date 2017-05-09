@@ -4,6 +4,9 @@ package com.zju.campustour.model.database.models;
  * Created by Administrator on 2016/7/9.
  */
 public class Major {
+
+    //专业配图
+    private String majorImg;
     //专业所属类别
     private int majorClass;
     //专业名称
@@ -12,12 +15,22 @@ public class Major {
     private String majorCode;
     //专业简介
     private String majorAbstract;
+    //感兴趣人数，点赞该专业人数
+    private int interests;
 
     public Major(String majorAbstract, int majorClass, String majorCode, String majorName) {
         this.majorAbstract = majorAbstract;
         this.majorClass = majorClass;
         this.majorCode = majorCode;
         this.majorName = majorName;
+    }
+
+    public String getMajorImg() {
+        return majorImg;
+    }
+
+    public void setMajorImg(String mMajorImg) {
+        majorImg = mMajorImg;
     }
 
     public String getMajorAbstract() {

@@ -12,7 +12,7 @@
     <com.zju.campustour.view.widget.viewpager.SuperViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/bottomBar"/>
 
     <com.roughike.bottombar.BottomBar
@@ -22,7 +22,9 @@
         android:layout_alignParentBottom="true"
         app:bb_titleTextAppearance="@style/MyTextAppearance"
         app:bb_tabXmlResource="@xml/bottombar_tabs"
-        app:bb_behavior="shifting"
+        app:bb_behavior="underNavbar"
+        app:bb_activeTabAlpha="1"
+        app:bb_inActiveTabAlpha="0.6"
         app:bb_showShadow="true"/>
 
 </RelativeLayout>

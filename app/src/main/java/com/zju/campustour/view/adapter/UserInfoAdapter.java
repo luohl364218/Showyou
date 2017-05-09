@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.util.DbUtils;
 
 
 import java.util.List;
@@ -18,13 +19,13 @@ import java.util.List;
  * Created by HeyLink on 2017/4/24.
  */
 
-public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfoAdapter.ViewHolder> {
+public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHolder> {
 
 
     private List<User> mProviderUserItemInfos;
     private onCardViewItemClickListener mListener;
 
-    public ServiceItemInfoAdapter(List<User> mProviderUserItemInfos) {
+    public UserInfoAdapter(List<User> mProviderUserItemInfos) {
         this.mProviderUserItemInfos = mProviderUserItemInfos;
     }
 
@@ -72,22 +73,21 @@ public class ServiceItemInfoAdapter extends RecyclerView.Adapter<ServiceItemInfo
 
 
     @Override
-    public ServiceItemInfoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UserInfoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         View mView = mInflater.inflate(R.layout.template_info_cardview, parent, false);
         return new ViewHolder(mView);
     }
 
     @Override
-    public void onBindViewHolder(ServiceItemInfoAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(UserInfoAdapter.ViewHolder holder, int position) {
 
         User mItemInfo = mProviderUserItemInfos.get(position);
         holder.studentIdView.setText(mItemInfo.getId());
         String url = mItemInfo.getImgUrl();
         if (url == null)
             url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
-        Uri uri = Uri.parse(url);
-        holder.studentImgView.setImageURI(uri);
+        DbUtils.setImg(holder.studentImgView,url,150,150);
 
         holder.studentNameView.setText(mItemInfo.getUserName());
         holder.shortDescriptionView.setText(mItemInfo.getShortDescription());
