@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ssdk_oks_share">分享</string>
-    <string name="ssdk_oks_sharing">分享操作正在后台进行…</string>
+    <string name="ssdk_oks_sharing">正在分享</string>
     <string name="ssdk_oks_share_failed">分享失败</string>
     <string name="ssdk_oks_share_completed">分享成功</string>
     <string name="ssdk_oks_share_canceled">分享已取消</string>

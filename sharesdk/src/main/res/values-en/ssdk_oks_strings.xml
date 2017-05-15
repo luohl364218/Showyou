@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ssdk_oks_share">Share</string>
-    <string name="ssdk_oks_sharing">Sharing operation is working in the background…</string>
+    <string name="ssdk_oks_sharing">Sharing</string>
     <string name="ssdk_oks_share_failed">Operation failed</string>
     <string name="ssdk_oks_share_completed">Operation succeeded</string>
     <string name="ssdk_oks_share_canceled">Operation canceled</string>
