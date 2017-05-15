@@ -5,15 +5,15 @@
         <item
             android:id="@+id/my_project"
             android:icon="@mipmap/icon_my_project"
-            android:title="我的活动"/>
+            android:title="登录/我的活动"/>
         <item
             android:id="@+id/my_focus"
             android:icon="@mipmap/icon_my_focus"
-            android:title="我的关注"/>
+            android:title="注册/我的关注"/>
         <item
             android:id="@+id/my_interest"
             android:icon="@mipmap/icon_my_interest"
-            android:title="我的收藏"/>
+            android:title="退出/我的收藏"/>
         <item
             android:id="@+id/setting"
             android:icon="@mipmap/icon_setting"

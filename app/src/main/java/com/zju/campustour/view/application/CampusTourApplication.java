@@ -1,14 +1,15 @@
 package com.zju.campustour.view.application;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 
-import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.parse.Parse;
-import com.squareup.leakcanary.LeakCanary;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
 
 /**
  * Created by HeyLink on 2017/4/23.
@@ -33,8 +34,33 @@ public class CampusTourApplication extends Application {
                 .build();
         Fresco.initialize(this,config);
 
-        LeakCanary.install(this);
-
         ZXingLibrary.initDisplayOpinion(this);
+
+        mInstance = this;
     }
+
+
+
+
+    private static CampusTourApplication mInstance;
+
+    public static CampusTourApplication getInstance(){
+        return mInstance;
+    }
+
+    private Intent intent;
+    public void putIntent(Intent intent){
+        this.intent = intent;
+    }
+
+    public Intent getIntent() {
+        return this.intent;
+    }
+
+    public void jumpToTargetActivity(Context context){
+
+        context.startActivity(intent);
+        this.intent =null;
+    }
+
 }

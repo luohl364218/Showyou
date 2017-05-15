@@ -4,15 +4,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
 import com.zju.campustour.model.database.data.SchoolData;
 import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
-import com.zju.campustour.presenter.protocal.event.onAreaAndSchoolSelectedEvent;
+import com.zju.campustour.presenter.protocal.event.AreaAndSchoolSelectedEvent;
 import com.zju.campustour.view.adapter.MyExpandableListAdapter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,7 +74,7 @@ public class SchoolListActivity extends AppCompatActivity {
 
     private void searchProviderWithConditions(int mArea, String mSearchSchool) {
         EventBus.getDefault().post(new ToolbarTitleChangeEvent(selectedText));
-        EventBus.getDefault().post(new onAreaAndSchoolSelectedEvent(mArea, mSearchSchool));
+        EventBus.getDefault().post(new AreaAndSchoolSelectedEvent(mArea, mSearchSchool));
         finish();
     }
 }

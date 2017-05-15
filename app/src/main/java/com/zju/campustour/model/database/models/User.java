@@ -16,7 +16,7 @@ public class User implements Serializable {
 
     private String userName;
 
-    private String loginName;
+    private String realName;
 
     private String password;
 
@@ -46,13 +46,17 @@ public class User implements Serializable {
 
     private int categoryId;
 
-    public User(String mId, String mUserName, String mLoginName, String mPassword,
+    public User(){
+
+    }
+
+    public User(String mId, String mUserName, String mRealName, String mPassword,
                 SexType mSex, String mSchool, String mMajor, String mGrade,
                 int mFansNum, boolean mOnline, String mImgUrl, String mPhoneNum,
-                String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription,int mCategoryId) {
+                String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription, int mCategoryId) {
         id = mId;
         userName = mUserName;
-        loginName = mLoginName;
+        realName = mRealName;
         password = mPassword;
         sex = mSex;
         school = mSchool;
@@ -101,12 +105,12 @@ public class User implements Serializable {
         userName = mUserName;
     }
 
-    public String getLoginName() {
-        return loginName;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setLoginName(String mLoginName) {
-        loginName = mLoginName;
+    public void setRealName(String mRealName) {
+        realName = mRealName;
     }
 
     public String getPassword() {

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +22,10 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
-import com.zju.campustour.presenter.protocal.event.onAreaAndSchoolSelectedEvent;
-import com.zju.campustour.presenter.protocal.event.onLoadingDone;
-import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.presenter.protocal.event.AreaAndSchoolSelectedEvent;
+import com.zju.campustour.presenter.protocal.event.LoadingDone;
+import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
+import com.zju.campustour.view.IView.ISearchUserViewInfoView;
 import com.zju.campustour.view.activity.ProviderHomePageActivity;
 import com.zju.campustour.view.activity.SchoolListActivity;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
@@ -43,7 +42,7 @@ import java.util.List;
  * Created by HeyLink on 2017/4/1.
  */
 
-public class SearchFragment extends Fragment implements ISearchUserInfoView, View.OnClickListener {
+public class SearchFragment extends Fragment implements ISearchUserViewInfoView, View.OnClickListener {
 
     private String TAG = "SearchFragment";
     private View mRootView;
@@ -81,7 +80,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
             initRefreshLayout();
             EventBus.getDefault().register(this);
 
-            mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this);
+            mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,getContext());
 
             Log.d(TAG,"first create view--------------------");
 
@@ -199,20 +198,21 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
             showRecycleView(mUsers);
         }
         else {
-            mMaterialRefreshLayout.finishRefresh();
-            mMaterialRefreshLayout.finishRefreshLoadMore();
-            noResultHint.setVisibility(View.VISIBLE);
-            if (state == Constants.STATE_NORMAL){
-                noResultHint.setText("你好，请检查网络连接是否正常");
-            }
-            else if (state == Constants.STATE_REFRESH ){
-                mItemInfoAdapter.clearData();
-                noResultHint.setText("报告，没找到符合条件的同学");
-            }
-            else
-            {
-                noResultHint.setText("已经为你找到所有符合条件的同学");
-                mMaterialRefreshLayout.setLoadMore(false);
+            try {
+                mMaterialRefreshLayout.finishRefresh();
+                mMaterialRefreshLayout.finishRefreshLoadMore();
+                noResultHint.setVisibility(View.VISIBLE);
+                if (state == Constants.STATE_NORMAL) {
+                    noResultHint.setText("你好，请检查网络连接是否正常");
+                } else if (state == Constants.STATE_REFRESH) {
+                    mItemInfoAdapter.clearData();
+                    noResultHint.setText("报告，没找到符合条件的同学");
+                } else {
+                    noResultHint.setText("已经为你找到所有符合条件的同学");
+                    mMaterialRefreshLayout.setLoadMore(false);
+                }
+            }catch (Exception e){
+                Log.w(TAG,"Null Pointer Exception");
             }
 
         }
@@ -248,7 +248,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void searchProviderWithConditions(onAreaAndSchoolSelectedEvent event) {
+    public void searchProviderWithConditions(AreaAndSchoolSelectedEvent event) {
 
         searchSchool = event.getSchool();
         searchArea = event.getArea();
@@ -257,7 +257,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onNetworkChangeEvent(onNetworkChangeEvent event) {
+    public void onNetworkChangeEvent(NetworkChangeEvent event) {
         if (event.isValid()){
             noResultHint.setVisibility(View.GONE);
             isNetworkValid = true;
@@ -281,7 +281,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onHomeFragmentLoadingDone(onLoadingDone done){
+    public void onHomeFragmentLoadingDone(LoadingDone done){
         if (done.isDone()){
             Log.d(TAG,"------------loading user info----------");
 
@@ -295,5 +295,7 @@ public class SearchFragment extends Fragment implements ISearchUserInfoView, Vie
         super.onDestroy();
         EventBus.getDefault().unregister(this);//解除订阅
     }
+
+
 
 }

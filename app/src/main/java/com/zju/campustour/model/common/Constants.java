@@ -78,7 +78,7 @@ public class Constants {
 
     public final static List<String> projectDefaultKeys = asList(
            "id",
-           "provider",
+           "providerV2",
            "title",
            "startTime",
            "imgUrl",
@@ -95,4 +95,10 @@ public class Constants {
             "rateCount",
             "salePrice",
             "comments");
+
+    public final static String[] studentGrades = {"小学一年级","小学二年级","小学三年级","小学四年级","小学五年级","小学六年级",
+            "初中一年级","初中二年级","初中三年级","高中一年级","高中二年级","高中三年级","就业-高中","大学一年级","大学二年级","大学三年级","大学四年级",
+            "大学五年级","就业-本科","研究生一年级","研究生二年级","研究生三年级","就业-硕士","研究生四年级","研究生五年级",
+            "研究生五年+","博士-就业","博士后","助理研究员","讲师","副研究员","副教授","研究员","教授"};
+
 }

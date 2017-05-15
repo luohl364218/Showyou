@@ -15,7 +15,7 @@ import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
 import com.zju.campustour.view.adapter.GuideViewPagerAdapter;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.util.SpUtils;
+import com.zju.campustour.model.util.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,7 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         // 如果切换到后台，就设置下次不进入功能引导页
-        SpUtils.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
+        PreferenceUtils.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
         finish();
     }
 
@@ -156,7 +156,7 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
         Intent intent = new Intent(WelcomeGuideActivity.this,
                 MainActivity.class);
         startActivity(intent);
-        SpUtils.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
+        PreferenceUtils.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
         finish();
     }
 

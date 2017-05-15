@@ -24,7 +24,7 @@ import com.zju.campustour.model.database.models.Major;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.IView.ISearchUserViewInfoView;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoView {
+public class MajorInfoActivity extends BaseActivity implements ISearchUserViewInfoView {
 
     //行家推荐列表
     UserInfoAdapter mItemInfoAdapter;
@@ -72,7 +72,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
         if (null != extras) {
             getBundleExtras(extras);
         }
-        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this);
+        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,getBaseContext());
         mUserInfoOpPresenter.queryProviderUserWithConditions(null, null,0,-1,selectedGroupID);
         initViewsAndEvents();
     }

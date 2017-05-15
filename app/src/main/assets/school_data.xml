@@ -1,0 +1,298 @@
+<root>
+    <province name="北京市">
+        <college name="全部" tag=""/>
+        <college name="中央民族大学"  tag="985" />
+        <college name="清华大学"  tag="985" />
+        <college name="北京大学"  tag="985" />
+        <college name="中国人民大学"  tag="985" />
+        <college name="北京航空航天大学"  tag="985" />
+        <college name="北京师范大学"  tag="985" />
+        <college name="北京理工大学"  tag="985" />
+        <college name="北京工业大学"  tag="211" />
+        <college name="北京化工大学"  tag="211" />
+        <college name="北京邮电大学"  tag="211" />
+        <college name="对外经济贸易大学"  tag="211" />
+        <college name="中国传媒大学"  tag="211" />
+        <college name="中国矿业大学(北京)"  tag="211" />
+        <college name="中央财经大学"  tag="211" />
+        <college name="中国政法大学"  tag="211" />
+        <college name="中国石油大学(北京)"  tag="211" />
+        <college name="中央音乐学院"  tag="211" />
+        <college name="北京体育大学"  tag="211" />
+        <college name="北京外国语大学"   tag="211" />
+        <college name="北京交通大学"  tag="211" />
+        <college name="北京科技大学"  tag="211" />
+        <college name="北京林业大学"  tag="211" />
+        <college name="中国农业大学"  tag="985" />
+        <college name="北京中医药大学"   tag="211" />
+        <college name="华北电力大学(北京)"  tag="211" />
+        <college name="中国地质大学(北京)"  tag="211" />
+        <college name="其他" tag=""/>
+    </province>
+
+    <province name="天津市">
+        <college name="全部" tag=""/>
+        <college name="南开大学" tag="985"/>
+        <college name="天津大学" tag="985"/>
+        <college name="河北工业大学" tag="211"/>
+        <college name="天津工业大学" tag=""/>
+        <college name="天津科技大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="河北省">
+        <college name="全部" tag="" />
+        <college name="华北电力大学"  tag="211"/>
+        <college name="河北大学" tag=""/>
+        <college name="河北科技大学" tag=""/>
+        <college name="河北师范大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="山西省">
+        <college name="全部" tag=""/>
+        <college name="山西大学" tag=""/>
+        <college name="太原理工大学"  tag="211"/>
+        <college name="山西农业大学" tag=""/>
+        <college name="山西医科大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="内蒙古">
+        <college name="全部" tag=""/>
+        <college name="内蒙古大学"  tag="211"/>
+        <college name="内蒙古工业大学" tag=""/>
+        <college name="内蒙古师范大学" tag=""/>
+        <college name="内蒙古农业大学" tag=""/>
+        <college name="其他" />
+    </province>
+    <province name="上海市">
+        <college name="全部" tag=""/>
+        <college name="华东师范大学" tag="985"/>
+        <college name="复旦大学" tag="985"/>
+        <college name="同济大学" tag="985"/>
+        <college name="东华大学" tag="211"/>
+        <college name="上海交通大学" tag="985"/>
+        <college name="华东理工大学" tag="211"/>
+        <college name="上海财经大学" tag="211"/>
+        <college name="上海外国语大学" tag="211"/>
+        <college name="上海大学" tag="211"/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="江苏省">
+        <college name="全部" tag=""/>
+        <college name="南京大学"  tag="985"/>
+        <college name="东南大学"  tag="985"/>
+        <college name="中国矿业大学"  tag="211"/>
+        <college name="苏州大学"  tag="211"/>
+        <college name="南京航空航天"  tag="211"/>
+        <college name="南京理工大学"  tag="211"/>
+        <college name="南京师范大学"  tag="211"/>
+        <college name="河海大学"  tag="211"/>
+        <college name="江南大学"  tag="211"/>
+        <college name="南京农业大学"  tag="211"/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="浙江省">
+        <college name="全部" tag=""/>
+        <college name="浙江大学" tag="985"/>
+        <college name="浙江工业大学" tag=""/>
+        <college name="杭州电子科技大学" tag=""/>
+        <college name="浙江理工大学" tag=""/>
+        <college name="温州医科大学" tag=""/>
+        <college name="浙江师范大学" tag=""/>
+        <college name="其他" />
+    </province>
+    <province name="安徽省">
+        <college name="全部" tag=""/>
+        <college name="中国科学技术大学"  tag="985"/>
+        <college name="安徽大学"  tag="211"/>
+        <college name="合肥工业大学"  tag="211"/>
+        <college name="安徽理工大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="福建省">
+        <college name="全部" tag=""/>
+        <college name="厦门大学"  tag="985"/>
+        <college name="福州大学"  tag="211"/>
+        <college name="华侨大学" tag=""/>
+        <college name="福建医科大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="江西省">
+        <college name="全部" tag=""/>
+        <college name="南昌大学"  tag="211"/>
+        <college name="华东交通大学" tag=""/>
+        <college name="南昌航空大学" tag=""/>
+        <college name="江西农业大学" tag=""/>
+        <college name="江西师范大学" tag=""/>
+        <college name="其他" />
+    </province>
+    <province name="山东省">
+        <college name="全部" tag=""/>
+        <college name="山东大学"  tag="985"/>
+        <college name="中国海洋大学"  tag="985"/>
+        <college name="中国石油大学"  tag="211"/>
+        <college name="山东科技大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="辽宁省">
+        <college name="全部" tag=""/>
+        <college name="大连理工大学"  tag="985"/>
+        <college name="东北大学"  tag="985"/>
+        <college name="辽宁大学"  tag="211"/>
+        <college name="大连海事大学"  tag="211"/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="吉林省">
+        <college name="全部" tag=""/>
+        <college name="吉林大学"  tag="985"/>
+        <college name="东北师范大学"  tag="211"/>
+        <college name="延边大学"  tag="211"/>
+        <college name="东北电力大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="黑龙江省">
+        <college name="全部" tag=""/>
+        <college name="哈尔滨工业大学"  tag="985"/>
+        <college name="哈尔滨工程大学"  tag="211"/>
+        <college name="东北林业大学"  tag="211"/>
+        <college name="黑龙江大学" tag=""/>
+        <college name="东北农业大学"  tag="211"/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="河南省">
+        <college name="全部" tag=""/>
+        <college name="郑州大学"  tag="211" />
+        <college name="河南科技大学" tag=""/>
+        <college name="河南农业大学" tag=""/>
+        <college name="河南师范大学" tag=""/>
+        <college name="其他" tag=""/>
+    </province>
+    <province name="湖北省">
+        <college name="全部" tag=""/>
+        <college name="武汉大学"  tag="985"/>
+        <college name="华中科技大学"  tag="985"/>
+        <college name="华中农业大学"  tag="211"/>
+        <college name="华中师范大学"  tag="211"/>
+        <college name="中南财经政法"  tag="211"/>
+        <college name="武汉理工大学"  tag="211"/>
+        <college name="其他" tag="" />
+    </province>
+    <province name="湖南省">
+        <college name="全部" tag="" />
+        <college name="国防科技大学" tag="985" />
+        <college name="湖南大学"  tag="985"/>
+        <college name="中南大学"  tag="985"/>
+        <college name="湖南师范大学" tag="211" />
+        <college name="其他" tag="" />
+    </province>
+    <province name="广东省">
+        <college name="全部"  tag=""/>
+        <college name="中山大学"  tag="985"/>
+        <college name="华南理工大学"  tag="985"/>
+        <college name="暨南大学"  tag="211"/>
+        <college name="华南师范大学"  tag="211"/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="广西">
+        <college name="全部"  tag=""/>
+        <college name="广西大学"  tag="211"/>
+        <college name="广西科技大学"  tag=""/>
+        <college name="广西医科大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="海南省">
+        <college name="全部"  tag=""/>
+        <college name="海南大学"  tag="211"/>
+        <college name="海南师范大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="重庆市">
+        <college name="全部"  tag=""/>
+        <college name="重庆大学" tag="985" />
+        <college name="西南大学" tag="211" />
+        <college name="重庆邮电大学" tag="" />
+        <college name="重庆交通大学"  tag=""/>
+        <college name="其他" tag="" />
+    </province>
+    <province name="四川省">
+        <college name="全部" tag="" />
+        <college name="电子科技大学"  tag="985"/>
+        <college name="四川大学"  tag="985"/>
+        <college name="四川农业大学"  tag="211"/>
+        <college name="西南交通大学"  tag="211"/>
+        <college name="西南财经大学"  tag="211"/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="贵州省">
+        <college name="全部"  tag=""/>
+        <college name="贵州大学"  tag="211"/>
+        <college name="贵州医科大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="云南省">
+        <college name="全部" tag="" />
+        <college name="云南大学"  tag="211"/>
+        <college name="昆明理工大学"  tag=""/>
+        <college name="云南农业大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="西藏">
+        <college name="全部"  tag=""/>
+        <college name="西藏大学"  tag="211"/>
+        <college name="西藏民族学院"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="陕西省">
+        <college name="全部"  tag=""/>
+        <college name="西安交通大学"  tag="985"/>
+        <college name="西北农林科大"  tag="985"/>
+        <college name="西北工业大学"  tag="985"/>
+        <college name="西北农林科技" tag="" />
+        <college name="西北大学"  tag="211"/>
+        <college name="长安大学"  tag="211"/>
+        <college name="陕西师范大学"  tag="211"/>
+        <college name="西安电子科技"  tag="211"/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="甘肃省">
+        <college name="全部"  tag=""/>
+        <college name="兰州大学"  tag="985"/>
+        <college name="兰州理工大学"  tag=""/>
+        <college name="甘肃农业大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="青海省">
+        <college name="全部"  tag=""/>
+        <college name="青海大学"  tag="211"/>
+        <college name="青海师范大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="宁夏">
+        <college name="全部"  tag=""/>
+        <college name="宁夏大学"  tag="211"/>
+        <college name="宁夏医学院"  tag=""/>
+        <college name="宁夏师范学院"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="新疆">
+        <college name="全部"  tag=""/>
+        <college name="新疆大学"  tag="211"/>
+        <college name="石河子大学"  tag="211"/>
+        <college name="塔里木大学"  tag=""/>
+        <college name="新疆农业大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="香港">
+        <college name="全部"  tag=""/>
+        <college name="香港城市大学"  tag=""/>
+        <college name="香港中文大学"  tag=""/>
+        <college name="香港科技大学"  tag=""/>
+        <college name="香港大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+    <province name="澳门">
+        <college name="全部"  tag=""/>
+        <college name="澳门科技大学"  tag=""/>
+        <college name="其他"  tag=""/>
+    </province>
+
+</root>

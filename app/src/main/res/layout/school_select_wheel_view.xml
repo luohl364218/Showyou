@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="#E9E9E9"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/school_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请选择你所在的大学"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <com.zju.campustour.view.widget.wheelview.WheelView
+            android:id="@+id/id_school_province"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+        </com.zju.campustour.view.widget.wheelview.WheelView>
+
+        <com.zju.campustour.view.widget.wheelview.WheelView
+            android:id="@+id/id_school_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+        </com.zju.campustour.view.widget.wheelview.WheelView>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/school_btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        style="@style/bigYellowButton"
+        android:text="确定"
+        android:textColor="#ffffff"
+        android:textSize="16sp" >
+    </Button>
+
+</LinearLayout>

@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.util.SpUtils;
+import com.zju.campustour.model.util.PreferenceUtils;
 
 public class SplashActivity extends BaseActivity {
 
@@ -21,7 +21,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // 判断是否是第一次开启应用
-        boolean notFirstOpen = SpUtils.getBoolean(this, Constants.First_Open);
+        boolean notFirstOpen = PreferenceUtils.getBoolean(this, Constants.First_Open);
 
         // 如果是第一次启动，则先进入功能引导页
         if (!notFirstOpen) {

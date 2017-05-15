@@ -1,18 +1,30 @@
 package com.zju.campustour.presenter.implement;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.IView.ISearchUserViewInfoView;
+import com.zju.campustour.view.IView.IUserLoginView;
+import com.zju.campustour.view.IView.IUserRegisterView;
+import com.zju.campustour.view.IView.IUserView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.zju.campustour.model.database.data.SchoolData.allAreaSchoolList;
 import static com.zju.campustour.model.util.DbUtils.getUser;
@@ -24,11 +36,16 @@ import static com.zju.campustour.model.util.DbUtils.getUser;
 public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     private String TAG = "User Info Operation ";
-    private ISearchUserInfoView mSearchInfoView;
+    private Context mContext;
+    private IUserView mUserView;
+    private ISearchUserViewInfoView mSearchUserInfoView;
+    private IUserLoginView mIUserLoginView;
+    private IUserRegisterView mUserRegisterView;
     List<User> userResults;
 
-    public UserInfoOpPresenterImpl(ISearchUserInfoView mSearchInfoView) {
-        this.mSearchInfoView = mSearchInfoView;
+    public UserInfoOpPresenterImpl(IUserView mSearchInfoView, Context context) {
+        this.mContext = context;
+        this.mUserView = mSearchInfoView;
     }
 
     @Override
@@ -37,25 +54,76 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     }
 
     @Override
-    public void addOrUpdateUser(User mUser) {
+    public void registerUser(String userName, String password) {
+        SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
+        mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        mDialog.setTitleText("正在注册");
+        mDialog.show();
 
+        ParseUser user = new ParseUser();
+        user.setUsername(userName);
+        user.setPassword(password);
+        user.put("online",true);
+        user.put("imgUrl","");
+
+        mUserRegisterView = (IUserRegisterView)mUserView;
+        user.signUpInBackground(new SignUpCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Hooray! Let them use the app now.
+                    mDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    mDialog.getProgressHelper().setBarColor(Color.parseColor("#eb4f38"));
+                    mDialog.setTitleText("注册成功")
+                            .setContentText("欢迎你加入校游，去寻找校友吧!")
+                            .setConfirmText("下一步")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    mDialog.dismissWithAnimation();
+                                    mUserRegisterView.userSignedUpSuccessfully(userName,password);
+                                }
+                            });
+                    mDialog.setCancelable(false);
+
+
+                } else {
+                    // Sign up didn't succeed. Look at the ParseException
+                    // to figure out what went wrong
+                    mDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                    mDialog.getProgressHelper().setBarColor(Color.parseColor("#dc143c"));
+                    mDialog.setTitleText("注册失败");
+                    mDialog.setContentText("同学，该用户名已经存在");
+                    mDialog.setConfirmText("朕知道了")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    mDialog.dismissWithAnimation();
+                                    mUserRegisterView.userSignUpDidNotSucceed(e);
+                                }
+                            });
+                }
+            }
+        });
     }
+
 
     @Override
     public void queryUserInfoWithId(String userId) {
 
         userResults = new ArrayList<>();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("User2");
-        query.getInBackground(userId, new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.getInBackground(userId, new GetCallback<ParseUser>() {
+            public void done(ParseUser object, ParseException e) {
                 if (e == null) {
 
                     User provider = getUser(object);
                     userResults.add(provider);
-                    mSearchInfoView.onGetProviderUserDone(userResults);
+                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserDone(userResults);
                 } else {
                     Log.d(TAG,"get user error!!!!");
-                    mSearchInfoView.onGetProviderUserError(e);
+                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserError(e);
                 }
             }
         });
@@ -64,7 +132,26 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     @Override
     public void userLogin(String loginName, String password) {
-
+        SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
+        mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        mDialog.setTitleText("登录中");
+        mDialog.show();
+        mIUserLoginView = (IUserLoginView)mUserView;
+        ParseUser.logInInBackground(loginName, password, new LogInCallback() {
+            public void done(ParseUser user, ParseException e) {
+                mDialog.dismissWithAnimation();
+                if (e == null && user != null) {
+                    //设置用户的登录标志为true
+                    user.put("online",true);
+                    user.saveEventually();
+                    mIUserLoginView.loginSuccessful();
+                } else if (user == null) {
+                    mIUserLoginView.usernameOrPasswordIsInvalid();
+                } else {
+                    mIUserLoginView.loginError(e);
+                }
+            }
+        });
     }
 
     @Override
@@ -81,7 +168,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     public void queryProviderUserWithConditions(String mSchool, String mMajor,int start, int area, int categoryId) {
 
         Log.d(TAG, "enter method 【queryProviderUserWithConditions】-----------------: " );
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("User2").setSkip(start).setLimit(10);
+        ParseQuery<ParseUser> query = ParseUser.getQuery().setSkip(start).setLimit(10);
 
         if (mSchool != null)
             query.whereEqualTo("school",mSchool);
@@ -99,20 +186,22 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
             query.whereContainedIn("school",schoolList);
         }
         userResults = new ArrayList<>();
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> userList, ParseException e) {
+        query.findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> userList, ParseException e) {
                 if (e == null) {
                     /*信息转换*/
-                    for(ParseObject user: userList){
+                    for(ParseUser user: userList){
                         User provider = getUser(user);
                         userResults.add(provider);
                     }
                     Log.d(TAG, "find user-----------------: " + userList.size());
-                    mSearchInfoView.onGetProviderUserDone(userResults);
+                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserDone(userResults);
 
                 } else {
                     Log.d(TAG,"get user error!!!!");
-                    mSearchInfoView.onGetProviderUserError(e);
+                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserError(e);
                 }
 
 

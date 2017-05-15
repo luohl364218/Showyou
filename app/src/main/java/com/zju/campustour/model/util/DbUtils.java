@@ -38,8 +38,8 @@ public class DbUtils {
     @NonNull
     public static User getUser(ParseObject user) {
         String user_id = user.getObjectId();
-        String userName = user.getString("userName");
-        String loginName = user.getString("loginName");
+        String userName = user.getString("username");
+        String realName = user.getString("realname");
         String password =user.getString("password");
         SexType sex = SexType.values()[user.getInt("sex")];
         String school = user.getString("school");
@@ -55,7 +55,7 @@ public class DbUtils {
         String shortDescription = user.getString("shortDescription");
         int categoryId = user.getInt("categoryId");
 
-        return new User(user_id,userName, loginName, password, sex,
+        return new User(user_id,userName, realName, password, sex,
                 school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
                 userType, user_description, shortDescription,categoryId);
     }
@@ -79,7 +79,7 @@ public class DbUtils {
     public static Project getProject(ParseObject project) {
         String id = project.getObjectId();
         User provider;
-        ParseObject providerObject = project.getParseObject("provider");
+        ParseObject providerObject = project.getParseObject("providerV2");
         if (providerObject != null)
             provider = getUser(providerObject);
         else

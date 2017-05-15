@@ -11,7 +11,7 @@ public interface IUserInfoOpPresenter {
 
     public void initialUserInfo();
 
-    public void addOrUpdateUser(User mUser);
+    public void registerUser(String userName, String password);
 
     public void queryUserInfoWithId(String userId);
 

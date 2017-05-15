@@ -11,4 +11,15 @@
         <!-- <item name="android:actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
     </style>
 
+    <style name="LoginToolBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- 设置原来的actionbar不显示 -->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="actionOverflowMenuStyle">@style/LoginMenu</item>
+        <!-- <item name="android:actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
+    </style>
+
 </resources>

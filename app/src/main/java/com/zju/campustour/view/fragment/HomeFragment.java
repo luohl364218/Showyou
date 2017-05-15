@@ -1,13 +1,12 @@
 package com.zju.campustour.view.fragment;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,18 +31,24 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
+import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
+import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
-import com.zju.campustour.presenter.protocal.event.onLoadingDone;
-import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
-import com.zju.campustour.presenter.protocal.event.onRecycleViewRefreshEvent;
+import com.zju.campustour.presenter.protocal.event.LoadingDone;
+import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
+import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
+import com.zju.campustour.view.IView.IUserLoginView;
 import com.zju.campustour.view.activity.InfoWebActivity;
+import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MajorListActivity;
 import com.zju.campustour.view.activity.ProjectActivity;
 import com.zju.campustour.view.activity.ProviderHomePageActivity;
@@ -55,7 +60,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import static com.zju.campustour.model.common.Constants.STATE_MORE;
 import static com.zju.campustour.model.common.Constants.STATE_NORMAL;
@@ -133,6 +137,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setTitle("校游 Show You");
         mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+                if (!drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
         setHasOptionsMenu(true);
 
         //mMaterialRefreshLayout = (PullToRefreshScrollView) mRootView.findViewById(R.id.home_refresh_view);
@@ -238,6 +251,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     @Override
     public void onGetProjectInfoError(Exception e) {
 
+        ParseUser.logOut();
+        Intent mIntent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(mIntent);
+
     }
 
     private void showProjectRecycleView(List<Project> projectList) {
@@ -275,7 +292,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                 mRecyclerView.setAdapter(mProjectAdapter);
                 mRecyclerView.addItemDecoration(new DividerItemDecortion());
                 Log.d(TAG, "------------loading project info done----------");
-                EventBus.getDefault().post(new onLoadingDone(true));
+                EventBus.getDefault().post(new LoadingDone(true));
                 break;
             case STATE_REFRESH:
                 //mMaterialRefreshLayout.onRefreshComplete();
@@ -305,7 +322,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
 
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onNetworkChangeEvent(onNetworkChangeEvent event) {
+    public void onNetworkChangeEvent(NetworkChangeEvent event) {
         if (event.isValid()){
             noResultHint.setVisibility(View.GONE);
             isNetworkValid = true;
@@ -319,10 +336,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onRecycleViewRefreshEvent(onRecycleViewRefreshEvent event) {
+    public void onRecycleViewRefreshEvent(RecycleViewRefreshEvent event) {
         int selectedPosition = event.getPosition();
         if (selectedPosition >= 0 && mProjectList != null){
-            ParseQuery<ParseObject> query_project = ParseQuery.getQuery("Project").include("provider")
+            ParseQuery<ParseObject> query_project = ParseQuery.getQuery("Project").include("providerV2")
                     .whereEqualTo("objectId",mProjectList.get(selectedPosition).getId());
             query_project.findInBackground(new FindCallback<ParseObject>() {
                 @Override
@@ -336,6 +353,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
             });
         }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onLoginDoneEvent(LoginDoneEvent event) {
+        if (event.isLogin()){
+            if (mProjectInfoPresenter != null && mProjectAdapter == null)
+                mProjectInfoPresenter.getLimitProjectInfo(0,10);
+        }
     }
 
     @Override

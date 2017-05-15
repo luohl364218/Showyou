@@ -5,6 +5,11 @@
     <color name="colorAccent">#EFCA25</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="province_line_border">#016D94</color>
+
+    <color name="yellow_btn_color_normal">#EFCA25</color>
+    <color name="yellow_btn_color_pressed">#daa955</color>
+    <color name="yellow_btn_color_disable">#dcdcdc</color>
 
     <!--item颜色-->
     <color name="item_press">#44ff0000</color>
@@ -317,6 +322,11 @@
     <color name="tab_text_press">#ff8c00</color> <!-- 暗桔黄色 -->
     <color name="tab_text_normal">#A6000000</color>
 
+    <color name="grey_btn_color_normal">#fff1f1f1</color>
+    <color name="grey_btn_color_pressed">#ffd8d8d8</color>
+    <color name="border_color">#a9b7b7</color>
+    <color name="white_color_disable">#7fffffff</color>
+    <color name="main_font_color">#9a9a9a</color>
 
     <!-- start zxing -->
     <color name="viewfinder_frame">#2477ab</color>

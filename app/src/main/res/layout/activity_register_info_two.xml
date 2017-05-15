@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    android:fitsSystemWindows="true"
+    tools:context="com.zju.campustour.view.activity.ProjectActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/register_info_two_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="">
+
+                <TextView
+                    android:id="@+id/user_info_update_title_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="信息完善 2/2"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"/>
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/user_info2_scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="none"
+            android:fillViewport="true">
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:id="@+id/school_area_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_border_color_white"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="地区"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="#d2d2d2"/>
+
+                <TextView
+                    android:id="@+id/school_area"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="请选择学校所在的地区"
+                    android:textColor="@color/main_font_color"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="*"
+                    android:textColor="@color/red"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/school_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_border_color_white"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="学校"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="#d2d2d2"/>
+
+                <EditText
+                    android:id="@+id/user_school"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="#444444"
+                    android:textColorHint="@color/main_font_color"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="*"
+                    android:textColor="@color/red"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/user_type_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_border_color_white"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="用户类型"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="#d2d2d2"/>
+
+                <RadioGroup
+                    android:id="@+id/user_type_group"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp">
+
+                    <RadioButton
+                        android:id="@+id/select_common_user"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/radiobutton_user_common"
+                        android:button="@null"/>
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="普通用户"
+                        android:textSize="16sp"
+                        android:textColor="@color/main_font_color"
+                        />
+
+                    <RadioButton
+                        android:id="@+id/select_major_user"
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/radiobutton_user_major"
+                        android:visibility="gone"
+                        android:button="@null"/>
+
+                    <TextView
+                        android:id="@+id/select_major_user_txt"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="专业用户"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        android:textColor="@color/main_font_color"
+                        />
+
+                </RadioGroup>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="*"
+                    android:textColor="@color/red"
+                    android:textSize="16sp"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/user_type_hint_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingTop="10dp"
+                android:text="普通用户——适合对大学/专业/学习方法等有信息需求的小学/初中/高中/本科学生"
+                android:textColor="@color/main_font_color"
+                android:textSize="10sp"/>
+
+            <TextView
+                android:id="@+id/user_type_hint_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingTop="10dp"
+                android:text="专业用户——适合于了解大学/熟悉专业/喜欢分享/热爱教育的本科及更高学历学生"
+                android:visibility="gone"
+                android:textColor="@color/main_font_color"
+                android:textSize="10sp"/>
+
+            <TextView
+                android:id="@+id/user_desc_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="个人简介"
+                android:textColor="#444444"
+                android:visibility="gone"
+                android:textSize="16sp"/>
+
+            <LinearLayout
+                android:id="@+id/user_desc_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_border_color_white"
+                android:orientation="horizontal"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/user_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="如：所获荣誉/个人兴趣/有何特长/有趣经历"
+                    android:enabled="true"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:maxLines="10"
+                    android:scrollbars="vertical"
+                    android:textColor="#444444"
+                    android:textColorHint="@color/main_font_color"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="*"
+                    android:textColor="@color/red"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="10dp"
+                android:text="注：带*的为必填内容"
+                android:textColor="@color/alpha_70_black"
+                android:textSize="10sp"/>
+
+            <Button
+                android:id="@+id/btn_two_next"
+                style="@style/bigYellowButton"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:enabled="false"
+                android:text="完成"
+                android:textColor="#ffffff"
+                android:textSize="16sp">
+            </Button>
+
+        </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+
+

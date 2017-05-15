@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +15,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
@@ -28,7 +27,7 @@ import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
-import com.zju.campustour.presenter.protocal.event.onRecycleViewRefreshEvent;
+import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
 import com.zju.campustour.view.IView.IProjectCollectorView;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 
@@ -38,12 +37,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.sharesdk.framework.ShareSDK;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_MAN_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_PROJECT_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_WOMAN_IMG;
-import static com.zju.campustour.model.util.SpUtils.ConvertDateToString;
+import static com.zju.campustour.model.util.PreferenceUtils.ConvertDateToString;
 
 public class ProjectActivity extends BaseActivity implements ISearchProjectInfoView, IProjectCollectorView{
 
@@ -110,15 +110,16 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     private boolean isFavor;
     private Project currentProject;
     private MenuItem selectedItem;
-    private Toast toast = null;
+
     //todo 这里默认一个用户，以后要改为当前登录用户
-    private String currentLoginUser = "BmzEVHaG4A";
+    private ParseUser currentLoginUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
         ButterKnife.bind(this);
+        ShareSDK.initSDK(this);
         Intent mIntent = getIntent();
         Project mProject = (Project) mIntent.getSerializableExtra("project");
         position = mIntent.getIntExtra("position", -1);
@@ -131,7 +132,9 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
 
         mCollectorPresenter = new ProjectUserMapOpPresenterImpl(this);
 
-        mCollectorPresenter.query(currentLoginUser,mProject.getId(), UserProjectStateType.COLLECT);
+        currentLoginUser = ParseUser.getCurrentUser();
+        if (currentLoginUser != null)
+            mCollectorPresenter.query(currentLoginUser.getObjectId(),mProject.getId(), UserProjectStateType.COLLECT);
 
         //异步请求项目的销售界面信息
         mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this);
@@ -213,33 +216,23 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        currentLoginUser = ParseUser.getCurrentUser();
+        if (currentLoginUser == null){
+            Intent mIntent = new Intent(this,LoginActivity.class);
+            startActivity(mIntent);
+            return true;
+        }
         //点击收藏
         if (id == R.id.project_favor_icon) {
             if (isFavor){
-                if (toast != null) {
-                    toast.setText("收藏已取消");
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                    toast.show();
-
-                } else {
-                    toast = Toast.makeText(this, "收藏已取消", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                mCollectorPresenter.delete(currentLoginUser, projectId, UserProjectStateType.COLLECT);
+                showToast("收藏已取消");
+                mCollectorPresenter.delete(currentLoginUser.getObjectId(), projectId, UserProjectStateType.COLLECT);
                 item.setIcon(R.mipmap.icon_favor_default);
                 isFavor = false;
             }
             else {
-                if (toast != null) {
-                    toast.setText("收藏成功");
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                    toast.show();
-                } else {
-                    toast = Toast.makeText(this, "收藏成功", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                mCollectorPresenter.put(currentLoginUser, currentProject.getId(), UserProjectStateType.COLLECT);
+                showToast("收藏成功");
+                mCollectorPresenter.put(currentLoginUser.getObjectId(), currentProject.getId(), UserProjectStateType.COLLECT);
                 item.setIcon(R.mipmap.icon_favor_selected);
                 isFavor = true;
             }
@@ -302,14 +295,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
             selectedItem.setIcon(R.mipmap.icon_favor_selected);
         }
 
-        if (toast != null) {
-            toast.setText(text);
-            toast.setDuration(Toast.LENGTH_SHORT);
-            toast.show();
-        } else {
-            toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
-            toast.show();
-        }
+        showToast(text);
     }
 
     @Override
@@ -318,8 +304,15 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     }
 
     private void myFinish(){
-        EventBus.getDefault().post(new onRecycleViewRefreshEvent(position));
+        EventBus.getDefault().post(new RecycleViewRefreshEvent(position));
         finish();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentLoginUser = ParseUser.getCurrentUser();
+        if (currentLoginUser != null)
+            mCollectorPresenter.query(currentLoginUser.getObjectId(),projectId, UserProjectStateType.COLLECT);
+    }
 }

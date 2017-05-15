@@ -47,7 +47,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
     public void queryProjectWithUserId(String userId) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project")
                 .whereEqualTo("userId",userId)
-                .include("provider")
+                .include("providerV2")
                 .selectKeys(Constants.projectDefaultKeys);
         mProjects = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -85,7 +85,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
     public void getLimitProjectInfo(int start, int count) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").whereNotEqualTo("projectState",3)
-                .setSkip(start).setLimit(count).include("provider").selectKeys(Constants.projectDefaultKeys);
+                .setSkip(start).setLimit(count).include("providerV2").selectKeys(Constants.projectDefaultKeys);
         mProjects = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> projectList, ParseException e) {
@@ -95,11 +95,13 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
                         Project mProject = DbUtils.getProject(project);
                         mProjects.add(mProject);
                     }
+                    mProjectInfoView.onGetProjectInfoDone(mProjects);
                 } else {
                     Log.d(TAG, "Error: " + e.getMessage());
+                    mProjectInfoView.onGetProjectInfoError(e);
                 }
 
-                mProjectInfoView.onGetProjectInfoDone(mProjects);
+
 
             }
         });

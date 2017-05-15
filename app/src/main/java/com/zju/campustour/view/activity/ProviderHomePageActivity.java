@@ -24,7 +24,7 @@ import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.IView.ISearchUserViewInfoView;
 import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
@@ -32,7 +32,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProviderHomePageActivity extends AppCompatActivity implements ISearchUserInfoView,ISearchProjectInfoView, View.OnClickListener{
+public class ProviderHomePageActivity extends AppCompatActivity implements ISearchUserViewInfoView,ISearchProjectInfoView, View.OnClickListener{
     private String selectedProviderId;
     private UserInfoOpPresenterImpl mUserInfoOpPresenter;
     private ProjectInfoOpPresenterImpl mProjectInfoOpPresenter;
@@ -69,7 +69,7 @@ public class ProviderHomePageActivity extends AppCompatActivity implements ISear
         Intent mIntent = getIntent();
         defaultUser = (User) mIntent.getSerializableExtra("provider");
         selectedProviderId = defaultUser.getId();
-        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this);
+        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,getBaseContext());
         mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this);
 
         if (selectedProviderId != null) {

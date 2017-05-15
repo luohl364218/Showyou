@@ -26,10 +26,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile project(':lib_ratingbar')
+    compile project(':libs_scan')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -52,9 +54,7 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     testCompile 'junit:junit:4.12'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
-    compile project(':lib_ratingbar')
-    compile project(':libs_scan')
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile project(':sharesdk')
 }

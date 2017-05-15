@@ -9,10 +9,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -20,27 +20,34 @@ import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.parse.ParseUser;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.model.database.data.SchoolData;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
+import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
+import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
+import com.zju.campustour.presenter.protocal.event.LogoutEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
-import com.zju.campustour.presenter.protocal.event.onNetworkChangeEvent;
-import com.zju.campustour.presenter.protocal.event.onRecycleViewRefreshEvent;
+import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.view.activity.BaseActivity;
+import com.zju.campustour.view.activity.LoginActivity;
+import com.zju.campustour.view.activity.RegisterActivity;
+import com.zju.campustour.view.activity.RegisterInfoOneActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
 import com.zju.campustour.view.fragment.MessageFragment;
@@ -56,17 +63,32 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
-    private Toolbar mToolbar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private NavigationView mNavigationView;
+    private SimpleDraweeView userImg;
+    private CircleImageView userEditLogo;
 
-    private BottomBar mBottomBar;
-    private SuperViewPager mViewPager;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+    private View headerLayout;
+    private TextView loginHint;
+    private TextView userName;
+    private TextView userType;
+
+    @BindView(R.id.bottomBar)
+    BottomBar mBottomBar;
+
+    @BindView(R.id.viewPager)
+    SuperViewPager mViewPager;
+
     private List<Fragment> fragmentList;
     //点击两次返回才退出程序
     private long lastPressTime = 0;
@@ -89,6 +111,8 @@ public class MainActivity extends BaseActivity
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
+    private ParseUser currentLoginUser;
+
     private String TAG = "mainActivity";
 
     @Override
@@ -96,6 +120,7 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
+        ButterKnife.bind(this);
         initLayoutElements();
         initMajorListViewData();
         initSchoolListViewData();
@@ -156,24 +181,35 @@ public class MainActivity extends BaseActivity
     }
 
     private void initLayoutElements() {
-        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        mToolbar.setTitle("校游 Show You");*/
 
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        //mDrawerLayout.onInterceptTouchEvent()
-        mDrawerToggle.syncState();
-
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
+        headerLayout = mNavigationView.getHeaderView(0);
+        userImg = (SimpleDraweeView) headerLayout.findViewById(R.id.current_user_img);
+        userImg.setOnClickListener(this);
+        loginHint = (TextView) headerLayout.findViewById(R.id.login_hint);
+        loginHint.setOnClickListener(this);
+        userEditLogo = (CircleImageView) headerLayout.findViewById(R.id.user_edit);
+        userName = (TextView) headerLayout.findViewById(R.id.username);
+        userType = (TextView) headerLayout.findViewById(R.id.user_type);
+        currentLoginUser = ParseUser.getCurrentUser();
+        if (currentLoginUser == null){
+            userImg.setImageURI(Uri.parse("www.cxx"));
+            loginHint.setVisibility(View.VISIBLE);
+            userEditLogo.setVisibility(View.GONE);
 
-        mViewPager = (SuperViewPager) findViewById(R.id.viewPager);
+        }
+        else{
 
-        mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
+            userEditLogo.setVisibility(View.VISIBLE);
+            String userImgUrl = currentLoginUser.getString("imgUrl");
+            userImg.setImageURI(Uri.parse(userImgUrl == null? "www.cxx" :userImgUrl));
+            loginHint.setVisibility(View.GONE);
+            userName.setText(currentLoginUser.getUsername());
+            userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
+
+
+        }
+
         mBottomBar.setDefaultTabPosition(0);
         initViewPager();
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -226,22 +262,6 @@ public class MainActivity extends BaseActivity
             public void onPageSelected(int position) {
                 mBottomBar.selectTabAtPosition(position, true);
 
-               /* switch (position) {
-                    case 0:
-                        mToolbar.setTitle("校游 Show You");
-                        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
-                        break;
-                    case 1:
-                        mToolbar.setTitle("发现");
-                        break;
-                    case 2:
-                        mToolbar.setTitle("消息");
-
-                        break;
-                    default:
-                        break;
-                }*/
-
             }
 
             @Override
@@ -265,36 +285,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-/*    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //点击二维码扫描
-        if (id == R.id.toolbar_scan) {
-
-            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-            }else {
-                Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-                return true;
-            }
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -303,11 +293,14 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.my_project) {
-            // Handle the camera action
+            Intent mIntent = new Intent(this,LoginActivity.class);
+            startActivity(mIntent);
         } else if (id == R.id.my_focus) {
-
+            Intent mIntent = new Intent(this,RegisterActivity.class);
+            startActivity(mIntent);
         } else if (id == R.id.my_interest) {
-
+            ParseUser.logOut();
+            EventBus.getDefault().post(new LogoutEvent(true));
         } else if (id == R.id.setting) {
 
         } else if (id == R.id.build_project) {
@@ -316,8 +309,6 @@ public class MainActivity extends BaseActivity
 
         }
 
-        Toast.makeText(this, "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -325,14 +316,89 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.login_hint:
+            case R.id.current_user_img:
+                currentLoginUser = ParseUser.getCurrentUser();
+                if (currentLoginUser == null) {
+                    Intent mIntent = new Intent(this, LoginActivity.class);
+                    startActivity(mIntent);
+                }
+                else{
+                    Intent mIntent = new Intent(this, RegisterInfoOneActivity.class);
+                    mIntent.putExtra("isEditMode",true);
+                    startActivity(mIntent);
+                }
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                break;
+
+            default:
+                break;
+        }
 
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onToolbarTitleChangeEvent(ToolbarTitleChangeEvent event) {
-        if (mToolbar != null)
-            mToolbar.setTitle(event.getTitle());
+    public void onLoginDoneEvent(LoginDoneEvent event) {
+        if (event.isLogin()){
+            try{
+                currentLoginUser = ParseUser.getCurrentUser();
+                userName.setText(currentLoginUser.getUsername());
+                loginHint.setVisibility(View.GONE);
+                userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
+                String img = currentLoginUser.getString("imgUrl");
+                if (img == null){
+                    img = Constants.URL_DEFAULT_MAN_IMG;
+                }
+                userImg.setImageURI(Uri.parse(img));
+                userEditLogo.setVisibility(View.VISIBLE);
+            }catch (Exception e){
+
+            }
+
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onLogoutEvent(LogoutEvent event) {
+        if (event.isLogout()){
+            try{
+                userImg.setImageURI(Uri.parse("www.cxx"));
+                loginHint.setVisibility(View.VISIBLE);
+                userEditLogo.setVisibility(View.GONE);
+                userName.setText("第0行代码团队");
+                userType.setText("1124281072@qq.com");
+                currentLoginUser = null;
+            }catch (Exception e){
+
+            }
+
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onEditUserInfoDoneEvent(EditUserInfoDone event) {
+        if (event.isDone()){
+            try{
+                currentLoginUser = ParseUser.getCurrentUser();
+                userName.setText(currentLoginUser.getUsername());
+                loginHint.setVisibility(View.GONE);
+                userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
+                String img = currentLoginUser.getString("imgUrl");
+                if (img == null){
+                    img = Constants.URL_DEFAULT_MAN_IMG;
+                }
+                userImg.setImageURI(Uri.parse(img));
+
+            }catch (Exception e){
+
+            }
+
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
@@ -361,10 +427,10 @@ public class MainActivity extends BaseActivity
             ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = manager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isAvailable()){
-                EventBus.getDefault().post(new onNetworkChangeEvent(true));
+                EventBus.getDefault().post(new NetworkChangeEvent(true));
             }
             else {
-                EventBus.getDefault().post(new onNetworkChangeEvent(false));
+                EventBus.getDefault().post(new NetworkChangeEvent(false));
             }
 
         }
