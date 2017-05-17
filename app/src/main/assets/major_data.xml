@@ -1,0 +1,173 @@
+<root>
+    <class name="哲学">
+        <major name="逻辑学"  tag="0" />
+        <major name="伦理学"  tag="0" />
+        <major name="哲学"  tag="0" />
+        <major name="宗教学"  tag="0" />
+        <major name="其他"  tag="0" />
+    </class>
+
+    <class name="经济学">
+        
+        <major name="商务经济学" tag="1"/>
+        <major name="经济学" tag="1"/>
+        <major name="能源经济学" tag="1"/>
+        <major name="经济统计学" tag="1"/>
+        <major name="金融工程" tag="1"/>
+
+        <major name="投资学" tag="1"/>
+        <major name="金融学" tag="1"/>
+        <major name="财政学" tag="1"/>
+        <major name="税收学" tag="1"/>
+        <major name="国际经济与贸易" tag="1"/>
+        <major name="其他"  tag="1" />
+    </class>
+    <class name="法学">
+        <major name="法学"  tag="2"/>
+        <major name="知识产权" tag="2"/>
+        <major name="社会学" tag="2"/>
+        <major name="人类学" tag="2"/>
+
+        <major name="家政学"  tag="2"/>
+        <major name="侦察学" tag="2"/>
+        <major name="治安学" tag="2"/>
+        <major name="经济犯罪侦察" tag="2"/>
+
+        <major name="外交学"  tag="2"/>
+        <major name="国际政治经济学" tag="2"/>
+        <major name="国际事务" tag="2"/>
+        <major name="政治学与行政学" tag="2"/>
+        <major name="其他"  tag="2" />
+    </class>
+    <class name="教育学">
+        
+        <major name="教育学" tag="3"/>
+        <major name="学前教育"  tag="3"/>
+        <major name="教育技术学" tag="3"/>
+        <major name="体育教育" tag="3"/>
+
+        <major name="运动人体科学" tag="3"/>
+        <major name="社会体育"  tag="3"/>
+        <major name="其他"  tag="3" />
+    </class>
+    <class name="文学">
+        <major name="汉语言文学"  tag="4"/>
+        <major name="应用语言学" tag="4"/>
+        <major name="新闻学" tag="4"/>
+        <major name="广告学" tag="4"/>
+        <major name="传播学" tag="4" />
+
+        <major name="编辑出版学"  tag="4"/>
+        <major name="媒体创意" tag="4"/>
+        <major name="英语" tag="4"/>
+        <major name="俄语" tag="4"/>
+        <major name="法语" tag="4" />
+
+        <major name="日语"  tag="4"/>
+        <major name="阿拉伯语" tag="4"/>
+        <major name="马来语" tag="4"/>
+        <major name="葡萄牙语" tag="4"/>
+        <major name="意大利语" tag="4" />
+        <major name="其他"  tag="4" />
+    </class>
+    <class name="历史学">
+        
+        <major name="历史学" tag="5"/>
+        <major name="世界历史" tag="5"/>
+        <major name="考古学" tag="5"/>
+        <major name="文物保护技术" tag="5"/>
+        <major name="其他"  tag="5" />
+    </class>
+    <class name="理学">
+       
+        <major name="数学与应用数学"  tag="6"/>
+        <major name="物理学"  tag="6"/>
+        <major name="应用物理学"  tag="6"/>
+        <major name="化学"  tag="6"/>
+        <major name="应用化学"  tag="6"/>
+        <major name="化学生物学"  tag="6"/>
+        <major name="生物科学"  tag="6"/>
+        <major name="生物信息技术"  tag="6"/>
+        <major name="天文学"  tag="6"/>
+        <major name="地质学"  tag="6"/>
+        <major name="地理信息系统"  tag="6"/>
+        <major name="地球物理学"  tag="6"/>
+        <major name="应用气象学"  tag="6"/>
+        <major name="军事海洋学"  tag="6"/>
+        <major name="心理学"  tag="6"/>
+        <major name="统计学"  tag="6"/>
+        <major name="其他"  tag="6" />
+    </class>
+    <class name="工学">
+       
+        <major name="机械设计制造及其自动化" tag="7"/>
+        <major name="过程装备与控制工程" tag="7"/>
+        <major name="工业设计" tag="7"/>
+        <major name="测控技术及仪器" tag="7"/>
+        <major name="热能与动力工程" tag="7"/>
+        <major name="核工程与核技术" tag="7"/>
+        <major name="计算机科学与技术" tag="7"/>
+        <major name="通信工程" tag="7"/>
+        <major name="光电信息工程" tag="7"/>
+        <major name="生物医学工程" tag="7"/>
+        <major name="软件工程" tag="7"/>
+        <major name="建筑学" tag="7"/>
+        <major name="环境科学与工程" tag="7"/>
+        <major name="交通工程" tag="7"/>
+        <major name="船舶与海洋工程" tag="7"/>
+        <major name="航空航天工程" tag="7"/>
+        <major name="海事管理" tag="7"/>
+        <major name="其他"  tag="7" />
+    </class>
+    <class name="农学">
+       
+        <major name="农学"  tag="8"/>
+        <major name="园艺"  tag="8"/>
+        <major name="茶学"  tag="8"/>
+        <major name="应用生物科学" tag="8"/>
+        <major name="动物科学"  tag="8"/>
+        <major name="动物医学"  tag="8"/>
+        <major name="水产养殖学"  tag="8"/>
+        <major name="海洋渔业科学与技术" tag="8"/>
+        <major name="其他"  tag="8" />
+    </class>
+    <class name="医学">
+       
+        <major name="中医学"  tag="9"/>
+        <major name="临床医学"  tag="9"/>
+        <major name="法医学" tag="9"/>
+        <major name="护理学" tag="9"/>
+        <major name="药学"  tag="9"/>
+        <major name="口腔医学"  tag="9"/>
+        <major name="放射医学" tag="9"/>
+        <major name="营养学" tag="9"/>
+        <major name="精神医学" tag="9"/>
+        <major name="其他"  tag="9" />
+    </class>
+    <class name="管理学">
+       
+        <major name="工商管理"  tag="10"/>
+        <major name="会计学" tag="10"/>
+        <major name="人力资源管理" tag="10"/>
+        <major name="市场营销" tag="10"/>
+        <major name="财务管理" tag="10"/>
+        <major name="物流管理"  tag="10"/>
+        <major name="国际商务" tag="10"/>
+        <major name="公共关系学" tag="10"/>
+        <major name="信息资源管理" tag="10"/>
+        <major name="其他"  tag="10" />
+    </class>
+
+    <class name="艺术学">
+       
+        <major name="艺术设计"  tag="11"/>
+        <major name="戏剧学"  tag="11"/>
+        <major name="舞蹈学"  tag="11"/>
+        <major name="导演" tag="11"/>
+        <major name="表演"  tag="11"/>
+        <major name="音乐学" tag="11"/>
+        <major name="其他"  tag="11" />
+    </class>
+   
+
+</root>

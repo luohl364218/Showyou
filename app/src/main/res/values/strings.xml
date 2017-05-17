@@ -62,4 +62,5 @@
     <string name="login_title">校友登录</string>
     <string name="userName">用户名</string>
     <string name="regPwd">请输入密码</string>
+    <string name="userProjectHint">TA还没有提供相关项目</string>
 </resources>

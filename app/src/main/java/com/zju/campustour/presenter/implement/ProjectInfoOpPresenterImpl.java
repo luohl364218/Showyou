@@ -1,5 +1,6 @@
 package com.zju.campustour.presenter.implement;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.parse.FindCallback;
@@ -12,6 +13,7 @@ import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
+import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IProjectInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
@@ -32,19 +34,26 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
 
     ISearchProjectInfoView mProjectInfoView;
     List<Project> mProjects;
+    Context mContext;
     String TAG = getClass().getSimpleName();
 
-    public ProjectInfoOpPresenterImpl(ISearchProjectInfoView mProjectInfoView) {
+    public ProjectInfoOpPresenterImpl(ISearchProjectInfoView mProjectInfoView, Context context) {
         this.mProjectInfoView = mProjectInfoView;
+        mContext = context;
     }
 
     @Override
     public void addOrUpdateProject(Project mProject) {
-
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
     }
 
     @Override
     public void queryProjectWithUserId(String userId) {
+        if (userId == null)
+            return;
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project")
                 .whereEqualTo("userId",userId)
                 .include("providerV2")
@@ -78,12 +87,14 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
 
     @Override
     public void setProjectState(int projectId, ProjectStateType state) {
-
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
     }
 
     @Override
     public void getLimitProjectInfo(int start, int count) {
-
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").whereNotEqualTo("projectState",3)
                 .setSkip(start).setLimit(count).include("providerV2").selectKeys(Constants.projectDefaultKeys);
         mProjects = new ArrayList<>();
@@ -109,6 +120,8 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
 
     @Override
     public void queryProjectWithId(String projectId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         mProjects = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").selectKeys(Constants.projectDefaultKeys);
         query.getInBackground(projectId, new GetCallback<ParseObject>() {
@@ -128,7 +141,8 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
 
     @Override
     public void queryProjectSaleInfoWithId(String projectId) {
-
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").selectKeys(Constants.projectSaleKeys);
         query.getInBackground(projectId, new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {

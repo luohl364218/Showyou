@@ -1,24 +1,154 @@
 package com.zju.campustour.presenter.implement;
 
+import android.content.Context;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.util.Log;
+
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.database.models.UserFocusMap;
+import com.zju.campustour.model.util.DbUtils;
+import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IFocusMapOpPresenter;
+import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
+import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
+import com.zju.campustour.view.IView.IUserFocusView;
+import com.zju.campustour.view.IView.IUserView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by HeyLink on 2017/4/24.
  */
 
 public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
-    @Override
-    public void addFocusOn(int fromId, int toId) {
 
+    private IUserView mUserView;
+    private List<UserFocusMap> mUserFocusMapList;
+    private Context mContext;
+
+    public FocusMapOpPresenterImpl(IUserView mUserView, Context context) {
+        this.mUserView = mUserView;
+        this.mContext = context;
     }
 
     @Override
-    public void cancelFocusOn(int fromId, int toId) {
-
+    public void put(String providerId, String fansId, FocusStateType type) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        ParseObject fans = new ParseObject("UserFocusMap");
+        fans.put("providerId", providerId);
+        fans.put("fansId",fansId);
+        fans.put("focusState", type.getStateId());
+        fans.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    IUserFocusView mFocusView = (IUserFocusView)mUserView;
+                    mFocusView.onFocusActionError(true);
+                }
+            }
+        });
     }
 
     @Override
-    public int getFansNum(int userId) {
-        return 0;
+    public void delete(String providerId, String fansId, FocusStateType type) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("UserFocusMap");
+        if (providerId != null)
+            query.whereEqualTo("providerId",providerId);
+
+        if (fansId != null){
+            query.whereEqualTo("fansId", fansId);
+        }
+
+        if (type != null)
+            query.whereEqualTo("focusState",type.getStateId());
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() != 0){
+                    for (ParseObject mObject:objects)
+                        mObject.deleteEventually(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e != null){
+                                    IUserFocusView mFocusView = (IUserFocusView)mUserView;
+                                    mFocusView.onFocusActionError(false);
+                                }
+                            }
+                        });
+                }
+            }
+        });
+    }
+
+    @Override
+    public void queryFansAndDealNum(String providerId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        if (providerId == null)
+            return;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("UserFocusMap");
+        query.whereEqualTo("providerId",providerId).whereEqualTo("focusState",FocusStateType.FOCUS.getStateId());
+
+        try {
+            int fansNum = query.count();
+            IUserFocusView mFocusView = (IUserFocusView)mUserView;
+            mFocusView.onGetFansNumDone(fansNum);
+        } catch (ParseException mE) {
+            mE.printStackTrace();
+        }
+
+    }
+
+
+    @Override
+    public void query(String providerId, String fansId, FocusStateType type) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("UserFocusMap");
+        if (providerId != null)
+            query.whereEqualTo("providerId",providerId);
+
+        if (fansId != null){
+            query.whereEqualTo("fansId", fansId);
+        }
+
+        if (type != null)
+            query.whereEqualTo("focusState",type.getStateId());
+        mUserFocusMapList = new ArrayList<>();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() != 0){
+                    for (ParseObject mObject:objects){
+                        UserFocusMap map = new UserFocusMap();
+                        map.setProviderId(mObject.getString("providerId"));
+                        map.setFansId(mObject.getString("fansId"));
+                        map.setFocusState(FocusStateType.values()[mObject.getInt("focusState")]);
+                        mUserFocusMapList.add(map);
+                    }
+                    IUserFocusView mFocusView = (IUserFocusView)mUserView;
+                    mFocusView.onQueryFansOrFocusDone(true, mUserFocusMapList);
+                }
+                else {
+                    IUserFocusView mFocusView = (IUserFocusView)mUserView;
+                    mFocusView.onQueryFansOrFocusDone(false, mUserFocusMapList);
+                }
+            }
+        });
     }
 }

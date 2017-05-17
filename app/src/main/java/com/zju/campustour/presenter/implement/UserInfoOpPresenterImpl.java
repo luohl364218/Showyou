@@ -15,7 +15,9 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
+import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.view.IView.ISearchUserViewInfoView;
 import com.zju.campustour.view.IView.IUserLoginView;
 import com.zju.campustour.view.IView.IUserRegisterView;
@@ -35,7 +37,7 @@ import static com.zju.campustour.model.util.DbUtils.getUser;
 
 public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
-    private String TAG = "User Info Operation ";
+    private String TAG = "user Info Operation ";
     private Context mContext;
     private IUserView mUserView;
     private ISearchUserViewInfoView mSearchUserInfoView;
@@ -50,11 +52,15 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     @Override
     public void initialUserInfo() {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
 
     }
 
     @Override
     public void registerUser(String userName, String password) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
         mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         mDialog.setTitleText("正在注册");
@@ -65,6 +71,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
         user.setPassword(password);
         user.put("online",true);
         user.put("imgUrl","");
+        user.put("fansNum",0);
 
         mUserRegisterView = (IUserRegisterView)mUserView;
         user.signUpInBackground(new SignUpCallback() {
@@ -109,7 +116,10 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     @Override
     public void queryUserInfoWithId(String userId) {
-
+        if (userId == null)
+            return;
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         userResults = new ArrayList<>();
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.getInBackground(userId, new GetCallback<ParseUser>() {
@@ -132,6 +142,8 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     @Override
     public void userLogin(String loginName, String password) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
         mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         mDialog.setTitleText("登录中");
@@ -156,28 +168,38 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     @Override
     public void userLogout(String userId) {
-
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
     }
 
     @Override
     public void userDelete(String userId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
 
     }
 
     @Override
-    public void queryProviderUserWithConditions(String mSchool, String mMajor,int start, int area, int categoryId) {
+    public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+       this.queryProviderUserWithConditions(school,major,start,area,categoryId,false,false,true);
+    }
 
-        Log.d(TAG, "enter method 【queryProviderUserWithConditions】-----------------: " );
+    @Override
+    public void queryProviderUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest, boolean isMajorNotCommon) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         ParseQuery<ParseUser> query = ParseUser.getQuery().setSkip(start).setLimit(10);
 
-        if (mSchool != null)
-            query.whereEqualTo("school",mSchool);
-        if (mMajor != null)
-            query.whereEqualTo("major",mMajor);
+        if (school != null)
+            query.whereEqualTo("school",school);
+        if (major != null)
+            query.whereEqualTo("major",major);
         if (categoryId >= 0){
             query.whereEqualTo("categoryId",categoryId);
         }
-        if (mSchool == null && area >= 0){
+        if (school == null && area >= 0){
             String[] schools = (String[]) allAreaSchoolList[area];
             List<String> schoolList = new ArrayList<>();
             for (int i = 1; i < schools.length; i++)
@@ -185,6 +207,16 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
             query.whereContainedIn("school",schoolList);
         }
+        if (isOrderByFansNum)
+            query.orderByDescending("fansNum");
+        if (isOrderByLatest)
+            query.orderByDescending("createdAt");
+
+        if (isMajorNotCommon)
+            query.whereEqualTo("userType", UserType.PROVIDER.getValue());
+        else
+            query.whereEqualTo("userType",UserType.USER.getValue());
+
         userResults = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> userList, ParseException e) {
@@ -209,7 +241,6 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
             }
         });
     }
-
 
 
 }

@@ -164,6 +164,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:id="@+id/cardview_user_major_icon"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:layout_marginBottom="10dp"
@@ -196,20 +197,22 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal">
+
                             <ImageView
+                                android:id="@+id/cardview_user_type_icon"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:layout_marginLeft="10dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/icon_focus"/>
+                                android:src="@drawable/icon_common_user"/>
 
                             <TextView
-                                android:id="@+id/cardview_user_fans_num"
+                                android:id="@+id/cardview_user_type_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
-                                android:text="5人关注"
+                                android:text="普通用户"
                                 android:textColor="@color/alpha_30_black"
                                 android:textSize="15sp"/>
 

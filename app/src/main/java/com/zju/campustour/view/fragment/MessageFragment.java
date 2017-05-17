@@ -14,7 +14,7 @@ import com.zju.campustour.R;
  * Created by HeyLink on 2017/4/1.
  */
 
-public class MessageFragment extends Fragment {
+public class MessageFragment extends BaseFragment {
 
     private View mRootView;
     private String TAG = "MessageFragment";

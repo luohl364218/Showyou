@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/user_focus_icon"
+        android:icon="@mipmap/icon_user_focus_default"
+        android:title="关注"
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/user_share_icon"
+        android:icon="@mipmap/icon_share"
+        android:title="分享"
+        android:orderInCategory="20"
+        app:showAsAction="ifRoom" />
+
+</menu>

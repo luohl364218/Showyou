@@ -1,5 +1,7 @@
 package com.zju.campustour.presenter.implement;
 
+import android.content.Context;
+
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.Parse;
@@ -9,6 +11,7 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectUserMap;
+import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IProjectUserMapOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.view.IView.IProjectCollectorView;
@@ -27,14 +30,18 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
     IProjectCollectorView mCollectorView = null;
     private List<ProjectUserMap> mProjectUserMapList;
     String TAG = getClass().getSimpleName();
+    Context mContext;
 
-    public ProjectUserMapOpPresenterImpl(IProjectCollectorView mProjectCollectorView){
+    public ProjectUserMapOpPresenterImpl(IProjectCollectorView mProjectCollectorView,Context context){
         mCollectorView = mProjectCollectorView;
+        this.mContext = context;
     }
 
 
     @Override
     public int getBookedNum(int projectId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return 0;
         return 0;
     }
 
@@ -45,6 +52,8 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
 
     @Override
     public void put(String userId, String projectId, UserProjectStateType type){
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         ParseObject collector = new ParseObject("ProjectUserMap");
         collector.put("projectId", projectId);
         collector.put("userId",userId);
@@ -78,6 +87,8 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
 
     @Override
     public void delete(String userId, String projectId, UserProjectStateType type){
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
         if (userId != null)
             query.whereEqualTo("userId",userId);
@@ -130,6 +141,8 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
 
     @Override
     public void query(String userId, String projectId, UserProjectStateType type) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
         if (userId != null)
             query.whereEqualTo("userId",userId);

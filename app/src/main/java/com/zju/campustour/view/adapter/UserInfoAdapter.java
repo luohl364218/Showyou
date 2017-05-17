@@ -1,10 +1,11 @@
 package com.zju.campustour.view.adapter;
 
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -14,6 +15,8 @@ import com.zju.campustour.model.util.DbUtils;
 
 
 import java.util.List;
+
+import static com.zju.campustour.model.common.Constants.GRADE_HIGH_SCHOOL;
 
 /**
  * Created by HeyLink on 2017/4/24.
@@ -38,7 +41,9 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         TextView studentCollegeView;
         TextView studentMajorView;
         TextView studentGradeView;
-        TextView studentFansNumView;
+        TextView studentTypeView;
+        ImageView studentTypeImgView;
+        ImageView studentMajorImgView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -50,8 +55,9 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
             studentCollegeView = (TextView) itemView.findViewById(R.id.cardview_user_college);
             studentMajorView = (TextView)itemView.findViewById(R.id.cardview_user_major);
             studentGradeView = (TextView) itemView.findViewById(R.id.cardview_user_grade);
-            studentFansNumView = (TextView) itemView.findViewById(R.id.cardview_user_fans_num);
-
+            studentTypeView = (TextView) itemView.findViewById(R.id.cardview_user_type_txt);
+            studentTypeImgView = (ImageView) itemView.findViewById(R.id.cardview_user_type_icon);
+            studentMajorImgView = (ImageView) itemView.findViewById(R.id.cardview_user_major_icon);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -91,10 +97,28 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
 
         holder.studentNameView.setText(mItemInfo.getUserName());
         holder.shortDescriptionView.setText(mItemInfo.getShortDescription());
+
+        if (mItemInfo.getGradeId() > GRADE_HIGH_SCHOOL){
+            String major = mItemInfo.getMajor();
+            if (TextUtils.isEmpty(major))
+                major = "未填写";
+            holder.studentMajorImgView.setVisibility(View.VISIBLE);
+            holder.studentMajorView.setVisibility(View.VISIBLE);
+            holder.studentMajorView.setText(major);
+        }
+        else {
+            holder.studentMajorImgView.setVisibility(View.INVISIBLE);
+            holder.studentMajorView.setVisibility(View.INVISIBLE);
+        }
+
         holder.studentCollegeView.setText(mItemInfo.getSchool());
-        holder.studentMajorView.setText(mItemInfo.getMajor());
+
         holder.studentGradeView.setText(mItemInfo.getGrade());
-        holder.studentFansNumView.setText(mItemInfo.getFansNum() + "人关注");
+        holder.studentTypeView.setText(mItemInfo.getUserType().getName());
+        if (mItemInfo.getUserType().getIndex() == 1)
+            holder.studentTypeImgView.setImageResource(R.drawable.icon_major_user);
+        else
+            holder.studentTypeImgView.setImageResource(R.drawable.icon_common_user);
     }
 
     @Override
@@ -130,6 +154,11 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
 
     public List<User> getDatas(){
         return mProviderUserItemInfos;
+    }
+
+    public void refreshSelectedData(int position, User mUser){
+        mProviderUserItemInfos.get(position).update(mUser);
+        notifyItemChanged(position);
     }
 
 }

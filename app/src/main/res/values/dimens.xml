@@ -10,4 +10,11 @@
     <dimen name="normalButtonHeight">48dp</dimen>
     <dimen name="bigButtonTextSize">18dp</dimen>
 
+    <dimen name="smallButtonHeight">32dp</dimen>
+    <dimen name="smallButtonWidth">48dp</dimen>
+    <dimen name="normalButtonWidth">80dp</dimen>
+    <dimen name="smallPadding">8dp</dimen>
+    <dimen name="smallerPadding">3dp</dimen>
+    <dimen name="smallButtonTextSize">15sp</dimen>
+
 </resources>

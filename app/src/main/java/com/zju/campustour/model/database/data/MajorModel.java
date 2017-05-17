@@ -1,19 +1,21 @@
 package com.zju.campustour.model.database.data;
 
+import java.util.List;
+
 /**
- * Created by HeyLink on 2017/5/15.
+ * Created by HeyLink on 2017/5/16.
  */
 
-public class SchoolModel {
+public class MajorModel {
 
     private String name;
     private String tag;
 
-    public SchoolModel() {
+    public MajorModel() {
         super();
     }
 
-    public SchoolModel(String name, String tag) {
+    public MajorModel(String name, String tag) {
         this.name = name;
         this.tag = tag;
     }
@@ -36,7 +38,9 @@ public class SchoolModel {
 
     @Override
     public String toString() {
-        return "SchoolModel [name=" + name + ", tag=" + tag + "]";
+        return "MajorModel [name=" + name + ", tag=" + tag + "]";
     }
+
+
 
 }

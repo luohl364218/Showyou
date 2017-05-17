@@ -112,7 +112,9 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     private String projectId;
     private boolean isFavor;
     private Project currentProject;
+    private User defaultUser;
     private MenuItem selectedItem;
+    private boolean isMyOwnProject = false;
 
     //todo 这里默认一个用户，以后要改为当前登录用户
     private ParseUser currentLoginUser;
@@ -126,23 +128,43 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         Intent mIntent = getIntent();
         Project mProject = (Project) mIntent.getSerializableExtra("project");
         position = mIntent.getIntExtra("position", -1);
-
         if (mProject == null){
+            finish();
+        }
+        defaultUser = mProject.getProvider();
+        if (defaultUser == null){
             finish();
         }
 
         initViews(mProject);
 
-        mCollectorPresenter = new ProjectUserMapOpPresenterImpl(this);
+        mCollectorPresenter = new ProjectUserMapOpPresenterImpl(this,this);
 
         currentLoginUser = ParseUser.getCurrentUser();
         if (currentLoginUser != null)
             mCollectorPresenter.query(currentLoginUser.getObjectId(),mProject.getId(), UserProjectStateType.COLLECT);
 
         //异步请求项目的销售界面信息
-        mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this);
+        mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this,this);
         mProjectInfoOpPresenter.queryProjectSaleInfoWithId(mProject.getId());
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentLoginUser = ParseUser.getCurrentUser();
+        if (currentLoginUser != null)
+            mCollectorPresenter.query(currentLoginUser.getObjectId(),projectId, UserProjectStateType.COLLECT);
+
+        /*如果是当前用户进自己的界面，不显示关注按钮*/
+        if (defaultUser != null
+                && currentLoginUser != null
+                && currentLoginUser.getObjectId().equals(defaultUser.getId())){
+            isMyOwnProject = true;
+        }
+        else
+            isMyOwnProject = false;
     }
 
     private void initViews(Project mProject) {
@@ -174,6 +196,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         projectEnrollNum.setText(mProject.getAcceptNum()+"人报名");
 
         User provider = mProject.getProvider();
+
         url = provider.getImgUrl();
 
         if (url==null)
@@ -194,24 +217,29 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         providerBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mIntent = new Intent(ProjectActivity.this, ProviderHomePageActivity.class);
+                Intent mIntent = new Intent(ProjectActivity.this, UserActivity.class);
                 mIntent.putExtra("provider",currentProject.getProvider());
                 startActivity(mIntent);
             }
         });
     }
 
-
+    /*启动时初始化一次*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.project, menu);
         return true;
     }
 
+    /*每次点击一个Menu的时候，它就改变一次*/
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem mItem = menu.findItem(R.id.project_favor_icon);
         selectedItem = mItem;
+        /*如果是当前用户进自己的界面，不显示关注按钮*/
+        if (isMyOwnProject){
+            menu.findItem(R.id.project_favor_icon).setVisible(false);
+        }
 
         return true;
     }
@@ -225,6 +253,8 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
             startActivity(mIntent);
             return true;
         }
+
+
         //点击收藏
         if (id == R.id.project_favor_icon) {
             if (isFavor){
@@ -256,20 +286,21 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
         oks.setTitle(currentProject.getTitle());
         // titleUrl是标题的网络链接，QQ和QQ空间等使用
-        oks.setTitleUrl("http://sharesdk.cn");
+        String url = "http://123.206.208.68:8888/project?objectId=" + currentProject.getId();
+        oks.setTitleUrl(url);
         // text是分享文本，所有平台都需要这个字段
         oks.setText(currentProject.getDescription());
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
         oks.setImageUrl(currentProject.getImgUrl());
         // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://sharesdk.cn");
+        oks.setUrl(url);
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
         oks.setComment(selectComment.getText().toString().trim());
         // site是分享此内容的网站名称，仅在QQ空间使用
         oks.setSite(getString(R.string.app_name));
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
+        oks.setSiteUrl(url);
 
         // 启动分享GUI
         oks.show(this);
@@ -310,10 +341,10 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
 
     @Override
     public void onQueryProjectCollectorStateDone(boolean state, List<ProjectUserMap> mProjectUserMapList) {
-        //todo 判断是否已经收藏
+        //判断是否已经收藏
         isFavor = state;
 
-        if (isFavor)
+        if (isFavor && selectedItem != null)
             selectedItem.setIcon(R.mipmap.icon_favor_selected);
         else
             selectedItem.setIcon(R.mipmap.icon_favor_default);
@@ -346,11 +377,5 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         finish();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        currentLoginUser = ParseUser.getCurrentUser();
-        if (currentLoginUser != null)
-            mCollectorPresenter.query(currentLoginUser.getObjectId(),projectId, UserProjectStateType.COLLECT);
-    }
+
 }

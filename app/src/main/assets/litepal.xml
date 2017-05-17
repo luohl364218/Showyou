@@ -35,7 +35,6 @@
         <mapping class="com.zju.campustour.model.database.models.User"/>
         <mapping class="com.zju.campustour.model.database.models.Project"/>
         <mapping class="com.zju.campustour.model.database.models.ProjectUserMap"/>
-        <mapping class="com.zju.campustour.model.database.models.FocusMap"/>
     </list>
 
     <!--

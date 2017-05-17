@@ -94,8 +94,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
         password = mIntent.getStringExtra("password");
         isEditMode = mIntent.getBooleanExtra("isEditMode",false);
         currentUser = ParseUser.getCurrentUser();
-        if (isEditMode)
-            initOriginalView();
+        initOriginalView();
 
         initView();
     }

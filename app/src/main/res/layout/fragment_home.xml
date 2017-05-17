@@ -336,14 +336,14 @@
                 </LinearLayout>
 
                         <TextView
-                    android:id="@+id/fragment_home_noResult_hint"
-                    android:padding="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorAccent"
-                    android:layout_gravity="center"
-                    android:text="努力加载数据中，请稍候"/>
+                            android:id="@+id/fragment_home_noResult_hint"
+                            android:padding="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/colorAccent"
+                            android:layout_gravity="center"
+                            android:text="努力加载数据中，请稍候"/>
 
                         <RelativeLayout
                     android:layout_width="match_parent"

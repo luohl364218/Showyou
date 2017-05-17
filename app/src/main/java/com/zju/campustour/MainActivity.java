@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -37,6 +38,8 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.model.database.data.SchoolData;
+import com.zju.campustour.model.database.models.UserFocusMap;
+import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
@@ -44,6 +47,8 @@ import com.zju.campustour.presenter.protocal.event.LogoutEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
+import com.zju.campustour.view.IView.IUserFocusView;
+import com.zju.campustour.view.IView.IUserView;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.RegisterActivity;
@@ -68,7 +73,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -134,9 +139,15 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        currentLoginUser = ParseUser.getCurrentUser();
+        if (currentLoginUser != null){
+            currentLoginUser.put("online",false);
+            currentLoginUser.saveEventually();
+        }
+
         unregisterReceiver(mNetworkChangeReceiver);
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     /**
@@ -180,7 +191,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void initLayoutElements() {
+    private void initLayoutElements(){
 
         mNavigationView.setNavigationItemSelectedListener(this);
         headerLayout = mNavigationView.getHeaderView(0);
@@ -199,6 +210,7 @@ public class MainActivity extends BaseActivity
 
         }
         else{
+            initUserCloudInfo();
 
             userEditLogo.setVisibility(View.VISIBLE);
             String userImgUrl = currentLoginUser.getString("imgUrl");
@@ -206,7 +218,8 @@ public class MainActivity extends BaseActivity
             loginHint.setVisibility(View.GONE);
             userName.setText(currentLoginUser.getUsername());
             userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
-
+            currentLoginUser.put("online",true);
+            currentLoginUser.saveEventually();
 
         }
 
@@ -299,6 +312,11 @@ public class MainActivity extends BaseActivity
             Intent mIntent = new Intent(this,RegisterActivity.class);
             startActivity(mIntent);
         } else if (id == R.id.my_interest) {
+            currentLoginUser = ParseUser.getCurrentUser();
+            if (currentLoginUser != null){
+                currentLoginUser.put("online",false);
+                currentLoginUser.saveEventually();
+            }
             ParseUser.logOut();
             EventBus.getDefault().post(new LogoutEvent(true));
         } else if (id == R.id.setting) {
@@ -355,6 +373,12 @@ public class MainActivity extends BaseActivity
                 }
                 userImg.setImageURI(Uri.parse(img));
                 userEditLogo.setVisibility(View.VISIBLE);
+
+
+                FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
+                mFocusMapOpPresenter.queryFansAndDealNum(currentLoginUser.getObjectId());
+
+
             }catch (Exception e){
 
             }
@@ -384,6 +408,7 @@ public class MainActivity extends BaseActivity
     public void onEditUserInfoDoneEvent(EditUserInfoDone event) {
         if (event.isDone()){
             try{
+
                 currentLoginUser = ParseUser.getCurrentUser();
                 userName.setText(currentLoginUser.getUsername());
                 loginHint.setVisibility(View.GONE);
@@ -394,6 +419,8 @@ public class MainActivity extends BaseActivity
                 }
                 userImg.setImageURI(Uri.parse(img));
 
+                FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
+                mFocusMapOpPresenter.queryFansAndDealNum(currentLoginUser.getObjectId());
             }catch (Exception e){
 
             }
@@ -420,19 +447,61 @@ public class MainActivity extends BaseActivity
 
     }
 
+    @Override
+    public void onFocusActionError(boolean flag) {
+
+    }
+
+    @Override
+    public void onQueryFansOrFocusDone(boolean isFocus, List<UserFocusMap> userFocusList) {
+
+    }
+
+    @Override
+    public void onGetFansNumDone(int fansNum) {
+        currentLoginUser.put("fansNum",fansNum);
+        currentLoginUser.saveEventually();
+    }
+
+    @Override
+    public void onGetDealNumDone(int dealNum) {
+
+    }
+
 
     class NetworkChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isAvailable()){
+            if (networkInfo != null && networkInfo.isConnected() && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+
+                // 当前所连接的网络可用
+                isNetworkUseful = true;
                 EventBus.getDefault().post(new NetworkChangeEvent(true));
+
+                initUserCloudInfo();
+
             }
             else {
+                isNetworkUseful = false;
                 EventBus.getDefault().post(new NetworkChangeEvent(false));
             }
 
+        }
+
+
+    }
+
+    private void initUserCloudInfo() {
+        if (isNetworkUseful && currentLoginUser != null){
+            FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
+            mFocusMapOpPresenter.queryFansAndDealNum(currentLoginUser.getObjectId());
+            try {
+                currentLoginUser.fetch();
+            } catch (ParseException mE) {
+                mE.printStackTrace();
+            }
         }
     }
 

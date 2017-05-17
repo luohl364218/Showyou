@@ -1,25 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <LinearLayout
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/fragment_search_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/white"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fragment_search_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/customTabLayout"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            >
+
+        </android.support.design.widget.TabLayout>
+
+
+    <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/fragment_search_noResult_hint"
-                android:padding="30dp"
+            <LinearLayout
+                android:id="@+id/fragment_search_noResult_hint_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/colorAccent"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:text="努力加载数据中，请稍候"/>
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/icon_search_for_nothing_middle"/>
+
+                <TextView
+                    android:id="@+id/fragment_search_noResult_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    />
+            </LinearLayout>
+
 
             <com.cjj.MaterialRefreshLayout
                 android:id="@+id/refresh_view"
@@ -41,6 +77,9 @@
         </LinearLayout>
 
 
+
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -50,4 +89,4 @@
         app:srcCompat="@drawable/icon_college_white"/>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

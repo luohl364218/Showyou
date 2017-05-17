@@ -15,6 +15,18 @@ public class Constants {
     public static final int FULL_VIEW = 0;
     public static final int PART_VIEW = 1;
 
+    public static final int TAG_DEFAULT_SEARCH = 0;
+    public static final int TAG_HOT_RECOMMEND = 1;
+    public static final int TAG_SAME_PROVINCE = 2;
+    public static final int TAG_LATEST = 3;
+
+    public static final int ACTION_LIST = 1;
+    public static final int ACTION_GIRD = 2;
+
+    public static final int GRADE_PRIMARY_SCHOOL = 5;
+    public static final int GRADE_JUNIOR_HIGH_SCHOOL = 8;
+    public static final int GRADE_HIGH_SCHOOL = 12;
+
 
     public static final String First_Open = "isFirstOpen";
     public static final int STATE_NORMAL = 0;

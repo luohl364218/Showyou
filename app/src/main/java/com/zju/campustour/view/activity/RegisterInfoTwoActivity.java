@@ -18,10 +18,13 @@ import android.widget.TextView;
 import com.parse.ParseUser;
 import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
+import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.presenter.listener.MyTextWatch;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.view.widget.AreaSelectDialog;
 import com.zju.campustour.view.widget.CollegeSelectDialog;
+import com.zju.campustour.view.widget.MajorSelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -44,6 +47,12 @@ public class RegisterInfoTwoActivity extends BaseActivity {
 
     @BindView(R.id.user_school)
     EditText schoolName;
+
+    @BindView(R.id.major_select)
+    LinearLayout majorSelect;
+
+    @BindView(R.id.user_major)
+    EditText majorName;
 
     @BindView(R.id.user_type_group)
     RadioGroup userType;
@@ -77,6 +86,10 @@ public class RegisterInfoTwoActivity extends BaseActivity {
     private String schoolCity = "";
     private String schoolDistrict = "";
     private String collegeTag = "";
+    private String school;
+    private String majorClass;
+    private String major;
+    private int majorId;
 
     //当前用户
     ParseUser currentUser;
@@ -84,6 +97,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
     private boolean isEditMode = false;
 
     private boolean isSchoolNotNull = false;
+    private boolean isMajorNotNull = false;
     private boolean isSchoolAreaNotNull = false;
 
     @Override
@@ -114,14 +128,16 @@ public class RegisterInfoTwoActivity extends BaseActivity {
 
     private void initOriginalView() {
         //如果是大学生，隐藏地区选择，显示专业用户选项、提示
-        if (gradeIndex >= 13){
+        if (gradeIndex > Constants.GRADE_HIGH_SCHOOL){
             try{
                 //【大学用户】信息
                 if (currentUser != null && isEditMode){
-                    schoolName.setText(currentUser.getString("school"));
+                    school = currentUser.getString("school");
+                    schoolName.setText(school);
                     //大学是有省份数据的，不能忘了
                     schoolProvince = currentUser.getString("province");
                     isSchoolNotNull = true;
+                    isSchoolAreaNotNull = true;
                     if (currentUser.getInt("userType") == 0)
                         userType.check(R.id.select_common_user );
                     else {
@@ -132,6 +148,12 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                         userType.check(R.id.select_major_user);
                         userDesc.setText(currentUser.getString("description"));
                     }
+
+                    major = currentUser.getString("major");
+                    isMajorNotNull = true;
+                    majorId = currentUser.getInt("categoryId");
+                    majorName.setText(major);
+
                     btnConfirm.setEnabled(true);
                 }
 
@@ -149,14 +171,15 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                     schoolArea.setText(schoolProvince +" "+schoolCity+ " " + schoolDistrict);
                     isSchoolAreaNotNull = true;
                     String key = "";
-                    if (gradeIndex <= 5)
+                    if (gradeIndex <= Constants.GRADE_PRIMARY_SCHOOL)
                         key = "primarySchool";
-                    else if (gradeIndex <= 8)
+                    else if (gradeIndex < Constants.GRADE_JUNIOR_HIGH_SCHOOL)
                         key = "juniorHighSchool";
                     else
                         key = "highSchool";
 
-                    schoolName.setText(currentUser.getString(key));
+                    school = currentUser.getString(key);
+                    schoolName.setText(school);
                     isSchoolNotNull = true;
                     userType.check(R.id.select_common_user );
 
@@ -173,7 +196,8 @@ public class RegisterInfoTwoActivity extends BaseActivity {
     private void initView() {
 
         //如果是大学生，隐藏地区选择，显示专业用户选项、提示
-        if (gradeIndex >= 13){
+        if (gradeIndex > Constants.GRADE_HIGH_SCHOOL){
+            isSchoolAreaNotNull = true;
             schoolAreaSelect.setVisibility(View.GONE);
             majorUserBtn.setVisibility(View.VISIBLE);
             majorUserTxt.setVisibility(View.VISIBLE);
@@ -182,6 +206,12 @@ public class RegisterInfoTwoActivity extends BaseActivity {
             schoolName.setEnabled(false);
             schoolName.setClickable(true);
             schoolName.setHint("请点击左侧选择学校");
+
+            //专业只能点击，不能输入
+            majorSelect.setVisibility(View.VISIBLE);
+            majorName.setEnabled(false);
+            majorName.setClickable(true);
+            majorName.setHint("请点击左侧选择专业");
 
             schoolSelect.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -193,15 +223,46 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                             dialog.dismiss();
                             if ("全部".equals(currentSchool) || "其他".equals(currentSchool)){
                                 schoolName.setEnabled(true);
-                                schoolName.setHint("请输入你的大学名称");
+                                schoolName.setText("请输入你的大学名称");
                                 schoolName.setClickable(false);
                                 return;
                             }
                             schoolProvince = currentProvince;
-                            schoolName.setText(currentSchool);
+                            school = currentSchool;
+                            schoolName.setText(school);
                             collegeTag = currentTag;
                             isSchoolNotNull = true;
-                            btnConfirm.setEnabled(true);
+                            btnConfirm.setEnabled(isMajorNotNull);
+                        }
+                    });
+                    CollegeSelectDialog dialog =  mBuilder.create();
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }
+            });
+
+
+
+            majorSelect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MajorSelectDialog.Builder mBuilder = new MajorSelectDialog.Builder(mContext);
+                    mBuilder.setPositiveButtonListener(new MajorSelectDialog.Builder.OnMajorSelectDialog() {
+                        @Override
+                        public void onClick(DialogInterface dialog, String currentMajorClass, String currentMajor, String currentTag) {
+                            dialog.dismiss();
+                            if ("其他".equals(currentMajor)){
+                                majorName.setEnabled(true);
+                                majorName.setText("请输入你的专业名称");
+                                majorName.setClickable(false);
+                                return;
+                            }
+                            majorClass = currentMajorClass;
+                            major = currentMajor;
+                            majorName.setText(major);
+                            majorId = Integer.valueOf(currentTag);
+                            isMajorNotNull = true;
+                            btnConfirm.setEnabled(isSchoolNotNull);
                         }
                     });
                     CollegeSelectDialog dialog =  mBuilder.create();
@@ -211,10 +272,12 @@ public class RegisterInfoTwoActivity extends BaseActivity {
             });
         }
         else {
+            isMajorNotNull = true;
             schoolAreaSelect.setVisibility(View.VISIBLE);
             majorUserBtn.setVisibility(View.GONE);
             majorUserTxt.setVisibility(View.GONE);
             majorUserHint.setVisibility(View.GONE);
+            majorSelect.setVisibility(View.GONE);
             //学校名称只能输入，不能选择
             schoolName.setEnabled(true);
             schoolName.setClickable(false);
@@ -256,6 +319,24 @@ public class RegisterInfoTwoActivity extends BaseActivity {
         }
 
 
+        //让按钮随着输入内容有效而使能
+        schoolName.addTextChangedListener(new MyTextWatch() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                isSchoolNotNull = !TextUtils.isEmpty(s.toString());
+                btnConfirm.setEnabled((isSchoolNotNull && isMajorNotNull && isSchoolAreaNotNull));
+            }
+        });
+        //让按钮随着输入内容有效而使能
+        majorName.addTextChangedListener(new MyTextWatch() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                isMajorNotNull = !TextUtils.isEmpty(s.toString());
+                btnConfirm.setEnabled((isSchoolNotNull && isMajorNotNull && isSchoolAreaNotNull));
+            }
+        });
+
+
         userType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -279,8 +360,8 @@ public class RegisterInfoTwoActivity extends BaseActivity {
     @OnClick(R.id.btn_two_next)
     protected void updateUserInfo(){
 
-        String school = schoolName.getText().toString().trim();
-        if (TextUtils.isEmpty(school)) {
+        school = schoolName.getText().toString().trim();
+        if ( TextUtils.isEmpty(school)) {
             showToast("学校名称不能为空");
             return;
         }
@@ -292,7 +373,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
 
         String userDescription = "";
         boolean isMajorUser = false;
-        if (gradeIndex >= 13){
+        if (gradeIndex > Constants.GRADE_HIGH_SCHOOL){
             isMajorUser = userType.getCheckedRadioButtonId() == R.id.select_major_user;
             if (isMajorUser){
                 userDescription = userDesc.getText().toString().trim();
@@ -300,37 +381,56 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                     showToast("专业用户介绍不能为空");
                     return;
                 }
+
+
             }
+
+            if (TextUtils.isEmpty(major) || "请输入你的专业名称".equals(major)){
+                showToast("专业不能为空");
+                return;
+            }
+
         }
 
         currentUser.put("province",schoolProvince);
         currentUser.put("city", schoolCity);
         currentUser.put("district",schoolDistrict);
 
-        if (isMajorUser){
-            //存储专业用户信息
-            currentUser.put("description",userDescription);
-            currentUser.put("userType",1);
-            currentUser.put("school",school);
-            currentUser.put("collegeTag",collegeTag);
-        }
-        else {
-            currentUser.put("userType",0);
-            //存储普通用户信息
-            if (gradeIndex >= 13){
-                currentUser.put("school",school);
-                currentUser.put("collegeTag",collegeTag);
-            }
-            else if (gradeIndex >= 9){
-                currentUser.put("highSchool",school);
-            }
-            else if (gradeIndex >=6){
-                currentUser.put("juniorHighSchool",school);
+       //按年级存储
+
+        //1. 大学生+
+        if (gradeIndex > Constants.GRADE_HIGH_SCHOOL){
+
+            if (isMajorUser){
+                //存储专业用户信息
+                currentUser.put("description",userDescription);
+                currentUser.put("userType", UserType.PROVIDER.getValue());
             }
             else {
-                currentUser.put("primarySchool",school);
+                currentUser.put("userType", UserType.USER.getValue());
+                //存储普通用户信息
             }
+            currentUser.put("school",school);
+            currentUser.put("collegeTag",collegeTag);
+            currentUser.put("major",major);
+            currentUser.put("categoryId", majorId);
         }
+        else if (gradeIndex > Constants.GRADE_JUNIOR_HIGH_SCHOOL){
+            currentUser.put("userType", UserType.USER.getValue());
+            //存储普通用户信息
+            currentUser.put("highSchool",school);
+        }
+        else if (gradeIndex > Constants.GRADE_PRIMARY_SCHOOL){
+            currentUser.put("userType", UserType.USER.getValue());
+            //存储普通用户信息
+            currentUser.put("juniorHighSchool",school);
+        }
+        else {
+            currentUser.put("userType", UserType.USER.getValue());
+            //存储普通用户信息
+            currentUser.put("primarySchool",school);
+        }
+
 
         currentUser.saveEventually();
         EventBus.getDefault().post(new EditUserInfoDone(true));

@@ -73,7 +73,7 @@
             android:theme="@style/DiyNoActionBar">
         </activity>
         <activity
-            android:name=".view.activity.ProviderHomePageActivity"
+            android:name=".view.activity.UserActivity"
             android:launchMode="singleTask"
             android:theme="@style/DiyNoActionBar">
         </activity>

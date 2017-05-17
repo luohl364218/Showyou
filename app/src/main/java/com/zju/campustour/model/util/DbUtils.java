@@ -2,6 +2,7 @@ package com.zju.campustour.model.util;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.zju.campustour.model.common.Constants.GRADE_HIGH_SCHOOL;
+import static com.zju.campustour.model.common.Constants.GRADE_JUNIOR_HIGH_SCHOOL;
+import static com.zju.campustour.model.common.Constants.GRADE_PRIMARY_SCHOOL;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_STOP;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_RUNNING;
@@ -42,7 +46,7 @@ public class DbUtils {
         String realName = user.getString("realname");
         String password =user.getString("password");
         SexType sex = SexType.values()[user.getInt("sex")];
-        String school = user.getString("school");
+
         String major = user.getString("major");
         String grade = user.getString("grade");
         int fansNum = user.getInt("fansNum");
@@ -54,10 +58,33 @@ public class DbUtils {
         String user_description = user.getString("description");
         String shortDescription = user.getString("shortDescription");
         int categoryId = user.getInt("categoryId");
+        String province = user.getString("province");
+        String city = user.getString("city");
+        String district = user.getString("district");
+        int gradeId = user.getInt("gradeId");
+
+        String school = "";
+        if (gradeId <= GRADE_PRIMARY_SCHOOL){
+            school = user.getString("primarySchool");
+        }
+        else if (gradeId <= GRADE_JUNIOR_HIGH_SCHOOL){
+            school = user.getString("juniorHighSchool");
+        }
+        else if (gradeId <= GRADE_HIGH_SCHOOL){
+            school = user.getString("highSchool");
+        }
+        else
+            school = user.getString("school");
+
+        if (TextUtils.isEmpty(school))
+            school =  "未填写";
+
+        String collegeTag = user.getString("collegeTag");
 
         return new User(user_id,userName, realName, password, sex,
                 school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
-                userType, user_description, shortDescription,categoryId);
+                userType, user_description, shortDescription,categoryId,province,city,
+                district,gradeId,collegeTag);
     }
 
     public static void setImg(SimpleDraweeView mImg, String url, int width, int heigth)

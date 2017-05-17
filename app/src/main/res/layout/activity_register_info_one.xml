@@ -317,7 +317,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="一句话介绍自己"
+                android:text="一句话写下奋斗目标or介绍自己"
                 android:textColor="#444444"
                 android:textSize="16sp"/>
 
@@ -338,7 +338,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:hint="如：一个天天搬砖的程序员"
+                    android:hint="如：考上重点大学成为一个天天搬砖的程序员"
                     android:inputType="text"
                     android:maxLines="2"
                     android:textColor="#444444"

@@ -46,6 +46,13 @@ public class User implements Serializable {
 
     private int categoryId;
 
+    private String province;
+    private String city;
+    private String district;
+    private int    gradeId;
+    private String collegeTag;
+
+  
     public User(){
 
     }
@@ -53,7 +60,8 @@ public class User implements Serializable {
     public User(String mId, String mUserName, String mRealName, String mPassword,
                 SexType mSex, String mSchool, String mMajor, String mGrade,
                 int mFansNum, boolean mOnline, String mImgUrl, String mPhoneNum,
-                String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription, int mCategoryId) {
+                String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription, int mCategoryId,
+                String mProvince,String mCity, String mDistrict, int mGradeId, String mCollegeTag) {
         id = mId;
         userName = mUserName;
         realName = mRealName;
@@ -71,6 +79,12 @@ public class User implements Serializable {
         description = mDescription;
         shortDescription = mShortDescription;
         categoryId = mCategoryId;
+
+        province = mProvince;
+        city = mCity;
+        district = mDistrict;
+        gradeId = mGradeId;
+        collegeTag = mCollegeTag;
     }
 
     public String getDescription() {
@@ -208,5 +222,87 @@ public class User implements Serializable {
 
     public void setCategoryId(int mCategoryId) {
         categoryId = mCategoryId;
+    }
+
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String mProvince) {
+        province = mProvince;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String mCity) {
+        city = mCity;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String mDistrict) {
+        district = mDistrict;
+    }
+
+    public int getGradeId() {
+        return gradeId;
+    }
+
+    public void setGradeId(int mGradeId) {
+        gradeId = mGradeId;
+    }
+
+    public String getCollegeTag() {
+        return collegeTag;
+    }
+
+    public void setCollegeTag(String mCollegeTag) {
+        collegeTag = mCollegeTag;
+    }
+
+
+    public void update(User mUser){
+
+        if (this == mUser)return;
+        if (mUser == null || getClass() != mUser.getClass())return;
+
+        if (getUserName() != null? !getUserName().equals(mUser.getUserName()) : mUser.getUserName() != null){
+            setUserName(mUser.getUserName());
+        }
+
+        if (getRealName() != null? !getRealName().equals(mUser.getRealName()) : mUser.getRealName() != null){
+            setRealName(mUser.getRealName());
+        }
+
+        if (getSchool() != null? !getSchool().equals(mUser.getSchool()) : mUser.getSchool() != null){
+            setSchool(mUser.getSchool());
+        }
+
+        if (getMajor() != null? !getMajor().equals(mUser.getMajor()) : mUser.getMajor() != null){
+            setMajor(mUser.getMajor());
+        }
+
+        if (getGrade() != null? !getGrade().equals(mUser.getGrade()) : mUser.getGrade() != null){
+            setGrade(mUser.getGrade());
+        }
+
+        if (getFansNum() >= 0? !(getFansNum()== mUser.getFansNum()) : mUser.getFansNum() >= 0){
+            setFansNum(mUser.getFansNum());
+        }
+
+        if (getImgUrl() != null? !getImgUrl().equals(mUser.getImgUrl()) : mUser.getImgUrl() != null){
+            setImgUrl(mUser.getImgUrl());
+        }
+
+
+
+        if (getShortDescription() != null? !getShortDescription().equals(mUser.getShortDescription()) : mUser.getShortDescription() != null){
+            setShortDescription(mUser.getShortDescription());
+        }
     }
 }

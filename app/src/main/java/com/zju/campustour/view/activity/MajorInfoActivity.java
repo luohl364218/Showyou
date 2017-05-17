@@ -213,7 +213,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserViewIn
         mItemInfoAdapter_1.setOnCardViewItemClickListener(new UserInfoAdapter.onCardViewItemClickListener() {
             @Override
             public void onClick(View v, int position, User provider) {
-                Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);
+                Intent mIntent = new Intent(getApplication(), UserActivity.class);
                 mIntent.putExtra("provider",provider);
                 startActivity(mIntent);
             }
@@ -235,7 +235,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserViewIn
         mItemInfoAdapter.setOnCardViewItemClickListener(new UserInfoAdapter.onCardViewItemClickListener() {
             @Override
             public void onClick(View v, int position, User provider) {
-                Intent mIntent = new Intent(getApplication(), ProviderHomePageActivity.class);
+                Intent mIntent = new Intent(getApplication(), UserActivity.class);
                 mIntent.putExtra("provider",provider);
                 startActivity(mIntent);
             }

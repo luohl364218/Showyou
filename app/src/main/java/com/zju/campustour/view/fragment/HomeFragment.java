@@ -1,7 +1,6 @@
 package com.zju.campustour.view.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,20 +37,17 @@ import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
-import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
-import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
-import com.zju.campustour.view.IView.IUserLoginView;
 import com.zju.campustour.view.activity.InfoWebActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MajorListActivity;
 import com.zju.campustour.view.activity.ProjectActivity;
-import com.zju.campustour.view.activity.ProviderHomePageActivity;
+import com.zju.campustour.view.activity.UserActivity;
 import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
@@ -70,7 +66,7 @@ import static com.zju.campustour.model.common.Constants.imageUrls;
  * Created by HeyLink on 2017/4/1.
  */
 
-public class HomeFragment extends Fragment implements View.OnClickListener, ISearchProjectInfoView{
+public class HomeFragment extends BaseFragment implements View.OnClickListener, ISearchProjectInfoView{
 
     private View mRootView;
     private Toolbar mToolbar;
@@ -94,7 +90,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
 
     private TextView noResultHint;
     private int state = STATE_NORMAL;
-    private boolean isNetworkValid = true;
     private boolean isGotAllData = false;
 
     //获取project信息的接口实现
@@ -110,6 +105,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     public HomeFragment() {
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);//加上这句话，menu才会显示出来
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -117,8 +118,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
             mRootView = inflater.inflate(R.layout.fragment_home, container, false);
             initView();
             initSlideImages();
-            mProjectInfoPresenter = new ProjectInfoOpPresenterImpl(this);
+
+            mProjectInfoPresenter = new ProjectInfoOpPresenterImpl(this,getContext());
             mProjectInfoPresenter.getLimitProjectInfo(0,10);
+
+
             EventBus.getDefault().register(this);
             //initRefreshLayout();
 
@@ -134,7 +138,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
 
     private void initView() {
         mToolbar = (Toolbar) mRootView.findViewById(R.id.fragment_toolbar);
+
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        mToolbar.inflateMenu(R.menu.main);
         mToolbar.setTitle("校游 Show You");
         mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -146,7 +152,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                 }
             }
         });
-        setHasOptionsMenu(true);
+
 
         //mMaterialRefreshLayout = (PullToRefreshScrollView) mRootView.findViewById(R.id.home_refresh_view);
         renwenBtn = (LinearLayout)mRootView.findViewById(R.id.fragment_home_renwen);
@@ -161,6 +167,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
         hotMajorBtn = (Button)mRootView.findViewById(R.id.fragment_home_hotmajor_btn);
         remoteChatBtn = (Button)mRootView.findViewById(R.id.fragment_home_remotechat_btn);
         noResultHint = (TextView) mRootView.findViewById(R.id.fragment_home_noResult_hint);
+        if (!isNetworkUseful){
+            noResultHint.setText("无法连接到服务器");
+        }
         //专家推荐列表
         mRecyclerView = (RecyclerView)mRootView.findViewById(R.id.fragment_home_recycle_view);
 
@@ -259,7 +268,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
 
     private void showProjectRecycleView(List<Project> projectList) {
 
+        if (mProjectAdapter == null)
+            mProjectAdapter = new ProjectInfoAdapter(projectList, Constants.FULL_VIEW,getContext());
+
         switch (state) {
+
             case Constants.STATE_NORMAL:
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
                     @Override
@@ -270,7 +283,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                 if (projectList == null)
                     return;
 
-                mProjectAdapter = new ProjectInfoAdapter(projectList, Constants.FULL_VIEW,getContext());
                 mProjectAdapter.setOnProjectItemClickListener(new ProjectInfoAdapter.onProjectItemClickListener() {
                     @Override
                     public void onClick(View v, int position, Project project) {
@@ -283,8 +295,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
                 mProjectAdapter.setOnProjectProviderClickListener(new ProjectInfoAdapter.onProjectProviderClickListener() {
                     @Override
                     public void onClick(View v, int position, User user) {
-                        Intent mIntent = new Intent(getActivity(), ProviderHomePageActivity.class);
+                        Intent mIntent = new Intent(getActivity(), UserActivity.class);
                         mIntent.putExtra("provider",user);
+                        mIntent.putExtra("position",position);
                         startActivity(mIntent);
                     }
                 });
@@ -325,13 +338,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     public void onNetworkChangeEvent(NetworkChangeEvent event) {
         if (event.isValid()){
             noResultHint.setVisibility(View.GONE);
-            isNetworkValid = true;
-           /* mProjectInfoPresenter.getLimitProjectInfo(0,10);*/
+            isNetworkUseful = true;
+            if (mProjectAdapter == null)
+                state = STATE_NORMAL;
+            else{
+                state = STATE_REFRESH;
+            }
+            mProjectInfoPresenter.getLimitProjectInfo(0,10);
         }
         else {
-            isNetworkValid = false;
+            isNetworkUseful = false;
             noResultHint.setVisibility(View.VISIBLE);
-            noResultHint.setText("网络连接已经断开");
+            noResultHint.setText("网络连接不可用");
         }
     }
 
@@ -424,7 +442,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ISea
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater mInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menu.clear();
+        //menu.clear();
+        super.onCreateOptionsMenu(menu, mInflater);
         mInflater.inflate(R.menu.main, menu);
     }
 
