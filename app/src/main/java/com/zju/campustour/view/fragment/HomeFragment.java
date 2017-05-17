@@ -90,7 +90,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     private TextView noResultHint;
     private int state = STATE_NORMAL;
-    private boolean isGotAllData = false;
 
     //获取project信息的接口实现
     private ProjectInfoOpPresenterImpl mProjectInfoPresenter;
@@ -246,7 +245,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             noResultHint.setVisibility(View.GONE);
             if (mProjectAdapter == null)
                 state = STATE_NORMAL;
-            showProjectRecycleView((List<Project>) mProjects);
+            showProjectRecycleView((List<Project>)mProjects);
         }
         else {
             //showLocalProjectItemInfoData();
@@ -321,8 +320,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 mRecyclerView.scrollToPosition(mProjectAdapter.getDatas().size());
 
                 if (projectList.size() < 10){
-                    Toast.makeText(getActivity(), "已经获取全部数据", Toast.LENGTH_SHORT).show();
-                    isGotAllData = true;
+                    showToast(getContext(),"已经获取全部数据");
                 }
                 break;
             default:
@@ -424,10 +422,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 break;
 
             case R.id.fragment_home_hotmajor_btn:
-                Toast.makeText(getActivity(), "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
+                showToast(getContext(),"Sorry 此功能我们将在5月初完善");
                 break;
             case R.id.fragment_home_remotechat_btn:
-                Toast.makeText(getActivity(), "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
+                showToast(getContext(),"Sorry 此功能我们将在5月初完善");
                 break;
 
             default:

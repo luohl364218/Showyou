@@ -49,6 +49,7 @@ import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.view.IView.IUserFocusView;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.activity.LoginActivity;
+import com.zju.campustour.view.activity.MyProjectActivity;
 import com.zju.campustour.view.activity.RegisterActivity;
 import com.zju.campustour.view.activity.RegisterInfoOneActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
@@ -318,6 +319,8 @@ public class MainActivity extends BaseActivity
             ParseUser.logOut();
             EventBus.getDefault().post(new LogoutEvent(true));
         } else if (id == R.id.setting) {
+            Intent mIntent = new Intent(this,MyProjectActivity.class);
+            startActivity(mIntent,true);
 
         } else if (id == R.id.build_project) {
 

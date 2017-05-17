@@ -150,10 +150,9 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
         if(application.getIntent() == null){
             //todo 登录成功后通知左侧滑动栏头像加载
             EventBus.getDefault().post(new LoginDoneEvent(true));
-            setResult(RESULT_OK);
             finish();
         }else{
-
+            EventBus.getDefault().post(new LoginDoneEvent(true));
             application.jumpToTargetActivity(LoginActivity.this);
             finish();
 

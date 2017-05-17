@@ -126,7 +126,7 @@ public class UserActivity extends BaseActivity implements ISearchUserViewInfoVie
         mProjectUserMapOpPresenter.getDealNum(currentUserId);
 
         mUserInfoOpPresenter.queryUserInfoWithId(currentUserId);
-        mProjectInfoOpPresenter.queryProjectWithUserId(currentUserId);
+        mProjectInfoOpPresenter.queryProjectWithUserId(currentUserId,0,10);
 
         initViewsAndEvents(defaultUser);
 

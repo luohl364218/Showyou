@@ -6,16 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/fragment_search_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:titleTextColor="@color/white"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/fragment_search_tab_layout"

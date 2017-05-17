@@ -16,6 +16,7 @@ import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IProjectInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
+import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 
 
@@ -49,12 +50,14 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
     }
 
     @Override
-    public void queryProjectWithUserId(String userId) {
+    public void queryProjectWithUserId(String userId,int startIndex, int count) {
         if (userId == null)
             return;
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project")
+                .setSkip(startIndex)
+                .setLimit(count)
                 .whereEqualTo("userId",userId)
                 .include("providerV2")
                 .selectKeys(Constants.projectDefaultKeys);
@@ -82,7 +85,50 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
 
     }
 
+    @Override
+    public void queryProjectWithUserIdAndState(String userId, UserProjectStateType type, int startIndex, int count) {
+        if (userId == null || type == null)
+            return;
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
 
+        List<String> projectIdList = new ArrayList<>();
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
+        query.whereEqualTo("userId",userId).whereEqualTo("userProjectState",type.getIndex());
+        mProjects = new ArrayList<>();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() != 0) {
+                    for (ParseObject object:objects){
+                        projectIdList.add(object.getString("projectId"));
+                    }
+
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+                    query.whereContainedIn("objectId",projectIdList).setSkip(startIndex).setLimit(count);
+
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> objects, ParseException e) {
+                            if (e == null && objects.size() != 0) {
+
+                                for (ParseObject project:objects) {
+                                    Project mProject = DbUtils.getProject(project);
+                                    mProjects.add(mProject);
+                                }
+                            }
+                            mProjectInfoView.onGetProjectInfoDone(mProjects);
+                        }
+                    });
+
+                }
+                else
+                    mProjectInfoView.onGetProjectInfoDone(mProjects);
+
+            }
+        });
+    }
 
 
     @Override

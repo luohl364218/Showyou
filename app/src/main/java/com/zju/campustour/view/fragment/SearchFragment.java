@@ -244,7 +244,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserViewInfoV
                 mRecyclerView.scrollToPosition(mItemInfoAdapter.getDatas().size());
                 
                 if (mUsers.size() < 10){
-                    Toast.makeText(getActivity(), "已经获取全部数据", Toast.LENGTH_SHORT).show();
+                    showToast(getContext(),"已经获取全部数据");
                     mMaterialRefreshLayout.setLoadMore(false);
                 }
                 break;

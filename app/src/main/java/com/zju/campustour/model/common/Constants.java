@@ -20,6 +20,10 @@ public class Constants {
     public static final int TAG_SAME_PROVINCE = 2;
     public static final int TAG_LATEST = 3;
 
+    public static final int TAG_MINE = 4;
+    public static final int TAG_BOOKED = 5;
+    public static final int TAG_FINISHED = 6;
+
     public static final int ACTION_LIST = 1;
     public static final int ACTION_GIRD = 2;
 

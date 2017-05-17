@@ -46,22 +46,18 @@ public class BaseActivity extends AppCompatActivity {
 
     public void startActivity(Intent intent, boolean isNeedLogin){
 
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if(isNeedLogin && currentUser ==null){
 
-        if(isNeedLogin){
-
-            ParseUser currentUser = ParseUser.getCurrentUser();;
-            if(currentUser ==null){
-
-                CampusTourApplication.getInstance().putIntent(intent);
-                Intent loginIntent = new Intent(this
-                        , LoginActivity.class);
-                super.startActivity(intent);
-            }
+            CampusTourApplication.getInstance().putIntent(intent);
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            super.startActivity(loginIntent);
 
         }
         else{
             super.startActivity(intent);
         }
+
 
     }
 

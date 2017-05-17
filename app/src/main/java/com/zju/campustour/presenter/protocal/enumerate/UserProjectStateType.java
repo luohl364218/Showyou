@@ -16,7 +16,9 @@ public enum UserProjectStateType {
 
     BOOK_SUCCESS("成功预定",4),
 
-    WAIT_CANCEL_CONFIRM("申请取消",5);
+    WAIT_CANCEL_CONFIRM("申请取消",5),
+
+    FINISHED("已完成",6);
 
     private String name;
     private int index;
