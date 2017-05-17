@@ -31,6 +31,7 @@ import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.data.SchoolData;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.event.AreaAndSchoolSelectedEvent;
@@ -178,6 +179,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserViewInfoV
             public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
                 Log.d(TAG,"----------ready to refreshing!!!!!!---------network is "+isNetworkUseful);
                 //下拉刷新...
+                isNetworkUseful = NetworkUtil.isNetworkAvailable(getContext());
                 if (isNetworkUseful){
                     Log.d(TAG,"----------refreshing!!!!!!---------network is "+isNetworkUseful);
                     refreshServiceItemInfoData();
@@ -256,6 +258,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserViewInfoV
         state = Constants.STATE_REFRESH;
         mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
         //showLocalServiceItemInfoData();
+
 
     }
 

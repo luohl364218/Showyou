@@ -13,4 +13,6 @@ public interface IProjectCollectorView {
     public void onQueryProjectCollectorStateDone(boolean state, List<ProjectUserMap> mProjectUserMapList);
 
     public void onChangeCollectStateError(boolean isFavor);
+
+    public void onGetDealNumDone(int deal);
 }

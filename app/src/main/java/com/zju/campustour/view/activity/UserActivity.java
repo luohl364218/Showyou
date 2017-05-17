@@ -22,13 +22,16 @@ import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
+import com.zju.campustour.model.database.models.ProjectUserMap;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
+import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
+import com.zju.campustour.view.IView.IProjectCollectorView;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 import com.zju.campustour.view.IView.ISearchUserViewInfoView;
 import com.zju.campustour.view.IView.IUserFocusView;
@@ -43,7 +46,8 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserActivity extends BaseActivity implements ISearchUserViewInfoView,ISearchProjectInfoView, View.OnClickListener,IUserFocusView {
+public class UserActivity extends BaseActivity implements ISearchUserViewInfoView,
+        ISearchProjectInfoView, View.OnClickListener,IUserFocusView ,IProjectCollectorView {
 
     @BindView(R.id.activity_major_provider_page_toolbar)
     Toolbar mToolbar;
@@ -99,6 +103,7 @@ public class UserActivity extends BaseActivity implements ISearchUserViewInfoVie
     private boolean isMyselfPage = false;
     private boolean isFans;
     private FocusMapOpPresenterImpl mFocusMapOpPresenter;
+    private ProjectUserMapOpPresenterImpl mProjectUserMapOpPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +121,9 @@ public class UserActivity extends BaseActivity implements ISearchUserViewInfoVie
         mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,this);
         mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this,this);
         mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
-        mFocusMapOpPresenter.queryFansAndDealNum(currentUserId);
-
+        mProjectUserMapOpPresenter = new ProjectUserMapOpPresenterImpl(this, this);
+        mFocusMapOpPresenter.queryFansNum(currentUserId);
+        mProjectUserMapOpPresenter.getDealNum(currentUserId);
 
         mUserInfoOpPresenter.queryUserInfoWithId(currentUserId);
         mProjectInfoOpPresenter.queryProjectWithUserId(currentUserId);
@@ -441,6 +447,16 @@ public class UserActivity extends BaseActivity implements ISearchUserViewInfoVie
     public void onGetFansNumDone(int fansNum) {
 
         focusNum.setText(fansNum+"人关注");
+
+    }
+
+    @Override
+    public void onQueryProjectCollectorStateDone(boolean state, List<ProjectUserMap> mProjectUserMapList) {
+
+    }
+
+    @Override
+    public void onChangeCollectStateError(boolean isFavor) {
 
     }
 

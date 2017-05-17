@@ -368,6 +368,11 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     }
 
     @Override
+    public void onGetDealNumDone(int deal) {
+
+    }
+
+    @Override
     public void onBackPressed() {
         myFinish();
     }

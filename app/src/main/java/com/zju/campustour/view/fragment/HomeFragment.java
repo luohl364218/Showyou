@@ -348,8 +348,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         }
         else {
             isNetworkUseful = false;
-            noResultHint.setVisibility(View.VISIBLE);
-            noResultHint.setText("网络连接不可用");
+            if (mProjectList == null || mProjectList.size() == 0){
+                noResultHint.setVisibility(View.VISIBLE);
+                noResultHint.setText("网络连接不可用");
+            }
+
         }
     }
 

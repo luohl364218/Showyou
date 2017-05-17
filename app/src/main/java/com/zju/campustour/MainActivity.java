@@ -45,10 +45,8 @@ import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
 import com.zju.campustour.presenter.protocal.event.LogoutEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
-import com.zju.campustour.presenter.protocal.event.ToolbarTitleChangeEvent;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.view.IView.IUserFocusView;
-import com.zju.campustour.view.IView.IUserView;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.RegisterActivity;
@@ -376,7 +374,7 @@ public class MainActivity extends BaseActivity
 
 
                 FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
-                mFocusMapOpPresenter.queryFansAndDealNum(currentLoginUser.getObjectId());
+                mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
 
 
             }catch (Exception e){
@@ -420,7 +418,7 @@ public class MainActivity extends BaseActivity
                 userImg.setImageURI(Uri.parse(img));
 
                 FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
-                mFocusMapOpPresenter.queryFansAndDealNum(currentLoginUser.getObjectId());
+                mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
             }catch (Exception e){
 
             }
@@ -463,11 +461,6 @@ public class MainActivity extends BaseActivity
         currentLoginUser.saveEventually();
     }
 
-    @Override
-    public void onGetDealNumDone(int dealNum) {
-
-    }
-
 
     class NetworkChangeReceiver extends BroadcastReceiver {
         @Override
@@ -496,7 +489,7 @@ public class MainActivity extends BaseActivity
     private void initUserCloudInfo() {
         if (isNetworkUseful && currentLoginUser != null){
             FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
-            mFocusMapOpPresenter.queryFansAndDealNum(currentLoginUser.getObjectId());
+            mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
             try {
                 currentLoginUser.fetch();
             } catch (ParseException mE) {

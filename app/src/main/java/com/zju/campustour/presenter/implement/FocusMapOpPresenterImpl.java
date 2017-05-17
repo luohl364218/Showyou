@@ -96,7 +96,7 @@ public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
     }
 
     @Override
-    public void queryFansAndDealNum(String providerId) {
+    public void queryFansNum(String providerId) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         if (providerId == null)

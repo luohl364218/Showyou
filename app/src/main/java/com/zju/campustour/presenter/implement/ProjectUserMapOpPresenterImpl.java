@@ -39,15 +39,32 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
 
 
     @Override
-    public int getBookedNum(int projectId) {
-        if (!NetworkUtil.isNetworkAvailable(mContext))
-            return 0;
-        return 0;
+    public void getBookedNum(String projectId) {
+
     }
 
     @Override
-    public UserProjectStateType getUserProjectState(int userId, int projectId) {
-        return null;
+    public void getDealNum(String userId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        if (userId == null)
+            return;
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
+        query.whereEqualTo("userId",userId);
+        query.whereEqualTo("userProjectState",4);
+        try {
+            int dealNum = query.count();
+            mCollectorView.onGetDealNumDone(dealNum);
+        } catch (ParseException mE) {
+            mE.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void getUserProjectState(String userId, String projectId) {
+
     }
 
     @Override

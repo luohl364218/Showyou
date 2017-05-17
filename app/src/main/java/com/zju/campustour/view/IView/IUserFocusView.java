@@ -16,6 +16,5 @@ public interface IUserFocusView extends IUserView {
 
     public void onGetFansNumDone(int fansNum);
 
-    public void onGetDealNumDone(int dealNum);
 
 }

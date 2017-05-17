@@ -10,7 +10,7 @@ public interface IFocusMapOpPresenter {
 
     public void put(String providerId, String fansId, FocusStateType type);
     public void delete(String providerId, String fansId, FocusStateType type);
-    public void queryFansAndDealNum(String providerId);
+    public void queryFansNum(String providerId);
     public void query(String providerId, String fansId, FocusStateType type);
 
 }

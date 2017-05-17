@@ -9,9 +9,11 @@ import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 
 public interface IProjectUserMapOpPresenter {
 
-    public int getBookedNum(int projectId);
+    public void getBookedNum(String projectId);
 
-    public UserProjectStateType getUserProjectState(int userId, int projectId);
+    public void getDealNum(String userId);
+
+    public void getUserProjectState(String userId, String projectId);
 
     public void put(String userId, String projectId, UserProjectStateType type);
 
