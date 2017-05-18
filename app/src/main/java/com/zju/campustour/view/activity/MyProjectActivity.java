@@ -41,6 +41,7 @@ import static com.zju.campustour.model.common.Constants.STATE_MORE;
 import static com.zju.campustour.model.common.Constants.STATE_NORMAL;
 import static com.zju.campustour.model.common.Constants.STATE_REFRESH;
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.BOOK_SUCCESS;
+import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.COLLECT;
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.FINISHED;
 
 public class MyProjectActivity extends BaseActivity implements ISearchProjectInfoView,TabLayout.OnTabSelectedListener{
@@ -91,9 +92,9 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
             mProjectInfoPresenter.queryProjectWithUserId(currentLoginUser.getObjectId(), 0, 10);
         }
         else {
-            tabName = "你预约的活动为空哦，快去预约吧";
+            tabName = "你还没有收藏活动哦，快去收藏吧";
             isCurrentTabMine = false;
-            mProjectInfoPresenter.queryProjectWithUserIdAndState(currentLoginUser.getObjectId(),BOOK_SUCCESS,0,10);
+            mProjectInfoPresenter.queryProjectWithUserIdAndState(currentLoginUser.getObjectId(),COLLECT,0,10);
         }
     }
 
@@ -119,6 +120,11 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
             tab.setTag(Constants.TAG_MINE);
             mTabLayout.addTab(tab);
         }
+
+        tab= mTabLayout.newTab();
+        tab.setText("收藏");
+        tab.setTag(Constants.TAG_FAVOR);
+        mTabLayout.addTab(tab);
 
         tab= mTabLayout.newTab();
         tab.setText("预约");
@@ -194,7 +200,7 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
     private void showProjectRecycleView(List<Project> projectList) {
 
         if (mProjectAdapter == null)
-            mProjectAdapter = new ProjectInfoAdapter(projectList, Constants.FULL_VIEW,mContext);
+            mProjectAdapter = new ProjectInfoAdapter(projectList, Constants.COLLECT_VIEW,mContext);
 
         switch (state) {
 
@@ -269,7 +275,7 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
                     mProjectAdapter.clearData();
 
             } else {
-                showToast("已经为你找到所有符合条件的同学");
+                showToast("已经为你找到所有活动信息");
                 mMaterialRefreshLayout.setLoadMore(false);
             }
             }catch (Exception e){
@@ -303,6 +309,14 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
                 state = Constants.STATE_REFRESH;
                 isCurrentTabMine = true;
                 mProjectInfoPresenter.queryProjectWithUserId(currentLoginUser.getObjectId(), 0, 10);
+                break;
+
+            case Constants.TAG_FAVOR:
+                tabName = "你还没有收藏活动哦，快去收藏吧";
+                state = Constants.STATE_REFRESH;
+                isCurrentTabMine = false;
+                type = COLLECT;
+                mProjectInfoPresenter.queryProjectWithUserIdAndState(currentLoginUser.getObjectId(),type,0,10);
                 break;
 
             case Constants.TAG_BOOKED:

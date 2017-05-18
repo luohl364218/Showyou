@@ -1,5 +1,6 @@
 package com.zju.campustour.view.IView;
 
+import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
 
 import java.util.List;
@@ -15,6 +16,10 @@ public interface IUserFocusView extends IUserView {
     public void onQueryFansOrFocusDone(boolean isFocus,List<UserFocusMap> userFocusList);
 
     public void onGetFansNumDone(int fansNum);
+
+    public void onQueryMyFansDone(List<User> fansList);
+
+    public void onQueryMyFocusDone(List<User> focusList);
 
 
 }

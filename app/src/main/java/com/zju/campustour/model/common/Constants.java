@@ -14,6 +14,7 @@ public class Constants {
 
     public static final int FULL_VIEW = 0;
     public static final int PART_VIEW = 1;
+    public static final int COLLECT_VIEW = 2;
 
     public static final int TAG_DEFAULT_SEARCH = 0;
     public static final int TAG_HOT_RECOMMEND = 1;
@@ -21,8 +22,12 @@ public class Constants {
     public static final int TAG_LATEST = 3;
 
     public static final int TAG_MINE = 4;
-    public static final int TAG_BOOKED = 5;
-    public static final int TAG_FINISHED = 6;
+    public static final int TAG_FAVOR = 5;
+    public static final int TAG_BOOKED = 6;
+    public static final int TAG_FINISHED = 7;
+
+    public static final int TAG_FANS = 0;
+    public static final int TAG_FOCUS = 1;
 
     public static final int ACTION_LIST = 1;
     public static final int ACTION_GIRD = 2;

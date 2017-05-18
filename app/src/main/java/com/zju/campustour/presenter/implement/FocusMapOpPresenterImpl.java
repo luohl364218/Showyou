@@ -19,12 +19,14 @@ import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IFocusMapOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
+import com.zju.campustour.view.IView.ISearchUserInfoView;
 import com.zju.campustour.view.IView.IUserFocusView;
 import com.zju.campustour.view.IView.IUserView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zju.campustour.model.util.DbUtils.getUser;
 import static java.util.Arrays.asList;
 
 /**
@@ -150,5 +152,66 @@ public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
                 }
             }
         });
+    }
+
+    @Override
+    public void queryFansOrFocus(String userId,boolean isQueryFansNotFocus, int start, int count) {
+        if (!NetworkUtil.isNetworkAvailable(mContext) || userId == null)
+            return;
+        String tag = "";
+        ParseQuery<ParseObject> query;
+        if (isQueryFansNotFocus){
+            tag = "fansId";
+            query = ParseQuery.getQuery("UserFocusMap")
+                    .whereEqualTo("providerId",userId)
+                    .whereEqualTo("focusState",FocusStateType.FOCUS.getValue())
+                    .selectKeys(asList(tag));
+        }
+        else {
+            tag = "providerId";
+            query = ParseQuery.getQuery("UserFocusMap")
+                    .whereEqualTo("fansId",userId)
+                    .whereEqualTo("focusState",FocusStateType.FOCUS.getValue())
+                    .selectKeys(asList(tag));
+        }
+
+        String currentTag = tag;
+        ISearchUserInfoView mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+        List<User> userResults = new ArrayList<>();
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() != 0) {
+                    List<String> fansList = new ArrayList<String>();
+
+                    for (ParseObject object : objects) {
+
+                        fansList.add(object.getString(currentTag));
+                    }
+
+                    ParseQuery<ParseUser> queryTwo = ParseUser.getQuery().setSkip(start).setLimit(count);
+                    queryTwo.whereContainedIn("objectId", fansList);
+
+                    queryTwo.findInBackground(new FindCallback<ParseUser>() {
+                        @Override
+                        public void done(List<ParseUser> objects, ParseException e) {
+                            if (e == null && objects.size() != 0) {
+                                for (ParseUser user : objects) {
+                                    User fans = getUser(user);
+                                    userResults.add(fans);
+                                }
+                            }
+
+                            mSearchUserInfoView.onGetProviderUserDone(userResults);
+
+                        }
+                    });
+                }
+                else {
+                    mSearchUserInfoView.onGetProviderUserDone(userResults);
+                }
+            }
+        });
+
     }
 }

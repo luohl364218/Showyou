@@ -9,7 +9,7 @@ import java.util.List;
  * Created by HeyLink on 2017/4/25.
  */
 
-public interface ISearchUserViewInfoView extends IUserView {
+public interface ISearchUserInfoView extends IUserView {
 
     public void onGetProviderUserDone(List<User> mUsers);
 

@@ -20,6 +20,9 @@ import com.zju.campustour.model.util.DbUtils;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import static com.zju.campustour.model.common.Constants.COLLECT_VIEW;
+import static com.zju.campustour.model.common.Constants.PART_VIEW;
+
 /**
  * Created by HeyLink on 2017/4/24.
  */
@@ -72,6 +75,10 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
                 providerImgView.setVisibility(View.GONE);
                 projectCardViewTail.setVisibility(View.GONE);
             }
+            else if (state == COLLECT_VIEW){
+                projectImgView.setVisibility(View.GONE);
+                projectCardViewTail.setVisibility(View.GONE);
+            }
 
 
             projectCardViewBody.setOnClickListener(new View.OnClickListener() {
@@ -109,12 +116,15 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
     public void onBindViewHolder(ProjectInfoAdapter.ViewHolder holder, int position) {
 
         Project mItemInfo = mProjectItemInfos.get(position);
-        String url = mItemInfo.getProvider().getImgUrl();
-        if (url == null)
-            url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
-        //Uri uri = Uri.parse(url);
-        //holder.providerImgView.setImageURI(uri);
-        DbUtils.setImg(holder.providerImgView,url,150,150);
+        if (state != PART_VIEW){
+            String url = mItemInfo.getProvider().getImgUrl();
+            if (url == null)
+                url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
+            //Uri uri = Uri.parse(url);
+            //holder.providerImgView.setImageURI(uri);
+            DbUtils.setImg(holder.providerImgView,url,150,150);
+        }
+
         holder.projectTitleView.setText(mItemInfo.getTitle());
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         holder.projectTimeView.setText(sdf.format(mItemInfo.getStartTime()));
@@ -125,8 +135,11 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
         if (url_1 == null)
             url_1 = "http://www.huedu.net/UploadFiles_2233/201505/2015050508445878.jpg";
         // DbUtils.setImg(holder.projectImgView,url_1,250,100);
-        Uri mUri = Uri.parse(url_1);
-        holder.projectImgView.setImageURI(mUri);
+        if (state != COLLECT_VIEW){
+            Uri mUri = Uri.parse(url_1);
+            holder.projectImgView.setImageURI(mUri);
+        }
+
         holder.projectFavoritesNumView.setText(mItemInfo.getCollectorNum()+"人收藏");
         holder.projectPriceView.setText(mItemInfo.getPrice()+"元/人");
         holder.projectEnrollNumView.setText(mItemInfo.getAcceptNum()+"人报名");

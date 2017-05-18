@@ -126,7 +126,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.MyProjectActivity"
+        <activity
+            android:name=".view.activity.MyProjectActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.MySchoolmateActivity"
                   android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>

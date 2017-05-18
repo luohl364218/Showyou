@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
@@ -37,7 +35,7 @@ import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.event.AreaAndSchoolSelectedEvent;
 import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
-import com.zju.campustour.view.IView.ISearchUserViewInfoView;
+import com.zju.campustour.view.IView.ISearchUserInfoView;
 import com.zju.campustour.view.activity.UserActivity;
 import com.zju.campustour.view.activity.SchoolListActivity;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
@@ -54,7 +52,7 @@ import java.util.List;
  * Created by HeyLink on 2017/4/1.
  */
 
-public class SearchFragment extends BaseFragment implements ISearchUserViewInfoView, View.OnClickListener,TabLayout.OnTabSelectedListener {
+public class SearchFragment extends BaseFragment implements ISearchUserInfoView, View.OnClickListener,TabLayout.OnTabSelectedListener {
 
     private String TAG = "SearchFragment";
     private View mRootView;

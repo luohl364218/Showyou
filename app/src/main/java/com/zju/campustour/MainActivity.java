@@ -38,6 +38,7 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.model.database.data.SchoolData;
+import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
@@ -50,6 +51,7 @@ import com.zju.campustour.view.IView.IUserFocusView;
 import com.zju.campustour.view.activity.BaseActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MyProjectActivity;
+import com.zju.campustour.view.activity.MySchoolmateActivity;
 import com.zju.campustour.view.activity.RegisterActivity;
 import com.zju.campustour.view.activity.RegisterInfoOneActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
@@ -305,11 +307,12 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.my_project) {
-            Intent mIntent = new Intent(this,LoginActivity.class);
-            startActivity(mIntent);
+            Intent mIntent = new Intent(this,MyProjectActivity.class);
+            startActivity(mIntent,true);
+
         } else if (id == R.id.my_focus) {
-            Intent mIntent = new Intent(this,RegisterActivity.class);
-            startActivity(mIntent);
+            Intent mIntent = new Intent(this,MySchoolmateActivity.class);
+            startActivity(mIntent,true);
         } else if (id == R.id.my_interest) {
             currentLoginUser = ParseUser.getCurrentUser();
             if (currentLoginUser != null){
@@ -319,8 +322,7 @@ public class MainActivity extends BaseActivity
             ParseUser.logOut();
             EventBus.getDefault().post(new LogoutEvent(true));
         } else if (id == R.id.setting) {
-            Intent mIntent = new Intent(this,MyProjectActivity.class);
-            startActivity(mIntent,true);
+
 
         } else if (id == R.id.build_project) {
 
@@ -462,6 +464,16 @@ public class MainActivity extends BaseActivity
     public void onGetFansNumDone(int fansNum) {
         currentLoginUser.put("fansNum",fansNum);
         currentLoginUser.saveEventually();
+    }
+
+    @Override
+    public void onQueryMyFansDone(List<User> fansList) {
+
+    }
+
+    @Override
+    public void onQueryMyFocusDone(List<User> focusList) {
+
     }
 
 

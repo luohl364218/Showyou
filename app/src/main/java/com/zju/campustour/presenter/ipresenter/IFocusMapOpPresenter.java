@@ -12,5 +12,7 @@ public interface IFocusMapOpPresenter {
     public void delete(String providerId, String fansId, FocusStateType type);
     public void queryFansNum(String providerId);
     public void query(String providerId, String fansId, FocusStateType type);
+    public void queryFansOrFocus(String userId,boolean isQueryFansNotFocus, int start, int count);
+
 
 }

@@ -33,7 +33,7 @@ import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.view.IView.IProjectCollectorView;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
-import com.zju.campustour.view.IView.ISearchUserViewInfoView;
+import com.zju.campustour.view.IView.ISearchUserInfoView;
 import com.zju.campustour.view.IView.IUserFocusView;
 import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
@@ -46,7 +46,7 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserActivity extends BaseActivity implements ISearchUserViewInfoView,
+public class UserActivity extends BaseActivity implements ISearchUserInfoView,
         ISearchProjectInfoView, View.OnClickListener,IUserFocusView ,IProjectCollectorView {
 
     @BindView(R.id.activity_major_provider_page_toolbar)
@@ -447,6 +447,16 @@ public class UserActivity extends BaseActivity implements ISearchUserViewInfoVie
     public void onGetFansNumDone(int fansNum) {
 
         focusNum.setText(fansNum+"人关注");
+
+    }
+
+    @Override
+    public void onQueryMyFansDone(List<User> fansList) {
+
+    }
+
+    @Override
+    public void onQueryMyFocusDone(List<User> focusList) {
 
     }
 

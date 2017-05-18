@@ -1,6 +1,5 @@
 package com.zju.campustour.presenter.implement;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -9,16 +8,14 @@ import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.zju.campustour.model.database.models.User;
-import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
-import com.zju.campustour.view.IView.ISearchUserViewInfoView;
+import com.zju.campustour.view.IView.ISearchUserInfoView;
 import com.zju.campustour.view.IView.IUserLoginView;
 import com.zju.campustour.view.IView.IUserRegisterView;
 import com.zju.campustour.view.IView.IUserView;
@@ -40,7 +37,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     private String TAG = "user Info Operation ";
     private Context mContext;
     private IUserView mUserView;
-    private ISearchUserViewInfoView mSearchUserInfoView;
+    private ISearchUserInfoView mSearchUserInfoView;
     private IUserLoginView mIUserLoginView;
     private IUserRegisterView mUserRegisterView;
     List<User> userResults;
@@ -128,11 +125,11 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
                     User provider = getUser(object);
                     userResults.add(provider);
-                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
                     mSearchUserInfoView.onGetProviderUserDone(userResults);
                 } else {
                     Log.d(TAG,"get user error!!!!");
-                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
                     mSearchUserInfoView.onGetProviderUserError(e);
                 }
             }
@@ -227,12 +224,12 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                         userResults.add(provider);
                     }
                     Log.d(TAG, "find user-----------------: " + userList.size());
-                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
                     mSearchUserInfoView.onGetProviderUserDone(userResults);
 
                 } else {
                     Log.d(TAG,"get user error!!!!");
-                    mSearchUserInfoView = (ISearchUserViewInfoView) mUserView;
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
                     mSearchUserInfoView.onGetProviderUserError(e);
                 }
 

@@ -95,7 +95,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         List<String> projectIdList = new ArrayList<>();
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
-        query.whereEqualTo("userId",userId).whereEqualTo("userProjectState",type.getIndex());
+        query.whereEqualTo("userId",userId).whereEqualTo("userProjectState",type.getIndex()).selectKeys(asList("projectId"));
         mProjects = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -106,7 +106,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
                     }
 
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
-                    query.whereContainedIn("objectId",projectIdList).setSkip(startIndex).setLimit(count);
+                    query.whereContainedIn("objectId",projectIdList).include("providerV2").setSkip(startIndex).setLimit(count);
 
                     query.findInBackground(new FindCallback<ParseObject>() {
                         @Override
