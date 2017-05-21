@@ -7,17 +7,17 @@
             android:icon="@mipmap/icon_my_project"
             android:title="我的活动"/>
         <item
-            android:id="@+id/my_focus"
+            android:id="@+id/my_schoolmate"
             android:icon="@mipmap/icon_my_focus"
             android:title="我的校友"/>
         <item
-            android:id="@+id/my_interest"
-            android:icon="@mipmap/icon_my_interest"
-            android:title="退出/我的收藏"/>
+            android:id="@+id/edit_info"
+            android:icon="@mipmap/icon_change_self"
+            android:title="修改信息"/>
         <item
-            android:id="@+id/setting"
-            android:icon="@mipmap/icon_setting"
-            android:title="设置"/>
+            android:id="@+id/logout"
+            android:icon="@mipmap/icon_exist"
+            android:title="退出"/>
     </group>
 
     <item android:title="">
@@ -27,10 +27,6 @@
                 android:icon="@mipmap/icon_build_project"
                 android:title="发布活动"/>
 
-            <item
-                android:id="@+id/share_project"
-                android:icon="@mipmap/icon_share_project"
-                android:title="分享活动"/>
 
         </menu>
     </item>

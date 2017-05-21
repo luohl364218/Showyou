@@ -26,7 +26,7 @@ import java.util.List;
  * Created by HeyLink on 2017/4/22.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends SwipeBackAppCompatActivity {
 
     private Toast mToast = null;
     protected   boolean isNetworkUseful = true;

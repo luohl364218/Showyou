@@ -21,5 +21,7 @@ public interface IProjectUserMapOpPresenter {
 
     public void query(String userId, String projectId, UserProjectStateType type);
 
+    public void queryUserInfo(String projectId, UserProjectStateType type, int start, int count);
+
 
 }

@@ -62,7 +62,6 @@ public class MySchoolmateActivity extends BaseActivity implements ISearchUserInf
         setContentView(R.layout.activity_my_schoolmate);
         ButterKnife.bind(this);
         currentLoginUser = ParseUser.getCurrentUser();
-        initUserCloudInfo();
 
         /*让toolbar显示我们的标题*/
         mToolbar.setTitle("");
@@ -107,16 +106,6 @@ public class MySchoolmateActivity extends BaseActivity implements ISearchUserInf
 
         mTabLayout.setOnTabSelectedListener(this);
 
-    }
-
-    private void initUserCloudInfo() {
-        if (isNetworkUseful && currentLoginUser != null){
-            try {
-                currentLoginUser.fetch();
-            } catch (ParseException mE) {
-                mE.printStackTrace();
-            }
-        }
     }
 
     private void initRefreshLayout() {

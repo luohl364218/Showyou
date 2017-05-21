@@ -11,9 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.util.PreferenceUtils;
+import com.zju.campustour.presenter.implement.IMImplement;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
@@ -150,7 +153,13 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
             currentLoginUser.saveEventually();
         }
 
+        IMImplement mIMImplement = new IMImplement();
+        mIMImplement.registerIMAccount(userName,pwd);
+
         userRegisteImpl.registerUser(userName,pwd);
+
+        PreferenceUtils.putString(this,"userName",userName);
+        PreferenceUtils.putString(this,"password",pwd);
     }
 
     @Override
@@ -170,7 +179,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
     }
 
     @Override
-    public void userSignUpDidNotSucceed(Exception e) {
+    public void userSignUpDidNotSucceed() {
 
         //showToast("注册失败，该用户名已经存在");
         registerName.setText("");

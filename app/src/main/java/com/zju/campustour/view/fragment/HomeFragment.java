@@ -3,7 +3,6 @@ package com.zju.campustour.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -33,15 +31,18 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.database.models.HomepageSlideImg;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
+import com.zju.campustour.presenter.implement.HomePageImgLoader;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
+import com.zju.campustour.view.IView.IHomepageImgLoadView;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 import com.zju.campustour.view.activity.InfoWebActivity;
 import com.zju.campustour.view.activity.LoginActivity;
@@ -57,6 +58,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import it.sephiroth.android.library.easing.Linear;
+
 import static com.zju.campustour.model.common.Constants.STATE_MORE;
 import static com.zju.campustour.model.common.Constants.STATE_NORMAL;
 import static com.zju.campustour.model.common.Constants.STATE_REFRESH;
@@ -66,7 +69,7 @@ import static com.zju.campustour.model.common.Constants.imageUrls;
  * Created by HeyLink on 2017/4/1.
  */
 
-public class HomeFragment extends BaseFragment implements View.OnClickListener, ISearchProjectInfoView{
+public class HomeFragment extends BaseFragment implements View.OnClickListener, ISearchProjectInfoView,IHomepageImgLoadView{
 
     private View mRootView;
     private Toolbar mToolbar;
@@ -82,11 +85,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private LinearLayout yishuxueBtn;
     private LinearLayout allSubjectsBtn;
     //两大话题按钮入口
-    private Button hotMajorBtn;
-    private Button remoteChatBtn;
+    private Button latestBtn;
+    private Button hotestBtn;
+
+    private LinearLayout latestIcon;
+    private LinearLayout hotestIcon;
     //专家推荐列表
     private RecyclerView mRecyclerView;
     private ProjectInfoAdapter mProjectAdapter;
+
+    private HomePageImgLoader mHomePageImgLoader;
 
     private TextView noResultHint;
     private int state = STATE_NORMAL;
@@ -99,6 +107,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     //定义二维码扫描请求
     private int REQUEST_CODE = 1;
     private int CAMERA_REQUEST_CODE = 2;
+
+    private boolean isLatest = false;
+    private boolean isHotest = false;
 
     private String TAG = "HomeFragment";
     public HomeFragment() {
@@ -116,11 +127,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         if (mRootView == null){
             mRootView = inflater.inflate(R.layout.fragment_home, container, false);
             initView();
-            initSlideImages();
 
             mProjectInfoPresenter = new ProjectInfoOpPresenterImpl(this,getContext());
-            mProjectInfoPresenter.getLimitProjectInfo(0,10);
 
+            /*异步请求首页轮播数据*/
+            mHomePageImgLoader = new HomePageImgLoader(getContext(),this);
+            mHomePageImgLoader.getImgList();
+
+            isLatest = false;
+            isHotest = false;
+            mProjectInfoPresenter.getLimitProjectInfo(0,10,isLatest,isHotest);
 
             EventBus.getDefault().register(this);
             //initRefreshLayout();
@@ -163,8 +179,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         yishuxueBtn = (LinearLayout)mRootView.findViewById(R.id.fragment_home_yishuxue);
         allSubjectsBtn = (LinearLayout)mRootView.findViewById(R.id.fragment_home_allsubjects);
         //两大话题按钮入口
-        hotMajorBtn = (Button)mRootView.findViewById(R.id.fragment_home_hotmajor_btn);
-        remoteChatBtn = (Button)mRootView.findViewById(R.id.fragment_home_remotechat_btn);
+        latestBtn = (Button)mRootView.findViewById(R.id.fragment_home_latest_btn);
+        hotestBtn = (Button)mRootView.findViewById(R.id.fragment_home_hotest_btn);
+
+        latestIcon = (LinearLayout) mRootView.findViewById(R.id.latest_project_recomment);
+        hotestIcon = (LinearLayout) mRootView.findViewById(R.id.hot_project_recomment);
+
         noResultHint = (TextView) mRootView.findViewById(R.id.fragment_home_noResult_hint);
         if (!isNetworkUseful){
             noResultHint.setText("无法连接到服务器");
@@ -181,8 +201,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         yixueBtn.setOnClickListener(this);
         allSubjectsBtn.setOnClickListener(this);
 
-        hotMajorBtn.setOnClickListener(this);
-        remoteChatBtn.setOnClickListener(this);
+        latestBtn.setOnClickListener(this);
+        hotestBtn.setOnClickListener(this);
 
     }
 
@@ -199,10 +219,33 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 @Override
                 public void onSliderClick(BaseSliderView slider) {
                     Intent intent = new Intent(getActivity(), InfoWebActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("web",Constants.imagewebs[(position + imageUrls.length )%imageUrls.length]);
-                    intent.putExtras(bundle);
+                    intent.putExtra("web",Constants.imagewebs[(position + imageUrls.length )%imageUrls.length]);
+                    getActivity().startActivity(intent);
+                }
+            });
+            mSliderShow.addSlider(slideView);
+        }
 
+        mSliderShow.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
+        mSliderShow.startAutoCycle();
+        mSliderShow.setDuration(3000);
+    }
+
+    private void initSlideImagesOnline(List<HomepageSlideImg> mSlideImgs) {
+        mSliderShow = (SliderLayout) mRootView.findViewById(R.id.slider);
+
+        for (int i = 0; i < mSlideImgs.size(); i++) {
+            HomepageSlideImg mSlideImg = mSlideImgs.get(i);
+            TextSliderView slideView = new TextSliderView(this.getActivity());
+            slideView.image(mSlideImg.getImgUrl());
+            slideView.description(mSlideImg.getDescription());
+            slideView.setScaleType(BaseSliderView.ScaleType.Fit);
+            int position = i;
+            slideView.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                @Override
+                public void onSliderClick(BaseSliderView slider) {
+                    Intent intent = new Intent(getActivity(), InfoWebActivity.class);
+                    intent.putExtra("web",mSlideImg.getLinkUrl());
                     getActivity().startActivity(intent);
                 }
             });
@@ -337,12 +380,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         if (event.isValid()){
             noResultHint.setVisibility(View.GONE);
             isNetworkUseful = true;
-            if (mProjectAdapter == null)
+            /*如果当前界面已经显示了就不需要刷新*/
+            if (mProjectList == null || mProjectList.size() == 0){
                 state = STATE_NORMAL;
-            else{
-                state = STATE_REFRESH;
+                isLatest = false;
+                isHotest = false;
+                mProjectInfoPresenter.getLimitProjectInfo(0,10,isLatest,isHotest);
             }
-            mProjectInfoPresenter.getLimitProjectInfo(0,10);
+
         }
         else {
             isNetworkUseful = false;
@@ -377,8 +422,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onLoginDoneEvent(LoginDoneEvent event) {
         if (event.isLogin()){
-            if (mProjectInfoPresenter != null && mProjectAdapter == null)
-                mProjectInfoPresenter.getLimitProjectInfo(0,10);
+            if (mProjectInfoPresenter != null && mProjectAdapter == null){
+                isLatest = false;
+                isHotest = false;
+                mProjectInfoPresenter.getLimitProjectInfo(0,10,isLatest,isHotest);
+            }
+
         }
     }
 
@@ -421,11 +470,21 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 startActivityWithData(100);
                 break;
 
-            case R.id.fragment_home_hotmajor_btn:
-                showToast(getContext(),"Sorry 此功能我们将在5月初完善");
+            case R.id.fragment_home_latest_btn:
+                isLatest = true;
+                isHotest = false;
+                state = Constants.STATE_REFRESH;
+                refreshProjectItemInfoData();
+                latestIcon.setVisibility(View.VISIBLE);
+                hotestIcon.setVisibility(View.GONE);
                 break;
-            case R.id.fragment_home_remotechat_btn:
-                showToast(getContext(),"Sorry 此功能我们将在5月初完善");
+            case R.id.fragment_home_hotest_btn:
+                isLatest = false;
+                isHotest = true;
+                state = Constants.STATE_REFRESH;
+                refreshProjectItemInfoData();
+                latestIcon.setVisibility(View.GONE);
+                hotestIcon.setVisibility(View.VISIBLE);
                 break;
 
             default:
@@ -494,11 +553,24 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     private void loadMoreProjectInfoData() {
         state = Constants.STATE_MORE;
-        mProjectInfoPresenter.getLimitProjectInfo(mProjectAdapter.getDatas().size(),10);
+        mProjectInfoPresenter.getLimitProjectInfo(mProjectAdapter.getDatas().size(),10,false,false);
     }
+
 
     private void refreshProjectItemInfoData() {
         state = Constants.STATE_REFRESH;
-        mProjectInfoPresenter.getLimitProjectInfo(0,10);
+        mProjectInfoPresenter.getLimitProjectInfo(0,10,isLatest,isHotest);
+    }
+
+    @Override
+    public void onImgUrlGot(List<HomepageSlideImg> mHomepageSlideImgs) {
+
+        if (mHomepageSlideImgs.size() >0){
+            initSlideImagesOnline(mHomepageSlideImgs);
+        }
+        else {
+            initSlideImages();
+        }
+
     }
 }

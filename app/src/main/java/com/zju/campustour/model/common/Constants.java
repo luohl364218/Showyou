@@ -44,6 +44,8 @@ public class Constants {
 
     public static final int DEFAULT_GET_NUM = 10;
 
+    public static final String URL_DEFAULT_PROJECT_BG =  "http://119.23.248.205:8080/pictures/20170511162220.jpg";
+
     public static final String URL_DEFAULT_MAN_IMG = "http://imgtu.5011.net/uploads/content/20170323/8197471490255172.jpg";
 
     public static final String URL_DEFAULT_WOMAN_IMG = "https://a-ssl.duitang.com/uploads/item/201605/24/20160524072338_CVLZB.thumb.700_0.jpeg";
@@ -104,17 +106,20 @@ public class Constants {
            "startTime",
            "imgUrl",
            "price",
+            "salePrice",
            "description",
            "acceptNum",
+            "bookedNum",
            "projectState",
-           "collectorNum");
+           "collectorNum",
+            "tips");
 
     public final static List<String> projectSaleKeys = asList(
             "refundable",
             "identified",
             "score",
+            "official",
             "rateCount",
-            "salePrice",
             "comments");
 
     public final static String[] studentGrades = {"小学一年级","小学二年级","小学三年级","小学四年级","小学五年级","小学六年级",

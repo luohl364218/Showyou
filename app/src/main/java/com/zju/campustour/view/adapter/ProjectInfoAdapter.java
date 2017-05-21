@@ -142,7 +142,7 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
 
         holder.projectFavoritesNumView.setText(mItemInfo.getCollectorNum()+"人收藏");
         holder.projectPriceView.setText(mItemInfo.getPrice()+"元/人");
-        holder.projectEnrollNumView.setText(mItemInfo.getAcceptNum()+"人报名");
+        holder.projectEnrollNumView.setText(mItemInfo.getBookedNum()+"人报名");
     }
 
     @Override

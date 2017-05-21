@@ -11,9 +11,14 @@ import java.util.Date;
  */
 public class PreferenceUtils {
     static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    static final SimpleDateFormat sdf_detail = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public static String ConvertDateToString(Date mDate){
         return sdf.format(mDate);
+    }
+
+    public static String ConvertDateToDetailString(Date mDate){
+        return sdf_detail.format(mDate);
     }
 
     private static final String spFileName = "Xiaoyou";

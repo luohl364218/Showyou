@@ -1,7 +1,9 @@
 package com.zju.campustour.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -14,25 +16,34 @@ public class InfoWebActivity extends BaseActivity{
 
     WebView mWebView;
 
+    Toolbar mToolbar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infoweb);
         mWebView = (WebView) findViewById(R.id.activity_infoweb_webview);
-        Bundle extras = getIntent().getExtras();
-        if (null != extras) {
-            getBundleExtras(extras);
-        }
+        mToolbar = (Toolbar) findViewById(R.id.webview_toolbar);
+
+        Intent mIntent = getIntent();
+        web = mIntent.getStringExtra("web");
+        if (web == null)
+            finish();
 
         initViewsAndEvents();
     }
 
-
-    protected void getBundleExtras(Bundle extras) {
-        web = extras.getString("web");
-    }
-
     protected void initViewsAndEvents() {
+
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //设置支持js  默认为false (解决了一部分显示不全的问题)
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -50,8 +61,10 @@ public class InfoWebActivity extends BaseActivity{
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBlockNetworkImage(false);
+        mWebView.getSettings().setBuiltInZoomControls(true);
         //加载指定url链接
-        mWebView.loadUrl(web);
+        if (isNetworkUseful)
+            mWebView.loadUrl(web);
 
     }
 

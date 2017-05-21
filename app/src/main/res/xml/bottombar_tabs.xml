@@ -16,6 +16,6 @@
     <tab
         id="@+id/tab_info"
         icon="@drawable/selector_icon_info"
-        title="消息"
+        title="资讯"
         />
 </tabs>

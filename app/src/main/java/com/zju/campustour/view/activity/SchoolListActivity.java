@@ -38,8 +38,11 @@ public class SchoolListActivity extends AppCompatActivity {
         nationwideTextView = (TextView)findViewById(R.id.search_school_nationwide);
         toolbar = (Toolbar) findViewById(R.id.school_list_toolbar);
 
-        toolbar.setNavigationOnClickListener(a->{
-            finish();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
         nationwideTextView.setOnClickListener(new View.OnClickListener() {
             @Override

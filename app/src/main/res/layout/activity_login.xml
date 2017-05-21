@@ -61,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:hint="请输入用户名"
+                    android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@._"
                     android:inputType="text"
                     />
             </LinearLayout>
@@ -99,7 +100,6 @@
             android:text="登 录"
             android:enabled="false"
             android:layout_marginTop="30dp"
-            android:layout_margin="20dp"
             />
 
     </LinearLayout>

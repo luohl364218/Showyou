@@ -38,8 +38,11 @@ public class MajorListActivity extends BaseActivity{
         expandableListView = (ExpandableListView) findViewById(R.id.activity_major_list_expandablelistview);
         toolbar = (Toolbar) this.findViewById(R.id.major_list_toolbar);
 
-        toolbar.setNavigationOnClickListener(a->{
-            finish();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
 
         Bundle extras = getIntent().getExtras();

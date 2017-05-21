@@ -1,11 +1,13 @@
 package com.zju.campustour.view.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,16 +21,21 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
+import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.database.models.Comment;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
 import com.zju.campustour.model.database.models.ProjectUserMap;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.presenter.implement.ProjectCommentImpl;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
+import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
 import com.zju.campustour.view.IView.IProjectCollectorView;
+import com.zju.campustour.view.IView.IProjectCommentView;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,6 +44,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
@@ -44,9 +53,14 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_MAN_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_PROJECT_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_WOMAN_IMG;
+import static com.zju.campustour.model.common.Constants.imageUrls;
+import static com.zju.campustour.model.util.PreferenceUtils.ConvertDateToDetailString;
 import static com.zju.campustour.model.util.PreferenceUtils.ConvertDateToString;
+import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
+import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_STOP;
+import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.BOOK_SUCCESS;
 
-public class ProjectActivity extends BaseActivity implements ISearchProjectInfoView, IProjectCollectorView{
+public class ProjectActivity extends BaseActivity implements ISearchProjectInfoView, IProjectCollectorView, View.OnClickListener,IProjectCommentView {
 
     @BindView(R.id.activity_project_toolbar)
     Toolbar mToolbar;
@@ -70,6 +84,8 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     TextView projectScore;
     @BindView(R.id.activity_project_comment_num)
     TextView projectComment;
+    @BindView(R.id.project_more_arrow)
+    ImageView moreComment;
     @BindView(R.id.activity_project_provider_image)
     ImageView providerImg;
     @BindView(R.id.activity_project_provider_name)
@@ -85,7 +101,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     @BindView(R.id.activity_project_fans_num)
     TextView providerFansNum;
     @BindView(R.id.activity_project_chat_button)
-    TextView projectChatBtn;
+    Button projectChatBtn;
     @BindView(R.id.activity_project_detail)
     TextView projectHint;
     @BindView(R.id.activity_project_btn4more)
@@ -100,10 +116,28 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     LinearLayout refundable;
     @BindView(R.id.project_identified)
     LinearLayout identified;
+    @BindView(R.id.project_official)
+    LinearLayout official;
     @BindView(R.id.project_provider_body)
     LinearLayout providerBody;
     @BindView(R.id.activity_project_selected_comments)
     TextView selectComment;
+    @BindView(R.id.selected_comments_time)
+    TextView selectCommentTime;
+    @BindView(R.id.project_flag)
+    LinearLayout projectFlag;
+    @BindView(R.id.project_book_interface)
+    CardView bookInterface;
+    @BindView(R.id.project_manager_interface)
+    CardView managerInterface;
+    @BindView(R.id.project_contact_ta)
+    CardView contactTa;
+    @BindView(R.id.cardview_provider_info)
+    CardView providerInfo;
+    @BindView(R.id.project_manager_btn_left)
+    Button buttonLeft;
+    @BindView(R.id.project_manager_btn_right)
+    Button buttonRight;
 
     private ProjectInfoOpPresenterImpl mProjectInfoOpPresenter;
     private String selectedProviderId;
@@ -112,12 +146,14 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     private String projectId;
     private boolean isFavor;
     private Project currentProject;
+    private ProjectSaleInfo currentProjectSaleInfo;
+    private ProjectCommentImpl mProjectComment;
     private User defaultUser;
     private MenuItem selectedItem;
     private boolean isMyOwnProject = false;
 
-    //todo 这里默认一个用户，以后要改为当前登录用户
     private ParseUser currentLoginUser;
+    private UserProjectStateType userBookedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,27 +162,35 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         ButterKnife.bind(this);
         ShareSDK.initSDK(this);
         Intent mIntent = getIntent();
-        Project mProject = (Project) mIntent.getSerializableExtra("project");
+        currentProject = (Project) mIntent.getSerializableExtra("project");
+        projectId = currentProject.getId();
+
         position = mIntent.getIntExtra("position", -1);
-        if (mProject == null){
+        if (currentProject == null){
             finish();
         }
-        defaultUser = mProject.getProvider();
+        defaultUser = currentProject.getProvider();
         if (defaultUser == null){
             finish();
         }
+        if (!isNetworkUseful){
+            projectFlag.setVisibility(View.GONE);
+        }
 
-        initViews(mProject);
+        initViews();
 
         mCollectorPresenter = new ProjectUserMapOpPresenterImpl(this,this);
 
         currentLoginUser = ParseUser.getCurrentUser();
         if (currentLoginUser != null)
-            mCollectorPresenter.query(currentLoginUser.getObjectId(),mProject.getId(), UserProjectStateType.COLLECT);
+            mCollectorPresenter.query(currentLoginUser.getObjectId(),currentProject.getId(),null);
 
         //异步请求项目的销售界面信息
         mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this,this);
-        mProjectInfoOpPresenter.queryProjectSaleInfoWithId(mProject.getId());
+        mProjectInfoOpPresenter.queryProjectSaleInfoWithId(currentProject.getId());
+        //异步请求评论信息
+        mProjectComment = new ProjectCommentImpl(this,this);
+        mProjectComment.queryComment(projectId);
 
     }
 
@@ -155,19 +199,340 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         super.onStart();
         currentLoginUser = ParseUser.getCurrentUser();
         if (currentLoginUser != null)
-            mCollectorPresenter.query(currentLoginUser.getObjectId(),projectId, UserProjectStateType.COLLECT);
+            mCollectorPresenter.query(currentLoginUser.getObjectId(),projectId,null);
 
         /*如果是当前用户进自己的界面，不显示关注按钮*/
-        if (defaultUser != null
-                && currentLoginUser != null
+        if (defaultUser != null && currentLoginUser != null
                 && currentLoginUser.getObjectId().equals(defaultUser.getId())){
-            isMyOwnProject = true;
+            /*开启管理员模式*/
+            openManagerMode();
         }
-        else
+        else{
             isMyOwnProject = false;
+            projectBookBtn.setText("立即预约");
+            projectBookBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent mIntent = new Intent(ProjectActivity.this,LoginActivity.class);
+                    startActivity(mIntent);
+                }
+            });
+
+        }
+
     }
 
-    private void initViews(Project mProject) {
+
+    private void openManagerMode() {
+        isMyOwnProject = true;
+        managerInterface.setVisibility(View.VISIBLE);
+        bookInterface.setVisibility(View.GONE);
+        buttonLeft.setOnClickListener(this);
+        buttonRight.setOnClickListener(this);
+        providerInfo.setVisibility(View.GONE);
+        contactTa.setVisibility(View.GONE);
+        switch (currentProject.getProjectState()){
+            case BOOK_ACCEPT:
+                buttonLeft.setText("报名详情");
+                buttonRight.setText("结束报名");
+                break;
+
+            case BOOK_STOP:
+                buttonLeft.setText("报名详情");
+                buttonRight.setText("开始活动");
+                break;
+
+            case PROJECT_RUNNING:
+                buttonLeft.setText("用户详情");
+                buttonRight.setText("结束活动");
+                break;
+
+            case PROJECT_STOP:
+                buttonLeft.setText("用户详情");
+                buttonRight.setText("重启活动");
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void openUserMode() {
+
+        managerInterface.setVisibility(View.GONE);
+        bookInterface.setVisibility(View.VISIBLE);
+
+        if (userBookedState == null){
+            switch (currentProject.getProjectState()){
+                case BOOK_ACCEPT:
+                    projectBookBtn.setText("立即预约");
+                    projectBookBtn.setOnClickListener(this);
+                    break;
+                case BOOK_STOP:
+                    projectBookBtn.setText("报名结束");
+                    projectBookBtn.setEnabled(false);
+                    break;
+                case PROJECT_RUNNING:
+                    projectBookBtn.setText("活动进行中");
+                    projectBookBtn.setEnabled(false);
+                    break;
+                case PROJECT_STOP:
+                    projectBookBtn.setText("活动已结束");
+                    projectBookBtn.setEnabled(false);
+                    break;
+
+            }
+
+            return;
+        }
+
+        switch (userBookedState){
+            case BOOK_SUCCESS:
+                if (currentProject.getProjectState() == BOOK_ACCEPT){
+                    projectBookBtn.setText("取消预约");
+                    projectBookBtn.setOnClickListener(this);
+                }
+                else if (currentProject.getProjectState() == PROJECT_STOP){
+                    projectBookBtn.setText("填写评价");
+                    projectBookBtn.setOnClickListener(this);
+                }
+                else if (currentProject.getProjectState() ==ProjectStateType.PROJECT_RUNNING){
+                    projectBookBtn.setText("活动进行中");
+                    projectBookBtn.setEnabled(false);
+                }
+                else if (currentProject.getProjectState() ==ProjectStateType.BOOK_STOP){
+                    projectBookBtn.setText("预约成功");
+                    projectBookBtn.setEnabled(false);
+                }
+                break;
+            case FINISHED:
+                projectBookBtn.setText("活动结束");
+                projectBookBtn.setEnabled(false);
+                break;
+
+        }
+
+
+
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+
+        switch (id){
+            case R.id.activity_project_comment_num:
+            case R.id.project_more_arrow:
+                Intent intent = new Intent(this, InfoWebActivity.class);
+                String url = "http://119.23.248.205:8080/comment?projectId="+projectId;
+                intent.putExtra("web",url);
+                startActivity(intent);
+
+                break;
+            case R.id.activity_project_btn_book:
+                //用户模式
+                if (!isMyOwnProject) {
+                    if (userBookedState == null && currentProject.getProjectState() == BOOK_ACCEPT) {
+                        SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE);
+                        dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                        dialog.setTitleText("预约成功")
+                                .setContentText("活动预约成功，你可以在“我的活动”中查看，活动发起人会在近期与您联系确认行程")
+                                .setConfirmText("确定")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismissWithAnimation();
+                                        currentProject.setBookedNum(currentProject.getBookedNum() + 1);
+                                        projectEnrollNum.setText(currentProject.getBookedNum() + "人报名");
+
+                                        projectBookBtn.setText("取消预约");
+                                        userBookedState = BOOK_SUCCESS;
+                                        mCollectorPresenter.put(currentLoginUser.getObjectId(), currentProject.getId(), BOOK_SUCCESS);
+                                    }
+                                })
+                                .show();
+                    } else if (userBookedState == BOOK_SUCCESS && currentProject.getProjectState() == BOOK_ACCEPT) {
+                        SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+                        dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                        dialog.setTitleText("取消预约")
+                                .setContentText("您真的要取消这次活动么？")
+                                .setConfirmText("确定")
+                                .setCancelText("取消")
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.cancel();
+                                    }
+                                })
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismissWithAnimation();
+                                        if (currentProject.getBookedNum() >= 1)
+                                            currentProject.setBookedNum(currentProject.getBookedNum() - 1);
+                                        projectEnrollNum.setText(currentProject.getBookedNum() + "人报名");
+                                        projectBookBtn.setText("立即预约");
+                                        userBookedState = null;
+                                        mCollectorPresenter.delete(currentLoginUser.getObjectId(), currentProject.getId(), BOOK_SUCCESS);
+                                    }
+                                })
+                                .show();
+                    } else if (userBookedState == BOOK_SUCCESS && currentProject.getProjectState() == PROJECT_STOP) {
+                        //评价活动
+                        Intent mIntent = new Intent(ProjectActivity.this, CommentActivity.class);
+                        mIntent.putExtra("project", currentProject);
+                        startActivity(mIntent, true);
+                    }
+
+                }
+                break;
+            case R.id.project_manager_btn_left:
+            case R.id.project_manager_btn_right:
+                //管理员模式
+                if (isMyOwnProject) {
+                    switch (currentProject.getProjectState()) {
+                        case BOOK_ACCEPT:
+                            if (id == R.id.project_manager_btn_left) {
+                                Intent mIntent = new Intent(ProjectActivity.this, BookedStudentActivity.class);
+                                mIntent.putExtra("projectId", currentProject.getId());
+                                startActivity(mIntent, true);
+                            }
+                            if (id == R.id.project_manager_btn_right) {
+                                SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+                                dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setTitleText("Are you sure?")
+                                        .setContentText("结束报名后将无法再接收有意向参加的学生!")
+                                        .setConfirmText("确定")
+                                        .setCancelText("取消")
+                                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.cancel();
+                                            }
+                                        })
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismissWithAnimation();
+                                                buttonRight.setText("开始活动");
+                                                currentProject.setProjectState(ProjectStateType.BOOK_STOP);
+                                                mProjectInfoOpPresenter.setProjectState(currentProject.getId(), ProjectStateType.BOOK_STOP);
+                                            }
+                                        })
+                                        .show();
+                            }
+                            break;
+
+                        case BOOK_STOP:
+                            if (id == R.id.project_manager_btn_left) {
+                                Intent mIntent = new Intent(ProjectActivity.this, BookedStudentActivity.class);
+                                mIntent.putExtra("projectId", currentProject.getId());
+                                startActivity(mIntent, true);
+                            }
+                            if (id == R.id.project_manager_btn_right) {
+                                SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+                                dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setTitleText("Are you sure?")
+                                        .setContentText("活动即将开始，请确认参加人员到齐！")
+                                        .setConfirmText("确定")
+                                        .setCancelText("取消")
+                                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.cancel();
+                                            }
+                                        })
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismissWithAnimation();
+                                                buttonRight.setText("结束活动");
+                                                currentProject.setProjectState(ProjectStateType.PROJECT_RUNNING);
+                                                mProjectInfoOpPresenter.setProjectState(currentProject.getId(), ProjectStateType.PROJECT_RUNNING);
+                                            }
+                                        })
+                                        .show();
+                            }
+
+                            break;
+
+                        case PROJECT_RUNNING:
+                            if (id == R.id.project_manager_btn_left) {
+                                Intent mIntent = new Intent(ProjectActivity.this, BookedStudentActivity.class);
+                                mIntent.putExtra("projectId", currentProject.getId());
+                                startActivity(mIntent, true);
+                            }
+                            if (id == R.id.project_manager_btn_right) {
+                                SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE);
+                                dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setTitleText("恭喜你完成活动")
+                                        .setContentText("辛苦啦~希望你多多组织活动让更多学生参与进来哈")
+                                        .setConfirmText("好的")
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismissWithAnimation();
+
+                                                buttonRight.setText("重启活动");
+                                                currentProject.setProjectState(PROJECT_STOP);
+                                                mProjectInfoOpPresenter.setProjectState(currentProject.getId(), PROJECT_STOP);
+                                            }
+                                        })
+                                        .show();
+                            }
+                            break;
+
+                        case PROJECT_STOP:
+                            if (id == R.id.project_manager_btn_left) {
+                                Intent mIntent = new Intent(ProjectActivity.this, BookedStudentActivity.class);
+                                mIntent.putExtra("projectId", currentProject.getId());
+                                startActivity(mIntent, true);
+                            }
+                            if (id == R.id.project_manager_btn_right) {
+                                SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+                                dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setTitleText("重启活动")
+                                        .setContentText("活动重启后将接受学生报名")
+                                        .setConfirmText("确定")
+                                        .setCancelText("取消")
+                                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.cancel();
+                                            }
+                                        })
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismissWithAnimation();
+                                                buttonRight.setText("结束报名");
+                                                currentProject.setProjectState(BOOK_ACCEPT);
+                                                mProjectInfoOpPresenter.setProjectState(currentProject.getId(), BOOK_ACCEPT);
+                                            }
+                                        })
+                                        .show();
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                break;
+
+
+        }
+
+
+
+
+    }
+
+    private void initViews() {
+        /*初始化toolbar*/
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,23 +544,21 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         if (mActionBar != null) {
             mActionBar.setDisplayHomeAsUpEnabled(true);
         }
-        projectId = mProject.getId();
-        currentProject = mProject;
+
         collapsToolbarLayout.setTitle("");
-        projectRealTitle.setText(mProject.getTitle());
-        projectContent.setText(mProject.getDescription());
-        String url = mProject.getImgUrl();
+        projectRealTitle.setText(currentProject.getTitle());
+        projectContent.setText(currentProject.getDescription());
+        String url = currentProject.getImgUrl();
         if (url==null)
             url = URL_DEFAULT_PROJECT_IMG;
         Uri uri = Uri.parse(url);
         projectImg.setImageURI(uri);
-        providerDesc.setText(mProject.getDescription());
-        projectAcceptNum.setText("上限"+mProject.getAcceptNum()+"人");
-        projectStartTime.setText(ConvertDateToString(mProject.getStartTime()));
-        //todo 增加报名人数字段
-        projectEnrollNum.setText(mProject.getAcceptNum()+"人报名");
+        providerDesc.setText(currentProject.getDescription());
+        projectAcceptNum.setText("上限"+currentProject.getAcceptNum()+"人");
+        projectStartTime.setText(ConvertDateToString(currentProject.getStartTime()));
+        projectEnrollNum.setText(currentProject.getBookedNum()+"人报名");
 
-        User provider = mProject.getProvider();
+        User provider = currentProject.getProvider();
 
         url = provider.getImgUrl();
 
@@ -209,10 +572,14 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         providerGrade.setText(provider.getGrade());
         providerMajor.setText(provider.getMajor());
         providerFansNum.setText(provider.getFansNum()+"人关注");
-        //todo 增加温馨提示
-        projectHint.setText(mProject.getDescription());
-        //todo 增加精选评论
-        projectPrice.setText(mProject.getPrice()+"");
+
+        projectHint.setText(currentProject.getTips());
+        projectOriginalPrice.setText(currentProject.getPrice()+"");
+        projectOriginalPrice.setPaintFlags(projectOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        projectPrice.setText(""+currentProject.getSalePrice());
+
+        projectComment.setOnClickListener(this);
+        moreComment.setOnClickListener(this);
 
         providerBody.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,6 +589,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                 startActivity(mIntent);
             }
         });
+
     }
 
     /*启动时初始化一次*/
@@ -239,6 +607,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         /*如果是当前用户进自己的界面，不显示关注按钮*/
         if (isMyOwnProject){
             menu.findItem(R.id.project_favor_icon).setVisible(false);
+            menu.findItem(R.id.project_edit_icon).setVisible(true);
         }
 
         return true;
@@ -251,6 +620,11 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         if (currentLoginUser == null){
             Intent mIntent = new Intent(this,LoginActivity.class);
             startActivity(mIntent);
+            return true;
+        }
+
+        if (!isNetworkUseful){
+            showToast("当前网络不可用");
             return true;
         }
 
@@ -275,6 +649,13 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
             showShare();
             return true;
         }
+        else if (id == R.id.project_edit_icon){
+            showToast("准备编辑");
+            Intent mIntent = new Intent(this, ProjectNewActivity.class);
+            mIntent.putExtra("isEditMode",true);
+            mIntent.putExtra("project",currentProject);
+            startActivity(mIntent,true);
+        }
         return true;
     }
 
@@ -286,7 +667,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
         oks.setTitle(currentProject.getTitle());
         // titleUrl是标题的网络链接，QQ和QQ空间等使用
-        String url = "http://123.206.208.68:8888/project?objectId=" + currentProject.getId();
+        String url = "http://119.23.248.205:8080/project?objectId=" + currentProject.getId();
         oks.setTitleUrl(url);
         // text是分享文本，所有平台都需要这个字段
         oks.setText(currentProject.getDescription());
@@ -317,18 +698,27 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     public void onGetProjectInfoDone(List<? extends Object> mProjects) {
 
         if (mProjects.size() != 0){
-            ProjectSaleInfo mProjectSaleInfo = (ProjectSaleInfo) mProjects.get(0);
-            refundable.setVisibility(mProjectSaleInfo.isRefundable()? View.VISIBLE : View.GONE);
-            identified.setVisibility(mProjectSaleInfo.isIdentified()? View.VISIBLE : View.GONE);
-            //todo 增加分数字段
-            mRatingBar.setNumStars(5);
-            mRatingBar.setMax(mProjectSaleInfo.getCommentNum() * 5);
-            double progress = mProjectSaleInfo.getTotalScore() * 5.0 /mRatingBar.getMax();
-            mRatingBar.setProgress(mProjectSaleInfo.getTotalScore());
-            projectScore.setText(String.format("%.1f", progress)+"分");
+            currentProjectSaleInfo = (ProjectSaleInfo) mProjects.get(0);
+            if (currentProjectSaleInfo.isRefundable()){
+                projectFlag.setVisibility(View.VISIBLE);
+                refundable.setVisibility(View.VISIBLE);
+            }
 
-            projectOriginalPrice.setText(""+mProjectSaleInfo.getOriginalPrice());
-            projectOriginalPrice.setPaintFlags(projectOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            if(currentProjectSaleInfo.isIdentified()){
+                projectFlag.setVisibility(View.VISIBLE);
+                identified.setVisibility(View.VISIBLE);
+            }
+            if (currentProjectSaleInfo.isOfficial()){
+                projectFlag.setVisibility(View.VISIBLE);
+                official.setVisibility(View.VISIBLE);
+            }
+
+            //todo 增加分数字段
+            mRatingBar.setNumStars(10);
+            mRatingBar.setMax(currentProjectSaleInfo.getCommentNum() * 10);
+            double progress = currentProjectSaleInfo.getTotalScore() * 10.0 /mRatingBar.getMax();
+            mRatingBar.setProgress(currentProjectSaleInfo.getTotalScore());
+            projectScore.setText(String.format("%.1f", progress)+"分");
         }
 
 
@@ -343,28 +733,45 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     public void onQueryProjectCollectorStateDone(boolean state, List<ProjectUserMap> mProjectUserMapList) {
         //判断是否已经收藏
         isFavor = state;
+        if (mProjectUserMapList != null && mProjectUserMapList.size() != 0){
+            userBookedState = mProjectUserMapList.get(0).getUserProjectState();
+        }
+        else
+            userBookedState = null;
+
+        //此时用户不是关注活动状态，而是已经与活动有交互了，如果当前是用户进入，开启用户模式
+        if (!isMyOwnProject)
+            openUserMode();
 
         if (isFavor && selectedItem != null)
             selectedItem.setIcon(R.mipmap.icon_favor_selected);
-        else
+        else if (selectedItem != null)
             selectedItem.setIcon(R.mipmap.icon_favor_default);
 
     }
 
+
+
+
     @Override
-    public void onChangeCollectStateError(boolean isFavor) {
+    public void onChangeCollectStateError(boolean isFavor, UserProjectStateType type) {
 
         String text;
-        if (isFavor){
-            text = "收藏失败";
-            selectedItem.setIcon(R.mipmap.icon_favor_default);
-        }
-        else {
-            text = "取消收藏失败";
-            selectedItem.setIcon(R.mipmap.icon_favor_selected);
+        switch (type){
+            case COLLECT:
+                if (isFavor){
+                    text = "收藏失败";
+                    selectedItem.setIcon(R.mipmap.icon_favor_default);
+                }
+                else {
+                    text = "取消收藏失败";
+                    selectedItem.setIcon(R.mipmap.icon_favor_selected);
+                }
+
+                showToast(text);
+                break;
         }
 
-        showToast(text);
     }
 
     @Override
@@ -383,4 +790,28 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     }
 
 
+    @Override
+    public void onCommentSuccess() {
+        //提交评论
+    }
+
+    @Override
+    public void onQueryCommentsDone(List<Comment> mComments) {
+        //获得当前活动的评论
+        int count = mComments.size();
+        projectComment.setText(count+"条评价");
+
+        if (mComments.size()>0){
+            selectComment.setText(mComments.get(0).getCommentContent());
+            selectCommentTime.setText(ConvertDateToDetailString(mComments.get(0).getCommentTime()));
+        }
+
+    }
+
+    @OnClick(R.id.activity_project_chat_button)
+    public void onChatClickListener(){
+        Intent mIntent = new Intent(this,ChatActivity.class);
+        mIntent.putExtra("user",defaultUser);
+        startActivity(mIntent,true);
+    }
 }

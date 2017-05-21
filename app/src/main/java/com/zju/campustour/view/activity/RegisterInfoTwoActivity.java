@@ -115,9 +115,9 @@ public class RegisterInfoTwoActivity extends BaseActivity {
             initOriginalView();
         }
         else {
-            //注册模式 自我介绍先不显示
+          /*  //注册模式 自我介绍先不显示
             userDescTitle.setVisibility(View.GONE);
-            userDescContent.setVisibility(View.GONE);
+            userDescContent.setVisibility(View.GONE);*/
 
             userType.check(R.id.select_common_user);
         }
@@ -141,9 +141,9 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                     if (currentUser.getInt("userType") == 0)
                         userType.check(R.id.select_common_user );
                     else {
-                        //【专业用户】显示自我介绍
+                      /*  //【专业用户】显示自我介绍
                         userDescTitle.setVisibility(View.VISIBLE);
-                        userDescContent.setVisibility(View.VISIBLE);
+                        userDescContent.setVisibility(View.VISIBLE);*/
 
                         userType.check(R.id.select_major_user);
                         userDesc.setText(currentUser.getString("description"));
@@ -337,7 +337,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
         });
 
 
-        userType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+       /* userType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 if (checkedId == R.id.select_major_user){
@@ -353,7 +353,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
 
                 }
             }
-        });
+        });*/
     }
 
 
@@ -371,19 +371,14 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                 return;
         }
 
-        String userDescription = "";
-        boolean isMajorUser = false;
+        String userDescription = userDesc.getText().toString().trim();
+        if (TextUtils.isEmpty(userDescription)) {
+            showToast("用户介绍不能为空");
+            return;
+        }
+
+        boolean isMajorUser = userType.getCheckedRadioButtonId() == R.id.select_major_user;
         if (gradeIndex > Constants.GRADE_HIGH_SCHOOL){
-            isMajorUser = userType.getCheckedRadioButtonId() == R.id.select_major_user;
-            if (isMajorUser){
-                userDescription = userDesc.getText().toString().trim();
-                if (TextUtils.isEmpty(userDescription)) {
-                    showToast("专业用户介绍不能为空");
-                    return;
-                }
-
-
-            }
 
             if (TextUtils.isEmpty(major) || "请输入你的专业名称".equals(major)){
                 showToast("专业不能为空");
@@ -395,6 +390,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
         currentUser.put("province",schoolProvince);
         currentUser.put("city", schoolCity);
         currentUser.put("district",schoolDistrict);
+        currentUser.put("description",userDescription);
 
        //按年级存储
 
@@ -403,7 +399,6 @@ public class RegisterInfoTwoActivity extends BaseActivity {
 
             if (isMajorUser){
                 //存储专业用户信息
-                currentUser.put("description",userDescription);
                 currentUser.put("userType", UserType.PROVIDER.getValue());
             }
             else {

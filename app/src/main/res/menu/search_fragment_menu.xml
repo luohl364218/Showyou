@@ -8,4 +8,11 @@
         android:orderInCategory="20"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/fragment_search_btn"
+        android:icon="@mipmap/icon_search_60"
+        android:title="查找校友"
+        android:orderInCategory="20"
+        app:showAsAction="ifRoom" />
+
 </menu>

@@ -77,7 +77,8 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
         setContentView(R.layout.activity_my_project);
         ButterKnife.bind(this);
         currentLoginUser = ParseUser.getCurrentUser();
-        initUserCloudInfo();
+        Intent mIntent = getIntent();
+        currentUserType = UserType.values()[mIntent.getIntExtra("userType",0)];
 
         /*让toolbar显示我们的标题*/
         mToolbar.setTitle("");
@@ -350,15 +351,4 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
 
     }
 
-    private void initUserCloudInfo() {
-        if (isNetworkUseful && currentLoginUser != null){
-
-            try {
-                currentLoginUser.fetch();
-                currentUserType = UserType.values()[currentLoginUser.getInt("userType")];
-            } catch (ParseException mE) {
-                mE.printStackTrace();
-            }
-        }
-    }
 }

@@ -9,6 +9,14 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/project_edit_icon"
+        android:icon="@mipmap/icon_edit"
+        android:title="编辑"
+        android:orderInCategory="10"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/project_share_icon"
         android:icon="@mipmap/icon_share"
         android:title="分享"

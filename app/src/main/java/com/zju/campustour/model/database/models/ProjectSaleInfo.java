@@ -10,19 +10,27 @@ public class ProjectSaleInfo implements Serializable {
 
     private boolean refundable;
     private boolean identified;
+
+    public boolean isOfficial() {
+        return official;
+    }
+
+    public void setOfficial(boolean mOfficial) {
+        official = mOfficial;
+    }
+
+    private boolean official;
     private int totalScore;
     private int commentNum;
-    private int originalPrice;
     private Comment comment;
 
-    public ProjectSaleInfo(boolean mRefundable, boolean mIdentified,
-                           int mTotalScore, int mCommentNum,
-                           int mOriginalPrice, Comment mComment) {
+    public ProjectSaleInfo(boolean mRefundable, boolean mIdentified,boolean mOfficial,
+                           int mTotalScore, int mCommentNum, Comment mComment) {
         refundable = mRefundable;
         identified = mIdentified;
+        official = mOfficial;
         totalScore = mTotalScore;
         commentNum = mCommentNum;
-        originalPrice = mOriginalPrice;
         comment = mComment;
     }
 
@@ -56,14 +64,6 @@ public class ProjectSaleInfo implements Serializable {
 
     public void setCommentNum(int mCommentNum) {
         commentNum = mCommentNum;
-    }
-
-    public int getOriginalPrice() {
-        return originalPrice;
-    }
-
-    public void setOriginalPrice(int mOriginalPrice) {
-        originalPrice = mOriginalPrice;
     }
 
     public Comment getComment() {

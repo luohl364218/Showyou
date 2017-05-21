@@ -27,9 +27,21 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
 
     private List<User> mProviderUserItemInfos;
     private onCardViewItemClickListener mListener;
+    private boolean isManager = false;
+
+    public void setBooked(boolean mBooked) {
+        isBooked = mBooked;
+    }
+
+    private boolean isBooked = false;
 
     public UserInfoAdapter(List<User> mProviderUserItemInfos) {
         this.mProviderUserItemInfos = mProviderUserItemInfos;
+    }
+
+    public UserInfoAdapter(List<User> mProviderUserItemInfos, boolean isProjectManager) {
+        this.mProviderUserItemInfos = mProviderUserItemInfos;
+        isManager = isProjectManager;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -95,8 +107,18 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
             url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
         DbUtils.setImg(holder.studentImgView,url,150,150);
 
-        holder.studentNameView.setText(mItemInfo.getUserName());
-        holder.shortDescriptionView.setText(mItemInfo.getShortDescription());
+        holder.studentNameView.setText(mItemInfo.getRealName());
+
+        if (isManager && isBooked){
+            String phoneNum = mItemInfo.getPhoneNum();
+            if (phoneNum == null){
+                //// TODO: 2017/5/20
+            }
+
+            holder.shortDescriptionView.setText("联系方式："+phoneNum);
+        }
+        else
+            holder.shortDescriptionView.setText(mItemInfo.getShortDescription());
 
         if (mItemInfo.getGradeId() > GRADE_HIGH_SCHOOL){
             String major = mItemInfo.getMajor();

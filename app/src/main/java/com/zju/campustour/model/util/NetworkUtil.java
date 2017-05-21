@@ -25,10 +25,22 @@ public class NetworkUtil {
                 // 当前网络是连接的
                 if (info.getState() == NetworkInfo.State.CONNECTED)
                 {
-                    // 当前所连接的网络可用
+                    // 当前所连接的网络连接，判断是否可达
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public static boolean isNetWorkAvailable() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process pingProcess = runtime.exec("ping www.baidu.com");
+            int exitCode = pingProcess.waitFor();
+            return (exitCode == 0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

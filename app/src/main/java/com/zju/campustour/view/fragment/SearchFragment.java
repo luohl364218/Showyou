@@ -36,6 +36,7 @@ import com.zju.campustour.presenter.protocal.event.AreaAndSchoolSelectedEvent;
 import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.activity.SearchActivity;
 import com.zju.campustour.view.activity.UserActivity;
 import com.zju.campustour.view.activity.SchoolListActivity;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
@@ -52,7 +53,7 @@ import java.util.List;
  * Created by HeyLink on 2017/4/1.
  */
 
-public class SearchFragment extends BaseFragment implements ISearchUserInfoView, View.OnClickListener,TabLayout.OnTabSelectedListener {
+public class SearchFragment extends BaseFragment implements ISearchUserInfoView,TabLayout.OnTabSelectedListener {
 
     private String TAG = "SearchFragment";
     private View mRootView;
@@ -61,7 +62,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     private int state = Constants.STATE_NORMAL;
     private MaterialRefreshLayout mMaterialRefreshLayout;
     IUserInfoOpPresenter mUserInfoOpPresenter;
-    private FloatingActionButton mFloatingActionButton;
+
     private LinearLayout noResultHintWrapper;
     private TextView noResultHint;
     private TabLayout mTabLayout;
@@ -96,10 +97,9 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mRootView == null){
             mRootView = inflater.inflate(R.layout.fragment_search, container, false);
+            EventBus.getDefault().register(this);
             initFragmentView();
             initRefreshLayout();
-            EventBus.getDefault().register(this);
-
             Log.d(TAG,"first create view--------------------");
 
         }
@@ -114,7 +114,6 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
 
     private void initFragmentView() {
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_search_recycle_view);
-        mFloatingActionButton = (FloatingActionButton) mRootView.findViewById(R.id.fab);
         noResultHintWrapper = (LinearLayout) mRootView.findViewById(R.id.fragment_search_noResult_hint_wrapper);
         noResultHint = (TextView) mRootView.findViewById(R.id.fragment_search_noResult_hint);
         mMaterialRefreshLayout = (MaterialRefreshLayout) mRootView.findViewById(R.id.refresh_view);
@@ -123,7 +122,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
         mToolbar.inflateMenu(R.menu.search_fragment_menu);
-        mToolbar.setTitle("校游 Show You");
+        mToolbar.setTitle(R.string.toolbar_title);
         mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,10 +134,12 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
             }
         });
 
-
-        mFloatingActionButton.setOnClickListener(this);
         mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,getContext());
-
+        isOrderByFans = false;
+        isOrderByLatest = true;
+        state = Constants.STATE_NORMAL;
+        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,
+                0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
         initTab();
     }
 
@@ -326,36 +327,13 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     }
 
 
-    @Override
-    public void onClick(View v) {
-
-
-        switch (v.getId()){
-            case R.id.fab:
-                Intent mIntent = new Intent(getActivity(), SchoolListActivity.class);
-                startActivity(mIntent);
-                state = Constants.STATE_REFRESH;
-                break;
-        }
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void searchProviderWithConditions(AreaAndSchoolSelectedEvent event) {
-
-        searchSchool = event.getSchool();
-        searchArea = event.getArea();
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool, searchMajor, 0, searchArea,-1);
-
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onNetworkChangeEvent(NetworkChangeEvent event) {
         if (event.isValid()){
             isNetworkUseful = true;
             mMaterialRefreshLayout.setLoadMore(true);
             if (mUserList == null || mUserList.size() == 0) {
-
+                state = Constants.STATE_NORMAL;
                 mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
             }
 
@@ -369,12 +347,17 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+   /* @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onHomeFragmentLoadingDone(LoadingDone done){
         if (done.isDone()){
             Log.d(TAG,"------------loading user info----------");
             isOrderByFans = false;
             isOrderByLatest = true;
+            if (mItemInfoAdapter == null)
+                state = Constants.STATE_NORMAL;
+            else
+                state = Constants.STATE_REFRESH;
+
             if (mFloatingActionButton!= null)
                 mFloatingActionButton.show();
             if (isNetworkUseful)
@@ -385,7 +368,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
             }
         }
 
-    }
+    }*/
 
     @Override
     public void onDestroy() {
@@ -406,7 +389,6 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
 
         switch (tag){
             case Constants.TAG_HOT_RECOMMEND:
-                mFloatingActionButton.hide();
                 searchSchool = null;
                 searchMajor = null;
                 searchArea = -1;
@@ -416,7 +398,6 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
                 mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
                 break;
             case Constants.TAG_SAME_PROVINCE:
-                mFloatingActionButton.hide();
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 String userProvince = "";
                 if (currentUser == null)
@@ -445,7 +426,6 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
                 mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);
                 break;
             case Constants.TAG_LATEST:
-                mFloatingActionButton.show();
                 searchSchool = null;
                 searchMajor = null;
                 searchArea = -1;
@@ -512,6 +492,10 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
                 mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
             }
 
+        }
+        else if (id == R.id.fragment_search_btn){
+            Intent mIntent = new Intent(getActivity(),SearchActivity.class);
+            startActivity(mIntent);
         }
 
         return true;

@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.util.PreferenceUtils;
+import com.zju.campustour.presenter.implement.IMImplement;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
@@ -116,7 +117,10 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
         }
 
         userLoginImpl.userLogin(loginName,pwd);
-
+        PreferenceUtils.putString(this,"userName",loginName);
+        PreferenceUtils.putString(this,"password",pwd);
+        IMImplement mIMImplement = new IMImplement();
+        mIMImplement.registerIMAccount(loginName,pwd);
     }
 
     @Override

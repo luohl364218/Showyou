@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -28,42 +31,57 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.hyphenate.chat.EMClient;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.yalantis.ucrop.UCrop;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.filter.Filter;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.model.database.data.SchoolData;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
+import com.zju.campustour.model.util.NetworkUtil;
+import com.zju.campustour.model.util.PreferenceUtils;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
+import com.zju.campustour.presenter.implement.IMImplement;
+import com.zju.campustour.presenter.listener.MyConnectionListener;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
 import com.zju.campustour.presenter.protocal.event.LogoutEvent;
+import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.view.IView.IUserFocusView;
-import com.zju.campustour.view.activity.BaseActivity;
+import com.zju.campustour.view.activity.BaseMainActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MyProjectActivity;
 import com.zju.campustour.view.activity.MySchoolmateActivity;
-import com.zju.campustour.view.activity.RegisterActivity;
+import com.zju.campustour.view.activity.ProjectNewActivity;
 import com.zju.campustour.view.activity.RegisterInfoOneActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
 import com.zju.campustour.view.fragment.MessageFragment;
 import com.zju.campustour.view.fragment.SearchFragment;
+import com.zju.campustour.view.widget.GifSizeFilter;
 import com.zju.campustour.view.widget.viewpager.SuperViewPager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -72,8 +90,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseMainActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView {
 
     @BindView(R.id.drawer_layout)
@@ -81,6 +108,7 @@ public class MainActivity extends BaseActivity
 
     private SimpleDraweeView userImg;
     private CircleImageView userEditLogo;
+    private Context mContext = this;
 
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
@@ -101,6 +129,9 @@ public class MainActivity extends BaseActivity
     //定义二维码扫描请求
     private int REQUEST_CODE = 1;
     private int CAMERA_REQUEST_CODE = 2;
+    private static final int REQUEST_CODE_CHOOSE = 23;
+    private static int picId = 1;
+    private String uriSuffix;
 
     //专业列表相关信息
     public static List<String> groupList = new ArrayList<>();
@@ -135,6 +166,11 @@ public class MainActivity extends BaseActivity
         mIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         mNetworkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(mNetworkChangeReceiver, mIntentFilter);
+        //huanxin
+        //注册一个监听连接状态的listener
+        EMClient.getInstance().addConnectionListener(new MyConnectionListener(this));
+
+
 
     }
 
@@ -201,6 +237,7 @@ public class MainActivity extends BaseActivity
         loginHint = (TextView) headerLayout.findViewById(R.id.login_hint);
         loginHint.setOnClickListener(this);
         userEditLogo = (CircleImageView) headerLayout.findViewById(R.id.user_edit);
+        userEditLogo.setOnClickListener(this);
         userName = (TextView) headerLayout.findViewById(R.id.username);
         userType = (TextView) headerLayout.findViewById(R.id.user_type);
         currentLoginUser = ParseUser.getCurrentUser();
@@ -308,25 +345,49 @@ public class MainActivity extends BaseActivity
 
         if (id == R.id.my_project) {
             Intent mIntent = new Intent(this,MyProjectActivity.class);
+            currentLoginUser = ParseUser.getCurrentUser();
+            if (currentLoginUser != null)
+                mIntent.putExtra("userType",currentLoginUser.getInt("userType"));
+            else
+                mIntent.putExtra("userType",0);
+
             startActivity(mIntent,true);
 
-        } else if (id == R.id.my_focus) {
+        } else if (id == R.id.my_schoolmate) {
             Intent mIntent = new Intent(this,MySchoolmateActivity.class);
             startActivity(mIntent,true);
-        } else if (id == R.id.my_interest) {
+        } else if (id == R.id.edit_info) {
+            Intent mIntent = new Intent(this,RegisterInfoOneActivity.class);
+            mIntent.putExtra("isEditMode",true);
+            //修复BUG，需要登录验证
+            startActivity(mIntent,true);
+
+        } else if (id == R.id.logout) {
+
             currentLoginUser = ParseUser.getCurrentUser();
+            /*退出登录也要网络可用*/
             if (currentLoginUser != null){
                 currentLoginUser.put("online",false);
                 currentLoginUser.saveEventually();
+                if (NetworkUtil.isNetworkAvailable(this))
+                    ParseUser.logOut();
+                EventBus.getDefault().post(new LogoutEvent(true));
             }
-            ParseUser.logOut();
-            EventBus.getDefault().post(new LogoutEvent(true));
-        } else if (id == R.id.setting) {
-
 
         } else if (id == R.id.build_project) {
+            currentLoginUser = ParseUser.getCurrentUser();
+            //修复Bug，未登录状态下不能发布活动
+            if (currentLoginUser != null) {
+                UserType mUserType = UserType.values()[currentLoginUser.getInt("userType")];
+                if (mUserType == UserType.PROVIDER) {
+                    Intent mIntent = new Intent(this, ProjectNewActivity.class);
+                    mIntent.putExtra("isEditMode", false);
+                    startActivity(mIntent, true);
+                } else {
+                    showToast("同学你是普通用户，没有权限创建活动哦");
+                }
+            }
 
-        } else if (id == R.id.share_project) {
 
         }
 
@@ -335,19 +396,63 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
+
+    public void editUserImg(){
+         /*Intent mIntent = new Intent(this, RegisterInfoOneActivity.class);
+                    mIntent.putExtra("isEditMode",true);
+                    startActivity(mIntent);*/
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            Matisse.from(MainActivity.this)
+                                    .choose(MimeType.ofAll(), false)
+                                    .countable(true)
+                                    .maxSelectable(1)
+                                    .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+                                    .gridExpectedSize(
+                                            getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                                    .thumbnailScale(0.85f)
+                                    .imageEngine(new GlideEngine())
+                                    .forResult(REQUEST_CODE_CHOOSE);
+                        } else {
+                            showToast("权限请求被拒绝");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.user_edit:
+                editUserImg();
+                break;
             case R.id.login_hint:
             case R.id.current_user_img:
                 currentLoginUser = ParseUser.getCurrentUser();
                 if (currentLoginUser == null) {
                     Intent mIntent = new Intent(this, LoginActivity.class);
-                    startActivity(mIntent);
-                }
-                else{
-                    Intent mIntent = new Intent(this, RegisterInfoOneActivity.class);
-                    mIntent.putExtra("isEditMode",true);
                     startActivity(mIntent);
                 }
 
@@ -382,6 +487,22 @@ public class MainActivity extends BaseActivity
                 mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
 
 
+            }catch (Exception e){
+
+            }
+
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onPictureUploadDoneEvent(UserPictureUploadDone event) {
+        currentLoginUser = ParseUser.getCurrentUser();
+        if (event.getImgUrl() != null && currentLoginUser != null){
+            try{
+                currentLoginUser.put("imgUrl",event.getImgUrl());
+                currentLoginUser.saveEventually();
+                userImg.setImageURI(Uri.parse(event.getImgUrl()));
             }catch (Exception e){
 
             }
@@ -502,15 +623,31 @@ public class MainActivity extends BaseActivity
     }
 
     private void initUserCloudInfo() {
-        if (isNetworkUseful && currentLoginUser != null){
-            FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
-            mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
-            try {
-                currentLoginUser.fetch();
-            } catch (ParseException mE) {
-                mE.printStackTrace();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (isNetworkUseful && currentLoginUser != null) {
+                /*刷新粉丝数量*/
+                    FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(MainActivity.this, mContext);
+                    mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
+                    try {
+                        currentLoginUser.fetch();
+                    } catch (ParseException mE) {
+                        mE.printStackTrace();
+                    }
+
+                    IMImplement mIMImplement = new IMImplement();
+                    try {
+                        String userName = PreferenceUtils.getString(mContext, "userName");
+                        String pwd = PreferenceUtils.getString(mContext, "password");
+                        mIMImplement.loginIMAccount(userName, pwd);
+                    }catch (Exception e){
+
+                    }
+                }
             }
-        }
+        }).start();
     }
 
 
@@ -556,11 +693,46 @@ public class MainActivity extends BaseActivity
                 }
                 break;
 
+            case REQUEST_CODE_CHOOSE:
+                if (data == null)
+                    break;
+                List<Uri> mUriList = Matisse.obtainResult(data);
+                Uri mUri = mUriList.get(0);
+
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                Cursor cursor = getContentResolver().query(mUri,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                final String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+                startCrop(picturePath);
+                break;
+            case UCrop.REQUEST_CROP:
+                if (data == null)
+                    break;
+                Uri croppedFileUri = UCrop.getOutput(data);
+
+                if (croppedFileUri != null) {
+                    imageUpLoad(croppedFileUri.getPath());
+                }
+
+                break;
             default:
 
         }
 
 
+    }
+
+
+    private void startCrop(String url) {
+        Uri sourceUri = Uri.fromFile(new File(url));
+        //裁剪后保存到文件中
+        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
+        UCrop.of(sourceUri, destinationUri).withAspectRatio(1, 1).withMaxResultSize(800, 800).start(this);
     }
 
     @Override
@@ -572,11 +744,70 @@ public class MainActivity extends BaseActivity
                     startActivityForResult(intent, REQUEST_CODE);
                 }
                 else {
-                    Toast.makeText(this, "相机被禁用，二维码扫描失败", Toast.LENGTH_SHORT).show();
+                    showToast("相机被禁用，二维码扫描失败");
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    public void imageUpLoad(String localPath) {
+
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/jpeg");
+        OkHttpClient client = new OkHttpClient();
+        String suffix = localPath.substring(localPath.lastIndexOf("."));
+
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+
+        File f = new File(localPath);
+        builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
+        Date mDate = new Date();
+        uriSuffix = currentLoginUser.getObjectId()+suffix + mDate.getTime();
+
+        final MultipartBody requestBody = builder.addFormDataPart("name",uriSuffix).build();
+        //构建请求
+        final Request request = new Request.Builder()
+                .url("http://119.23.248.205:8080")//地址
+                .post(requestBody)//添加请求体
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast("同学，不好意思，照片上传失败啦");
+                    }
+                }));
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                if (response.code() == 500){
+                    runOnUiThread(new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showToast("同学，照片太大，上传失败啦");
+                        }
+                    }));
+                }
+                else {
+                    runOnUiThread(new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showToast("报告同学，照片上传成功");
+                            String imgUri = "http://119.23.248.205:8080/pictures/" + uriSuffix;
+                            EventBus.getDefault().post(new UserPictureUploadDone(imgUri));
+                        }
+                    }));
+                }
+
+            }
+        });
+
     }
 }

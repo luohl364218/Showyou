@@ -10,15 +10,15 @@ import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 
 public interface IProjectInfoOpPresenter {
 
-    public void addOrUpdateProject(Project mProject);
+    public void addOrUpdateProject(Project mProject, boolean isEditMode);
 
     public void queryProjectWithUserId(String userId, int startIndex, int count);
 
     public void queryProjectWithUserIdAndState(String userId, UserProjectStateType type, int startIndex, int count);
 
-    public void setProjectState(int projectId, ProjectStateType state);
+    public void setProjectState(String projectId, ProjectStateType state);
 
-    public void getLimitProjectInfo(int start, int count);
+    public void getLimitProjectInfo(int start, int count ,boolean isLatest, boolean isHotest);
 
     public void queryProjectWithId(String projectId);
 

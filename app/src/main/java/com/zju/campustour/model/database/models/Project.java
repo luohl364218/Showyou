@@ -26,7 +26,28 @@ public class Project implements Serializable {
 
     private long price;
 
+    public long getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(long mSalePrice) {
+        salePrice = mSalePrice;
+    }
+
+    private long salePrice;
+
     private String description;
+
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String mTips) {
+        tips = mTips;
+    }
+
+    private String tips;
 
     private int acceptNum;
 
@@ -34,20 +55,28 @@ public class Project implements Serializable {
 
     private int collectorNum;
 
+    private int bookedNum;
+
+    public Project() {
+    }
+
     public Project(String mId, User mProvider, String mTitle,
-                    Date mStartTime, String mImgUrl, long mPrice,
-                    String mDescription, int mAcceptNum,
-                    ProjectStateType mProjectState,int mCollectorNum) {
+                   Date mStartTime, String mImgUrl, long mPrice, long mSalePrice,
+                   String mDescription, int mAcceptNum,
+                   ProjectStateType mProjectState, int mCollectorNum, int mBookedNum, String mTips) {
         id = mId;
         provider = mProvider;
         title = mTitle;
         startTime = mStartTime;
         imgUrl = mImgUrl;
         price = mPrice;
+        salePrice = mSalePrice;
         description = mDescription;
         acceptNum = mAcceptNum;
         projectState = mProjectState;
         collectorNum = mCollectorNum;
+        bookedNum = mBookedNum;
+        tips = mTips;
     }
 
     public String getId() {
@@ -169,7 +198,18 @@ public class Project implements Serializable {
         if (getCollectorNum() >= 0? !(getCollectorNum()== mProject.getCollectorNum()) : mProject.getCollectorNum() >= 0){
             setCollectorNum(mProject.getCollectorNum());
         }
+
+        if (getBookedNum() >= 0? !(getBookedNum()== mProject.getBookedNum()) : mProject.getBookedNum() >= 0){
+            setBookedNum(mProject.getBookedNum());
+        }
     }
 
 
+    public int getBookedNum() {
+        return bookedNum;
+    }
+
+    public void setBookedNum(int mBookedNum) {
+        bookedNum = mBookedNum;
+    }
 }

@@ -312,7 +312,6 @@
                 android:layout_marginTop="10dp"
                 android:text="个人简介"
                 android:textColor="#444444"
-                android:visibility="gone"
                 android:textSize="16sp"/>
 
             <LinearLayout
@@ -325,8 +324,7 @@
                 android:paddingBottom="15dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:paddingTop="15dp"
-                android:visibility="gone">
+                android:paddingTop="15dp">
 
                 <EditText
                     android:id="@+id/user_desc"

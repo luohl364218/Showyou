@@ -13,6 +13,8 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Comment;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
@@ -28,10 +30,6 @@ import java.util.List;
 import static com.zju.campustour.model.common.Constants.GRADE_HIGH_SCHOOL;
 import static com.zju.campustour.model.common.Constants.GRADE_JUNIOR_HIGH_SCHOOL;
 import static com.zju.campustour.model.common.Constants.GRADE_PRIMARY_SCHOOL;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_STOP;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_RUNNING;
-import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_STOP;
 
 /**
  * Created by HeyLink on 2017/4/26.
@@ -44,11 +42,10 @@ public class DbUtils {
         String user_id = user.getObjectId();
         String userName = user.getString("username");
         String realName = user.getString("realname");
-        String password =user.getString("password");
+        String password = "";
         SexType sex = SexType.values()[user.getInt("sex")];
 
         String major = user.getString("major");
-        String grade = user.getString("grade");
         int fansNum = user.getInt("fansNum");
         boolean online = user.getBoolean("online");
         String user_imgUrl = user.getString("imgUrl");
@@ -62,6 +59,56 @@ public class DbUtils {
         String city = user.getString("city");
         String district = user.getString("district");
         int gradeId = user.getInt("gradeId");
+        String grade = Constants.studentGrades[gradeId];
+
+        String school = "";
+        if (gradeId <= GRADE_PRIMARY_SCHOOL){
+            school = user.getString("primarySchool");
+        }
+        else if (gradeId <= GRADE_JUNIOR_HIGH_SCHOOL){
+            school = user.getString("juniorHighSchool");
+        }
+        else if (gradeId <= GRADE_HIGH_SCHOOL){
+            school = user.getString("highSchool");
+        }
+        else
+            school = user.getString("school");
+
+        if (TextUtils.isEmpty(school))
+            school =  "未填写";
+
+        String collegeTag = user.getString("collegeTag");
+
+        return new User(user_id,userName, realName, password, sex,
+                school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
+                userType, user_description, shortDescription,categoryId,province,city,
+                district,gradeId,collegeTag);
+    }
+
+    @NonNull
+    public static User getUser(ParseUser user, boolean is) {
+        String user_id = user.getObjectId();
+        String userName = user.getString("username");
+        String realName = user.getString("realname");
+        String password = "";
+        SexType sex = SexType.values()[user.getInt("sex")];
+
+        String major = user.getString("major");
+
+        int fansNum = user.getInt("fansNum");
+        boolean online = user.getBoolean("online");
+        String user_imgUrl = user.getString("imgUrl");
+        String phoneNum = user.getString("phoneNum");
+        String emailAddr = user.getString("emailAddr");
+        UserType userType = UserType.values()[user.getInt("userType")];
+        String user_description = user.getString("description");
+        String shortDescription = user.getString("shortDescription");
+        int categoryId = user.getInt("categoryId");
+        String province = user.getString("province");
+        String city = user.getString("city");
+        String district = user.getString("district");
+        int gradeId = user.getInt("gradeId");
+        String grade = Constants.studentGrades[gradeId];
 
         String school = "";
         if (gradeId <= GRADE_PRIMARY_SCHOOL){
@@ -115,25 +162,42 @@ public class DbUtils {
         Date startTime = project.getDate("startTime");
         String imgUrl = project.getString("imgUrl");
         long price = project.getLong("price");
+        long salePrice = project.getLong("salePrice");
         String description = project.getString("description");
         int acceptNum = project.getInt("acceptNum");
         ProjectStateType projectState = ProjectStateType.values()[project.getInt("projectState")];
         int collectorNum = project.getInt("collectorNum");
+        int booekdNum = project.getInt("bookedNum");
+        String tips = project.getString("tips");
+        if (TextUtils.isEmpty(tips))
+            tips = "暂无相关提示";
 
         return new Project(id, provider, title, startTime,
-                imgUrl, price, description, acceptNum, projectState, collectorNum);
+                imgUrl, price,salePrice, description, acceptNum, projectState, collectorNum,booekdNum,tips);
     }
 
+    @NonNull
+    public static Comment getComment(ParseObject object) {
+
+        Comment mComment = new Comment();
+        mComment.setProjectId(object.getString("projectId"));
+        mComment.setCommentScore(object.getInt("score"));
+        mComment.setCommentContent(object.getString("content"));
+        mComment.setCommentUserId(object.getString("userId"));
+        mComment.setCommentTime(object.getDate("commentTime"));
+
+        return mComment;
+    }
 
     public static ProjectSaleInfo getProjectSaleInfo(ParseObject project){
         boolean refundable = project.getBoolean("refundable");
         boolean identified = project.getBoolean("identified");
+        boolean official = project.getBoolean("official");
         int totalScore = project.getInt("score");
         int commentNum = project.getInt("rateCount");
-        int originalPrice = project.getInt("salePrice");
         //todo 将评论获得后转换
         Comment comment = null;
 
-        return new ProjectSaleInfo(refundable,identified,totalScore,commentNum,originalPrice,comment);
+        return new ProjectSaleInfo(refundable,identified,official,totalScore,commentNum,comment);
     }
 }

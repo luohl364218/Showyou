@@ -281,34 +281,36 @@
                     android:background="@color/divide_05_black"
                     android:layout_marginTop="10dp"
                     />
-
-                        <LinearLayout
+                      <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <Button
-                        android:id="@+id/fragment_home_hotmajor_btn"
+                        android:id="@+id/fragment_home_latest_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:text="@string/latest_major"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/selector_fragment_home_btn"/>
+
+                    <ImageView
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/alpha_02_black"
+                        />
+
+                    <Button
+                        android:id="@+id/fragment_home_hotest_btn"
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_weight="1"
                         android:text="@string/hot_major"
                         android:textSize="18sp"
                         android:textColor="@color/colorPrimary"
-                        android:background="@color/white"/>
-                    <ImageView
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/alpha_02_black"
-                        />
-                    <Button
-                        android:id="@+id/fragment_home_remotechat_btn"
-                        android:layout_width="0dp"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:text="@string/remote_chat"
-                        android:textSize="18sp"
-                        android:textColor="@color/colorPrimary"
-                        android:background="@color/white"/>
+                        android:background="@drawable/selector_fragment_home_btn"/>
                 </LinearLayout>
 
                 <ImageView
@@ -324,34 +326,67 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp">
 
+                          <LinearLayout
+                              android:id="@+id/hot_project_recomment"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:padding="2dp">
+
+
+                              <ImageView
+                                  android:layout_marginLeft="5dp"
+                                  android:layout_width="25dp"
+                                  android:layout_height="25dp"
+                                  android:scaleType="centerCrop"
+                                  android:src="@drawable/icon_recommend"/>
+
+                              <TextView
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center_vertical"
+                                  android:textSize="15sp"
+                                  android:layout_marginRight="5dp"
+                                  android:text="@string/recommend"/>
+                          </LinearLayout>
+
+
+
                           <ImageView
                               android:layout_gravity="center_vertical"
                               android:layout_width="0dp"
                               android:layout_weight="1"
                               android:layout_height="1dp"
-                              android:background="@color/alpha_20_black" />
+                              android:background="@color/divide_05_black" />
 
-                            <ImageView
-                                android:layout_marginLeft="5dp"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/icon_recommend"/>
+                          <LinearLayout
+                              android:id="@+id/latest_project_recomment"
+                              android:orientation="horizontal"
+                              android:padding="2dp"
+                              android:visibility="gone"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:textSize="15sp"
-                                android:layout_marginRight="5dp"
-                                android:text="@string/recommend"/>
+                              <TextView
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center_vertical"
+                                  android:textSize="15sp"
+                                  android:layout_marginLeft="5dp"
+                                  android:text="@string/latest"/>
 
-                          <ImageView
-                              android:layout_gravity="center_vertical"
-                              android:layout_width="0dp"
-                              android:layout_weight="1"
-                              android:layout_height="1dp"
-                              android:background="@color/alpha_20_black" />
+                              <ImageView
+                                  android:layout_marginRight="5dp"
+                                  android:layout_width="25dp"
+                                  android:layout_height="25dp"
+                                  android:scaleType="centerCrop"
+                                  android:src="@drawable/icon_latest_blue"/>
+
+                          </LinearLayout>
+
+
+
+
                         </LinearLayout>
 
                         <TextView

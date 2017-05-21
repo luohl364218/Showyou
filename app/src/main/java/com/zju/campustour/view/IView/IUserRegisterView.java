@@ -8,6 +8,6 @@ public interface IUserRegisterView extends IUserView {
 
     void userSignedUpSuccessfully(String userName, String password);
 
-    void userSignUpDidNotSucceed(Exception e);
+    void userSignUpDidNotSucceed();
 
 }

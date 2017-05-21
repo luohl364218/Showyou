@@ -23,6 +23,10 @@ public interface IUserInfoOpPresenter {
 
     public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId);
 
+    public void queryProviderUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest);
+
     public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest,boolean isMajorNotCommon);
+
+    public void searchRelativeUserWithConditions(String condition,int start);
 
 }

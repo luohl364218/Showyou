@@ -11,6 +11,9 @@
     <color name="yellow_btn_color_pressed">#daa955</color>
     <color name="yellow_btn_color_disable">#dcdcdc</color>
 
+    <color name="red_btn_default">#eb4f38</color>
+    <color name="red_btn_select">#c8261a</color>
+
     <!--item颜色-->
     <color name="item_press">#44ff0000</color>
     <color name="item_normal">#009688</color>
@@ -314,8 +317,13 @@
 
     <color name="bg_color">#f1f1f1</color>
     <color name="black">#000</color>
+    <color name="title_text_color">#ff323232</color>
+    <color name="color_ce">#ffcecece</color>
+    <color name="color_e0">#ffe0e0e0</color>
     <color name="transparent">#0000</color>
-
+    <color name="image_view_btn_pressed_bgColor">#30000000</color>
+    <color name="bg_common_gray">#ffe2e2e2</color>
+    <color name="color_77">#ff777777</color>
     <color name="detail_bgColor">#f5f5f5</color>
 
     <color name="defaultTextColor">#666</color>

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +13,10 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,8 @@ import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
+import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.view.IView.IProjectCollectorView;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 import com.zju.campustour.view.IView.ISearchUserInfoView;
@@ -42,12 +48,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserActivity extends BaseActivity implements ISearchUserInfoView,
-        ISearchProjectInfoView, View.OnClickListener,IUserFocusView ,IProjectCollectorView {
+        ISearchProjectInfoView,IUserFocusView ,IProjectCollectorView {
 
     @BindView(R.id.activity_major_provider_page_toolbar)
     Toolbar mToolbar;
@@ -84,13 +91,25 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
     @BindView(R.id.major_provider_page_attention_amount)
     TextView focusNum;
     @BindView(R.id.major_provider_page_chat_button)
-    TextView chatOnline;
+    Button chatOnline;
     @BindView(R.id.major_provider_page_project_list)
     RecyclerView projectList;
     @BindView(R.id.major_provider_page_noResult_hint)
     TextView noResultHint;
     @BindView(R.id.major_provider_page_about)
     TextView aboutHim;
+    @BindView(R.id.contact_ta)
+    CardView contactTA;
+    @BindView(R.id.between_1)
+    ImageView between_1;
+    @BindView(R.id.between_2)
+    ImageView between_2;
+    @BindView(R.id.project_items)
+    CardView projects;
+    @BindView(R.id.project_wrapper)
+    RelativeLayout projectWrapper;
+    @BindView(R.id.user_contact_txt)
+    TextView contactTxt;
 
     private String currentUserId;
     private UserInfoOpPresenterImpl mUserInfoOpPresenter;
@@ -99,6 +118,7 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
     private ProjectInfoAdapter mProjectAdapter;
     private MenuItem selectedItem;
     private ParseUser currentLoginUser;
+    private UserType currentUserType;
     private int position;
     private boolean isMyselfPage = false;
     private boolean isFans;
@@ -118,15 +138,19 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
             finish();
         }
         currentUserId = defaultUser.getId();
+        currentUserType = defaultUser.getUserType();
+        if (currentUserType == UserType.PROVIDER){
+            mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this,this);
+            mProjectInfoOpPresenter.queryProjectWithUserId(currentUserId,0,10);
+            mProjectUserMapOpPresenter = new ProjectUserMapOpPresenterImpl(this, this);
+            mProjectUserMapOpPresenter.getDealNum(currentUserId);
+        }
         mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,this);
-        mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this,this);
         mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
-        mProjectUserMapOpPresenter = new ProjectUserMapOpPresenterImpl(this, this);
         mFocusMapOpPresenter.queryFansNum(currentUserId);
-        mProjectUserMapOpPresenter.getDealNum(currentUserId);
 
         mUserInfoOpPresenter.queryUserInfoWithId(currentUserId);
-        mProjectInfoOpPresenter.queryProjectWithUserId(currentUserId,0,10);
+
 
         initViewsAndEvents(defaultUser);
 
@@ -267,6 +291,13 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
             online.setVisibility(View.GONE);
         }
 
+        if (currentUserType == UserType.USER){
+            contactTxt.setText("了解不同学校的学习情况");
+            between_2.setVisibility(View.GONE);
+            projects.setVisibility(View.GONE);
+            projectWrapper.setVisibility(View.GONE);
+        }
+
         String selfDesc = user.getDescription();
         if (TextUtils.isEmpty(selfDesc))
             selfDesc = "我对自己无话可说，如果你真的想听，那么，请联系我吧";
@@ -319,14 +350,6 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.major_provider_page_chat_button:
-                Toast.makeText(this, "Sorry 此功能我们将在5月初完善", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -389,29 +412,30 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
         oks.disableSSOWhenAuthorize();
 
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
-        oks.setTitle("");
+        oks.setTitle(defaultUser.getSchool()+ " " + defaultUser.getRealName());
 
         // titleUrl是标题的网络链接，QQ和QQ空间等使用
-        oks.setTitleUrl("http://sharesdk.cn");
+        String url ="http://119.23.248.205:8080/user?objectId="+defaultUser.getId();
+        oks.setTitleUrl(url);
 
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("");
+        oks.setText(defaultUser.getShortDescription());
 
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        oks.setImageUrl("");
+        oks.setImageUrl(defaultUser.getImgUrl());
 
         // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://sharesdk.cn");
+        oks.setUrl(url);
 
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment("");
+        oks.setComment("我在校游中找到了一位优秀的同学，你们也一起来校游吧！");
 
         // site是分享此内容的网站名称，仅在QQ空间使用
         oks.setSite(getString(R.string.app_name));
 
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
+        oks.setSiteUrl(url);
 
         // 启动分享GUI
         oks.show(this);
@@ -466,7 +490,7 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
     }
 
     @Override
-    public void onChangeCollectStateError(boolean isFavor) {
+    public void onChangeCollectStateError(boolean isFavor, UserProjectStateType type) {
 
     }
 
@@ -487,5 +511,12 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
         finish();
     }
 
+
+    @OnClick(R.id.major_provider_page_chat_button)
+    public void talkToSomeone(){
+        Intent mIntent = new Intent(this,ChatActivity.class);
+        mIntent.putExtra("user",defaultUser);
+        startActivity(mIntent,true);
+    }
 
 }
