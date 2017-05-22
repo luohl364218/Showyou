@@ -123,6 +123,8 @@ public class RegisterInfoOneActivity extends BaseActivity{
         password = mIntent.getStringExtra("password");
         isEditMode = mIntent.getBooleanExtra("isEditMode",false);
         currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null)
+            return;
         initOriginalView();
 
         initView();
@@ -134,11 +136,14 @@ public class RegisterInfoOneActivity extends BaseActivity{
             if (currentUser != null && isEditMode){
                 title.setText("信息修改 1/2");
                 realName.setText(currentUser.getString("realname"));
+                isRealNameNotNull = true;
                 userPhone.setText(currentUser.getString("phoneNum"));
+                isUserPhoneNotNull = true;
                 userEmail.setText(currentUser.getString("emailAddr"));
                 userGrade.setText(currentUser.getString("grade"));
                 userSexType.check(currentUser.getInt("sex") == 0 ? R.id.select_male : R.id.select_female);
                 userShortDesc.setText(currentUser.getString("shortDescription"));
+                isUserShortDesc = true;
                 gradeId = currentUser.getInt("gradeId");
                 btnNext.setEnabled(true);
             }
