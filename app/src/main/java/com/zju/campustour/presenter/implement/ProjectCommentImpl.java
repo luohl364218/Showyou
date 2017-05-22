@@ -54,14 +54,23 @@ public class ProjectCommentImpl implements IProjectCommentPresenter {
         mComments.put("userId",comment.getCommentUserId());
         mComments.put("score", comment.getCommentScore());
         mComments.put("content",comment.getCommentContent());
+        mComments.put("commentTime",comment.getCommentTime());
 
         mComments.saveEventually(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e != null){
-                    pDialog.dismissWithAnimation();
-                    IProjectCommentView mIProjectCommentView = (IProjectCommentView)mICommentView;
-                    mIProjectCommentView.onCommentSuccess();
+                if (e == null){
+                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    pDialog.setTitleText("评价提交成功").setConfirmText("确定");
+                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismissWithAnimation();
+                            IProjectCommentView mIProjectCommentView = (IProjectCommentView)mICommentView;
+                            mIProjectCommentView.onCommentSuccess();
+                        }
+                    });
+
                 }
                 else {
                     pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);

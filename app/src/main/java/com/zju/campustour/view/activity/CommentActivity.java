@@ -44,7 +44,6 @@ public class CommentActivity extends BaseActivity implements IProjectCommentView
 
     int rateScore = 10;
     boolean isCommentNotNull = false;
-    boolean isRatingNotNull = false;
     ProjectCommentImpl mProjectComment;
     Project currentProject;
 
@@ -72,7 +71,6 @@ public class CommentActivity extends BaseActivity implements IProjectCommentView
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 score.setText(""+rating+"分");
                 rateScore = (int) rating;
-                isRatingNotNull = true;
             }
         });
 
@@ -81,7 +79,7 @@ public class CommentActivity extends BaseActivity implements IProjectCommentView
             @Override
             public void afterTextChanged(Editable s) {
                 isCommentNotNull = !TextUtils.isEmpty(s.toString());
-                mButton.setEnabled((isRatingNotNull && isCommentNotNull));
+                mButton.setEnabled(isCommentNotNull);
             }
         });
 

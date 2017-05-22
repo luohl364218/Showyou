@@ -802,10 +802,15 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         projectComment.setText(count+"条评价");
 
         if (mComments.size()>0){
-            selectComment.setText(mComments.get(0).getCommentContent());
-            selectCommentTime.setText(ConvertDateToDetailString(mComments.get(0).getCommentTime()));
-        }
+            try{
+                selectComment.setText(mComments.get(0).getCommentContent());
+                selectCommentTime.setText(ConvertDateToDetailString(mComments.get(0).getCommentTime()));
+            }catch (Exception e){
 
+            }
+
+        }
+//【21】修复用户评论活动中，评论时间没有提交导致查看评论奔溃，评分默认不为true等BUG
     }
 
     @OnClick(R.id.activity_project_chat_button)
