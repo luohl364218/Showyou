@@ -18,8 +18,11 @@ import com.zju.campustour.model.database.models.Comment;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.presenter.implement.ProjectCommentImpl;
 import com.zju.campustour.presenter.listener.MyTextWatch;
+import com.zju.campustour.presenter.protocal.event.CommentSuccessEvent;
 import com.zju.campustour.view.IView.ICommentView;
 import com.zju.campustour.view.IView.IProjectCommentView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 import java.util.List;
@@ -117,6 +120,7 @@ public class CommentActivity extends BaseActivity implements IProjectCommentView
 
     @Override
     public void onCommentSuccess() {
+        EventBus.getDefault().post(new CommentSuccessEvent(true));
         finish();
     }
 

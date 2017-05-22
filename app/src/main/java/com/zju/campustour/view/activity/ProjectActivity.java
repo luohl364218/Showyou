@@ -33,12 +33,15 @@ import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
+import com.zju.campustour.presenter.protocal.event.CommentSuccessEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
 import com.zju.campustour.view.IView.IProjectCollectorView;
 import com.zju.campustour.view.IView.IProjectCommentView;
 import com.zju.campustour.view.IView.ISearchProjectInfoView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -59,6 +62,7 @@ import static com.zju.campustour.model.util.PreferenceUtils.ConvertDateToString;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_STOP;
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.BOOK_SUCCESS;
+import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.FINISHED;
 
 public class ProjectActivity extends BaseActivity implements ISearchProjectInfoView, IProjectCollectorView, View.OnClickListener,IProjectCommentView {
 
@@ -161,6 +165,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         setContentView(R.layout.activity_project);
         ButterKnife.bind(this);
         ShareSDK.initSDK(this);
+        EventBus.getDefault().register(this);
         Intent mIntent = getIntent();
         currentProject = (Project) mIntent.getSerializableExtra("project");
         projectId = currentProject.getId();
@@ -192,11 +197,19 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         mProjectComment = new ProjectCommentImpl(this,this);
         mProjectComment.queryComment(projectId);
 
+        initBtnView();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+
+    }
+
+    public void initBtnView(){
+        /*初始化*/
         currentLoginUser = ParseUser.getCurrentUser();
         if (currentLoginUser != null)
             mCollectorPresenter.query(currentLoginUser.getObjectId(),projectId,null);
@@ -219,7 +232,6 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
             });
 
         }
-
     }
 
 
@@ -339,7 +351,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                         SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE);
                         dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
                         dialog.setTitleText("预约成功")
-                                .setContentText("活动预约成功，你可以在“我的活动”中查看，活动发起人会在近期与您联系确认行程")
+                                .setContentText("活动预约成功，你可以在“我的活动”中查看，活动发起人会在近期与您联系")
                                 .setConfirmText("确定")
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
@@ -382,6 +394,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                                 .show();
                     } else if (userBookedState == BOOK_SUCCESS && currentProject.getProjectState() == PROJECT_STOP) {
                         //评价活动
+
                         Intent mIntent = new Intent(ProjectActivity.this, CommentActivity.class);
                         mIntent.putExtra("project", currentProject);
                         startActivity(mIntent, true);
@@ -590,6 +603,8 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
             }
         });
 
+
+
     }
 
     /*启动时初始化一次*/
@@ -690,7 +705,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        EventBus.getDefault().unregister(this);
         ShareSDK.stopSDK(this);
     }
 
@@ -818,5 +833,23 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         Intent mIntent = new Intent(this,ChatActivity.class);
         mIntent.putExtra("user",defaultUser);
         startActivity(mIntent,true);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onCommentDone(CommentSuccessEvent event){
+        if (event.isCommentSuccess()){
+            try {
+                mCollectorPresenter.delete(currentLoginUser.getObjectId(),currentProject.getId(),BOOK_SUCCESS);
+                mCollectorPresenter.put(currentLoginUser.getObjectId(),currentProject.getId(),FINISHED);
+                projectBookBtn.setText("活动结束");
+                projectBookBtn.setEnabled(false);
+            }catch (Exception e){
+
+            }
+
+        }
+
+
     }
 }
