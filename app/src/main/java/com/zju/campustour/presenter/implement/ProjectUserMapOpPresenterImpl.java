@@ -78,7 +78,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
     }
 
     @Override
-    public void put(String userId, String projectId,final UserProjectStateType type){
+    public void put(String userId, String projectId, UserProjectStateType type){
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         ParseObject collector = new ParseObject("ProjectUserMap");
@@ -137,7 +137,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
     }
 
     @Override
-    public void delete(String userId, String projectId,final UserProjectStateType type){
+    public void delete(String userId, String projectId, UserProjectStateType type){
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
@@ -224,7 +224,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
             query.whereEqualTo("userProjectState",type.getIndex());
 
         mProjectUserMapList = new ArrayList<>();
-        final IProjectCollectorView mIProjectCollectorView = (IProjectCollectorView) mCollectorView;
+        IProjectCollectorView mIProjectCollectorView = (IProjectCollectorView) mCollectorView;
 
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -252,7 +252,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
     }
 
     @Override
-    public void queryUserInfo(String projectId, UserProjectStateType type,final int start,final int count) {
+    public void queryUserInfo(String projectId, UserProjectStateType type,int start, int count) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         if (projectId == null)
@@ -265,8 +265,8 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
             query.whereEqualTo("userProjectState",type.getIndex());
         query.setSkip(start).setLimit(count).selectKeys(asList("userId"));
 
-        final IProjectUserInfoView mIProjectUserInfoView = (IProjectUserInfoView) mCollectorView;
-
+        IProjectUserInfoView mIProjectUserInfoView = (IProjectUserInfoView) mCollectorView;
+        List<User> userResults = new ArrayList<>();
 
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -284,7 +284,6 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
                     queryTwo.findInBackground(new FindCallback<ParseUser>() {
                         @Override
                         public void done(List<ParseUser> objects, ParseException e) {
-                            List<User> userResults = new ArrayList<>();
                             if (e == null && objects.size() != 0) {
                                 for (ParseUser user : objects) {
                                     User fans = getUser(user);
@@ -297,11 +296,8 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
                         }
                     });
                 }
-                else{
-                    List<User> userResults = new ArrayList<>();
+                else
                     mIProjectUserInfoView.onGetProjectUserInfoDone(userResults);
-                }
-
             }
         });
 

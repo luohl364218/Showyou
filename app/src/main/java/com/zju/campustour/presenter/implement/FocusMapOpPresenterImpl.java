@@ -155,7 +155,7 @@ public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
     }
 
     @Override
-    public void queryFansOrFocus(String userId,boolean isQueryFansNotFocus, final int start, final int count) {
+    public void queryFansOrFocus(String userId,boolean isQueryFansNotFocus, int start, int count) {
         if (!NetworkUtil.isNetworkAvailable(mContext) || userId == null)
             return;
         String tag = "";
@@ -175,13 +175,12 @@ public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
                     .selectKeys(asList(tag));
         }
 
-        final String currentTag = tag;
-        final ISearchUserInfoView mSearchUserInfoView = (ISearchUserInfoView) mUserView;
-
+        String currentTag = tag;
+        ISearchUserInfoView mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+        List<User> userResults = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-
                 if (e == null && objects.size() != 0) {
                     List<String> fansList = new ArrayList<String>();
 
@@ -196,7 +195,6 @@ public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
                     queryTwo.findInBackground(new FindCallback<ParseUser>() {
                         @Override
                         public void done(List<ParseUser> objects, ParseException e) {
-                            List<User> userResults = new ArrayList<>();
                             if (e == null && objects.size() != 0) {
                                 for (ParseUser user : objects) {
                                     User fans = getUser(user);
@@ -210,7 +208,6 @@ public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
                     });
                 }
                 else {
-                    List<User> userResults = new ArrayList<>();
                     mSearchUserInfoView.onGetProviderUserDone(userResults);
                 }
             }

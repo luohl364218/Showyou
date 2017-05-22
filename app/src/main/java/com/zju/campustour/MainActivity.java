@@ -130,8 +130,6 @@ public class MainActivity extends BaseMainActivity
     private int REQUEST_CODE = 1;
     private int CAMERA_REQUEST_CODE = 2;
     private static final int REQUEST_CODE_CHOOSE = 23;
-    private static int picId = 1;
-    private String uriSuffix;
 
     //专业列表相关信息
     public static List<String> groupList = new ArrayList<>();
@@ -763,7 +761,7 @@ public class MainActivity extends BaseMainActivity
         File f = new File(localPath);
         builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
         Date mDate = new Date();
-        uriSuffix = currentLoginUser.getObjectId()+suffix + mDate.getTime();
+        String uriSuffix = currentLoginUser.getObjectId()+suffix + mDate.toString();
 
         final MultipartBody requestBody = builder.addFormDataPart("name",uriSuffix).build();
         //构建请求

@@ -38,7 +38,7 @@ public class HomePageImgLoader implements IImgDownLoadPresenter {
         }
 
         mHomepageSlideImgs = new ArrayList<>();
-        final IHomepageImgLoadView mImgLoadView = (IHomepageImgLoadView) imgLoadView;
+        IHomepageImgLoadView mImgLoadView = (IHomepageImgLoadView) imgLoadView;
 
         ParseQuery<ParseObject> mParseQuery = ParseQuery.getQuery("homePage");
         mParseQuery.findInBackground(new FindCallback<ParseObject>() {

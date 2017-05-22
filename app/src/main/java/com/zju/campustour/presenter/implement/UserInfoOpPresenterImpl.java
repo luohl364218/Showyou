@@ -59,10 +59,10 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     }
 
     @Override
-    public void registerUser(final String userName,final String password) {
+    public void registerUser(String userName, String password) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
-        final SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
+        SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
         mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         mDialog.setTitleText("正在注册");
         mDialog.show();
@@ -106,7 +106,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     mDialog.dismissWithAnimation();
-                                    mUserRegisterView.userSignUpDidNotSucceed();
+                                    mUserRegisterView.userSignUpDidNotSucceed(e);
                                 }
                             });
                 }
@@ -145,7 +145,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     public void userLogin(String loginName, String password) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
-        final SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
+        SweetAlertDialog mDialog = new SweetAlertDialog(mContext,SweetAlertDialog.PROGRESS_TYPE);
         mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         mDialog.setTitleText("登录中");
         mDialog.show();

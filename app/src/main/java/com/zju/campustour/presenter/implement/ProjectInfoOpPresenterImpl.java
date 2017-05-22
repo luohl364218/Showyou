@@ -89,23 +89,22 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
     }
 
     @Override
-    public void queryProjectWithUserIdAndState(String userId, UserProjectStateType type,final int startIndex,final int count) {
+    public void queryProjectWithUserIdAndState(String userId, UserProjectStateType type, int startIndex, int count) {
         if (userId == null || type == null)
             return;
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
 
-
+        List<String> projectIdList = new ArrayList<>();
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
         query.whereEqualTo("userId",userId).whereEqualTo("userProjectState",type.getIndex()).selectKeys(asList("projectId"));
         mProjects = new ArrayList<>();
-        final ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
+        ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null && objects.size() != 0) {
-                    List<String> projectIdList = new ArrayList<>();
                     for (ParseObject object:objects){
                         projectIdList.add(object.getString("projectId"));
                     }
@@ -128,10 +127,8 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
                     });
 
                 }
-                else {
-
+                else
                     mISearchProjectInfoView.onGetProjectInfoDone(mProjects);
-                }
 
             }
         });
@@ -139,7 +136,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
 
 
     @Override
-    public void setProjectState(String projectId,final ProjectStateType state) {
+    public void setProjectState(String projectId, ProjectStateType state) {
         if (!NetworkUtil.isNetworkAvailable(mContext) || projectId == null)
             return;
 
@@ -179,7 +176,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
             query.orderByDescending("collectorNum");
 
         mProjects = new ArrayList<>();
-        final ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
+        ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> projectList, ParseException e) {
                 if (e == null) {
@@ -206,7 +203,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
             return;
         mProjects = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").selectKeys(Constants.projectDefaultKeys);
-        final ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
+        ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
         query.getInBackground(projectId, new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
@@ -227,7 +224,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").selectKeys(Constants.projectSaleKeys);
-        final ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
+        ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
         query.getInBackground(projectId, new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {

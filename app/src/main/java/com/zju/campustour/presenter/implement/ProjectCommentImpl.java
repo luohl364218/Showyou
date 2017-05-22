@@ -43,7 +43,7 @@ public class ProjectCommentImpl implements IProjectCommentPresenter {
     public void postComment(Comment comment) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
-        final SweetAlertDialog pDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
+        SweetAlertDialog pDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("评价提交中");
         pDialog.setCancelable(false);
@@ -86,7 +86,7 @@ public class ProjectCommentImpl implements IProjectCommentPresenter {
         ParseQuery query = ParseQuery.getQuery("ProjectComments");
         query.whereEqualTo("projectId",projectId);
 
-        final IProjectCommentView mIProjectCommentView = (IProjectCommentView)mICommentView;
+        IProjectCommentView mIProjectCommentView = (IProjectCommentView)mICommentView;
         mComments = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override

@@ -182,7 +182,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                     schoolName.setText(school);
                     isSchoolNotNull = true;
                     userType.check(R.id.select_common_user );
-
+                    userDesc.setText(currentUser.getString("description"));
                     btnConfirm.setEnabled(true);
                 }
 

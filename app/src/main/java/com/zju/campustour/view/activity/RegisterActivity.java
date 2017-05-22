@@ -179,7 +179,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
     }
 
     @Override
-    public void userSignUpDidNotSucceed() {
+    public void userSignUpDidNotSucceed(Exception e) {
 
         //showToast("注册失败，该用户名已经存在");
         registerName.setText("");
