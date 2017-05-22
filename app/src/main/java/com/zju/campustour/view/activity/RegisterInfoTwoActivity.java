@@ -146,9 +146,9 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                         userDescContent.setVisibility(View.VISIBLE);*/
 
                         userType.check(R.id.select_major_user);
-                        userDesc.setText(currentUser.getString("description"));
-                    }
 
+                    }
+                    userDesc.setText(currentUser.getString("description"));
                     major = currentUser.getString("major");
                     isMajorNotNull = true;
                     majorId = currentUser.getInt("categoryId");
