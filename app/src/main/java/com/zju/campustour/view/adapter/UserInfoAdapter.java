@@ -112,7 +112,9 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         if (isManager && isBooked){
             String phoneNum = mItemInfo.getPhoneNum();
             if (phoneNum == null){
-                //// TODO: 2017/5/20
+                phoneNum = mItemInfo.getEmailAddr();
+                if (phoneNum == null)
+                    phoneNum = mItemInfo.getUserName();
             }
 
             holder.shortDescriptionView.setText("联系方式："+phoneNum);

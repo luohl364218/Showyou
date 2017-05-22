@@ -237,7 +237,7 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
     private void initUserInfoView(User user) {
         String url = user.getImgUrl();
         providerName.setVisibility(View.VISIBLE);
-        providerName.setText(user.getUserName());
+        providerName.setText(user.getRealName());
         mToolbarLayout.setTitle(user.getUserName());
         mToolbarLayout.setCollapsedTitleGravity(View.SCROLL_INDICATOR_START);
         mToolbarLayout.setExpandedTitleGravity(View.SCROLL_INDICATOR_TOP);

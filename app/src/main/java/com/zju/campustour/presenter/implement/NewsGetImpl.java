@@ -29,7 +29,7 @@ public class NewsGetImpl {
     }
 
     public void getNewsInfo(){
-        ParseQuery<ParseObject> mQuery = ParseQuery.getQuery("NewsRecommend");
+        ParseQuery<ParseObject> mQuery = ParseQuery.getQuery("NewsRecommend").orderByDescending("createdAt");
         mQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {

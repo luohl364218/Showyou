@@ -403,7 +403,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                             if (id == R.id.project_manager_btn_right) {
                                 SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
                                 dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                                dialog.setTitleText("Are you sure?")
+                                dialog.setTitleText("你确定吗?")
                                         .setContentText("结束报名后将无法再接收有意向参加的学生!")
                                         .setConfirmText("确定")
                                         .setCancelText("取消")
@@ -435,7 +435,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                             if (id == R.id.project_manager_btn_right) {
                                 SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
                                 dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                                dialog.setTitleText("Are you sure?")
+                                dialog.setTitleText("你确定吗?")
                                         .setContentText("活动即将开始，请确认参加人员到齐！")
                                         .setConfirmText("确定")
                                         .setCancelText("取消")
