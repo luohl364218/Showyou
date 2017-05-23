@@ -761,7 +761,7 @@ public class MainActivity extends BaseMainActivity
         File f = new File(localPath);
         builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
         Date mDate = new Date();
-        String uriSuffix = currentLoginUser.getObjectId()+suffix + mDate.toString();
+        String uriSuffix = currentLoginUser.getObjectId()+suffix + mDate.getTime();
 
         final MultipartBody requestBody = builder.addFormDataPart("name",uriSuffix).build();
         //构建请求

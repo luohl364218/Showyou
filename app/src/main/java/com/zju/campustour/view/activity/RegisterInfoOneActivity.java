@@ -136,6 +136,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
             if (currentUser != null && isEditMode){
                 title.setText("信息修改 1/2");
                 realName.setText(currentUser.getString("realname"));
+                isImgSet = true;
                 isRealNameNotNull = true;
                 userPhone.setText(currentUser.getString("phoneNum"));
                 isUserPhoneNotNull = true;

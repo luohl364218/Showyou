@@ -224,6 +224,8 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                             if ("全部".equals(currentSchool) || "其他".equals(currentSchool)){
                                 schoolName.setEnabled(true);
                                 schoolName.setText("请输入你的大学名称");
+                                schoolProvince = currentProvince;
+                                collegeTag = currentTag;
                                 schoolName.setClickable(false);
                                 return;
                             }
@@ -255,6 +257,8 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                                 majorName.setEnabled(true);
                                 majorName.setText("请输入你的专业名称");
                                 majorName.setClickable(false);
+                                majorClass = currentMajorClass;
+                                majorId = Integer.valueOf(currentTag);
                                 return;
                             }
                             majorClass = currentMajorClass;
@@ -378,9 +382,10 @@ public class RegisterInfoTwoActivity extends BaseActivity {
         }
 
         boolean isMajorUser = userType.getCheckedRadioButtonId() == R.id.select_major_user;
+        String majorNameInput = majorName.getText().toString().trim();
         if (gradeIndex > Constants.GRADE_HIGH_SCHOOL){
 
-            if (TextUtils.isEmpty(major) || "请输入你的专业名称".equals(major)){
+            if (TextUtils.isEmpty(majorNameInput) || "请输入你的专业名称".equals(majorNameInput)){
                 showToast("专业不能为空");
                 return;
             }
@@ -407,7 +412,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
             }
             currentUser.put("school",school);
             currentUser.put("collegeTag",collegeTag);
-            currentUser.put("major",major);
+            currentUser.put("major",majorNameInput);
             currentUser.put("categoryId", majorId);
         }
         else if (gradeIndex > Constants.GRADE_JUNIOR_HIGH_SCHOOL){

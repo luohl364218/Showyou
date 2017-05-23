@@ -99,24 +99,61 @@
         <major name="其他"  tag="6" />
     </class>
     <class name="工学">
-       
+
+        <major name="机械工程" tag="7"/>
+        <major name="机械电子工程" tag="7"/>
         <major name="机械设计制造及其自动化" tag="7"/>
+        <major name="工业工程" tag="7"/>
+        <major name="材料科学与工程" tag="7"/>
+        <major name="新能源科学与工程" tag="7"/>
+        <major name="能源与环境系统工程" tag="7"/>
+
+        <major name="电气工程及其自动化" tag="7"/>
+        <major name="自动化（电气）" tag="7"/>
+        <major name="电子信息工程" tag="7"/>
+        <major name="土木工程" tag="7"/>
+        <major name="城乡规划" tag="7"/>
+
+        <major name="水利水电工程" tag="7"/>
+        <major name="交通工程" tag="7"/>
         <major name="过程装备与控制工程" tag="7"/>
-        <major name="工业设计" tag="7"/>
+        <major name="化学工程与工艺" tag="7"/>
+        <major name="制药工程" tag="7"/>
+
+        <major name="生物工程" tag="7"/>
+        <major name="工程力学" tag="7"/>
+        <major name="飞行器设计与工程" tag="7"/>
+        <major name="高分子材料与工程" tag="7"/>
+        <major name="港口航道与海岸工程" tag="7"/>
+
+        <major name="海洋工程与技术" tag="7"/>
+        <major name="海洋科学" tag="7"/>
+        <major name="建筑学" tag="7"/>
+        <major name="环境科学与工程" tag="7"/>
+
+        <major name="船舶与海洋工程" tag="7"/>
+        <major name="航空航天工程" tag="7"/>
+        <major name="海事管理" tag="7"/>
+
+
+        <major name="信息工程" tag="7"/>
+        <major name="电子科学与技术" tag="7"/>
+        <major name="微电子科学与工程" tag="7"/>
+        <major name="自动化（控制）" tag="7"/>
+
         <major name="测控技术及仪器" tag="7"/>
         <major name="热能与动力工程" tag="7"/>
         <major name="核工程与核技术" tag="7"/>
         <major name="计算机科学与技术" tag="7"/>
+        <major name="软件工程" tag="7"/>
+        <major name="数字媒体技术" tag="7"/>
+        <major name="工业设计" tag="7"/>
+        <major name="信息安全" tag="7"/>
         <major name="通信工程" tag="7"/>
         <major name="光电信息工程" tag="7"/>
         <major name="生物医学工程" tag="7"/>
-        <major name="软件工程" tag="7"/>
-        <major name="建筑学" tag="7"/>
-        <major name="环境科学与工程" tag="7"/>
-        <major name="交通工程" tag="7"/>
-        <major name="船舶与海洋工程" tag="7"/>
-        <major name="航空航天工程" tag="7"/>
-        <major name="海事管理" tag="7"/>
+
+
         <major name="其他"  tag="7" />
     </class>
     <class name="农学">

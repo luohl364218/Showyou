@@ -579,7 +579,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
             url = provider.getSex() == SexType.MALE ? URL_DEFAULT_MAN_IMG: URL_DEFAULT_WOMAN_IMG;
         uri = Uri.parse(url);
         providerImg.setImageURI(uri);
-        providerName.setText(provider.getUserName());
+        providerName.setText(provider.getRealName());
         providerDesc.setText(provider.getShortDescription());
         providerCollege.setText(provider.getSchool());
         providerGrade.setText(provider.getGrade());
