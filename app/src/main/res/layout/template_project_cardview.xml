@@ -130,6 +130,7 @@
                 android:padding="5dp"
                 android:maxLines="3"
                 android:ellipsize="end"
+                android:textSize="15sp"
                 android:text="中国人民大学税收学大四学生，校团委骨干人才。爱旅游、爱发呆、爱思考，喜欢阅读中外文学经典。博古通今、善思明辨。一花一世界，一叶一菩提。熟知中国人民大学历史上风云人物典故，被戏称为“行走中的校史馆”。"
                 android:background="@drawable/textview_shape"
                 />

@@ -16,15 +16,20 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottomBar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:bb_titleTextAppearance="@style/MyTextAppearance"
-        app:bb_tabXmlResource="@xml/bottombar_tabs"
-        app:bb_behavior="underNavbar"
-        app:bb_activeTabAlpha="1"
-        app:bb_inActiveTabAlpha="0.6"
-        app:bb_showShadow="true"/>
+        android:orientation="vertical">
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:bb_titleTextAppearance="@style/MyTextAppearance"
+            app:bb_tabXmlResource="@xml/bottombar_tabs"
+            app:bb_behavior="underNavbar"
+            app:bb_activeTabAlpha="1"
+            app:bb_inActiveTabAlpha="0.6"
+            app:bb_showShadow="true"/>
+    </LinearLayout>
 
 </LinearLayout>
