@@ -119,8 +119,6 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
         userLoginImpl.userLogin(loginName,pwd);
         PreferenceUtils.putString(this,"userName",loginName);
         PreferenceUtils.putString(this,"password",pwd);
-        IMImplement mIMImplement = new IMImplement();
-        mIMImplement.registerIMAccount(loginName,pwd);
     }
 
     @Override

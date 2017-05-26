@@ -168,8 +168,8 @@ public class MainActivity extends BaseMainActivity
         mNetworkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(mNetworkChangeReceiver, mIntentFilter);
         //huanxin
-        //注册一个监听连接状态的listener
-        EMClient.getInstance().addConnectionListener(new MyConnectionListener(this));
+      /*  //注册一个监听连接状态的listener
+        EMClient.getInstance().addConnectionListener(new MyConnectionListener(this));*/
 
 
 
@@ -638,11 +638,11 @@ public class MainActivity extends BaseMainActivity
                         mE.printStackTrace();
                     }
 
-                    IMImplement mIMImplement = new IMImplement();
+
                     try {
                         String userName = PreferenceUtils.getString(mContext, "userName");
                         String pwd = PreferenceUtils.getString(mContext, "password");
-                        mIMImplement.loginIMAccount(userName, pwd);
+
                     }catch (Exception e){
 
                     }

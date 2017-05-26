@@ -153,9 +153,6 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
             currentLoginUser.saveEventually();
         }
 
-        IMImplement mIMImplement = new IMImplement();
-        mIMImplement.registerIMAccount(userName,pwd);
-
         userRegisteImpl.registerUser(userName,pwd);
 
         PreferenceUtils.putString(this,"userName",userName);

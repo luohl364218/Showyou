@@ -64,8 +64,8 @@ public class CommentActivity extends BaseActivity implements IProjectCommentView
         mRatingBar.setNumStars(10);
         mRatingBar.setMax(10);
         mRatingBar.setStepSize(1);
-        mRatingBar.setRating(8);
-        score.setText("8.0分");
+        mRatingBar.setRating(10);
+        score.setText("10.0分");
 
         mProjectComment = new ProjectCommentImpl(this,this);
 
