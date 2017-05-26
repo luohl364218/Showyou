@@ -55,6 +55,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:text="罗海林"
+                    android:textStyle="normal"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15sp"/>
 
@@ -72,6 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:textStyle="normal"
                     android:gravity="left"
                     android:singleLine="true"
                     android:text="一句话业务描述"
@@ -113,6 +115,7 @@
                                 android:layout_marginBottom="10dp"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginTop="10dp"
+                                android:textStyle="normal"
                                 android:ellipsize="end"
                                 android:singleLine="true"
                                 android:text="浙江大学"
@@ -142,6 +145,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
                                 android:text="大三"
+                                android:textStyle="normal"
                                 android:textColor="@color/alpha_30_black"
                                 android:textSize="15sp"/>
 
@@ -182,6 +186,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="10dp"
                                 android:layout_marginTop="10dp"
+                                android:textStyle="normal"
                                 android:layout_marginLeft="5dp"
                                 android:layout_gravity="center_vertical"
                                 android:ellipsize="end"
@@ -215,6 +220,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
                                 android:text="普通用户"
+                                android:textStyle="normal"
                                 android:textColor="@color/alpha_30_black"
                                 android:textSize="15sp"/>
 

@@ -249,7 +249,7 @@
                         android:background="@null"
                         android:hint="请输入邮箱地址"
                         android:inputType="textEmailAddress"
-                        android:maxLength="20"
+                        android:maxLength="40"
                         android:maxLines="1"
                         android:textColor="#444444"
                         android:textColorHint="@color/main_font_color"
