@@ -530,7 +530,9 @@ public class ProjectNewActivity extends BaseActivity{
     private void startCrop(String url) {
         Uri sourceUri = Uri.fromFile(new File(url));
         //裁剪后保存到文件中
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
+        Date now = new Date();
+
+        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), now.getTime() + "_SampleCropImage.jpeg"));
         UCrop.of(sourceUri, destinationUri).withAspectRatio(4, 3).withMaxResultSize(800, 600).start(this);
     }
 

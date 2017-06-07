@@ -171,7 +171,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
             query.orderByDescending("createdAt");
 
         if (isHotest)
-            query.orderByDescending("collectorNum");
+            query.orderByDescending("bookedNum");
 
         mProjects = new ArrayList<>();
         ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
