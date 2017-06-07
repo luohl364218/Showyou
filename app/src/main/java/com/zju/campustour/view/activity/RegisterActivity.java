@@ -18,6 +18,7 @@ import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.CountTimerView;
+import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.model.util.SharePreferenceManager;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.listener.MyTextWatch;
@@ -242,6 +243,9 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
 
     @OnClick(R.id.verify_btn)
     public void getCode(){
+        if (!NetworkUtil.isNetworkAvailable(this)){
+            showToast("请先连接网络");
+        }
 
         String phone = registerName.getText().toString().trim().replaceAll("\\s*", "");
         String code = countryCode.getText().toString().trim();

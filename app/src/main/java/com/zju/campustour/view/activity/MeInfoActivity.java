@@ -24,7 +24,9 @@ import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.view.chatting.MeInfoView;
 import com.zju.campustour.view.widget.AreaSelectDialog;
+import com.zju.campustour.view.widget.CollegeSelectDialog;
 import com.zju.campustour.view.widget.GradeSelectDialog;
+import com.zju.campustour.view.widget.MajorSelectDialog;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
@@ -279,6 +281,33 @@ public class MeInfoActivity extends BaseActivity {
         AreaSelectDialog dialog = mBuilder.create();
         dialog.show();
 
+
+    }
+
+
+    public void selectMajor() {
+        MajorSelectDialog.Builder mBuilder = new MajorSelectDialog.Builder(mContext);
+        mBuilder.setPositiveButtonListener(new MajorSelectDialog.Builder.OnMajorSelectDialog() {
+            @Override
+            public void onClick(DialogInterface dialog, String currentMajorClass, String currentMajor, String currentTag) {
+                dialog.dismiss();
+
+                mMeInfoView.setMajor(currentMajor);
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                currentUser.put("major",currentMajor);
+                currentUser.put("categoryId", Integer.valueOf(currentTag));
+                currentUser.saveEventually(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null){
+                            showToast(MeInfoActivity.this.getString(R.string.modify_success_toast));
+                        }
+                    }
+                });
+            }
+        });
+        CollegeSelectDialog dialog =  mBuilder.create();
+        dialog.show();
 
     }
 

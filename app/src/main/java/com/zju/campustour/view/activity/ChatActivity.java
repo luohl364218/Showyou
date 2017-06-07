@@ -425,7 +425,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
             }
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_send_location_btn")) {
-            if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
+            showToast("暂未开通发送位置功能，敬请期待");
+          /*  if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
                 mChatView.dismissMoreMenu();
             }
             Intent intent = new Intent(mContext, SendLocationActivity.class);
@@ -433,7 +434,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             intent.putExtra(Constants.TARGET_APP_KEY, mTargetAppKey);
             intent.putExtra(Constants.GROUP_ID, mGroupId);
             intent.putExtra("sendLocation", true);
-            startActivityForResult(intent, Constants.REQUEST_CODE_SEND_LOCATION);
+            startActivityForResult(intent, Constants.REQUEST_CODE_SEND_LOCATION);*/
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_send_file_btn")) {
             try {
                 RxPermissions rxPermissions = new RxPermissions(this);

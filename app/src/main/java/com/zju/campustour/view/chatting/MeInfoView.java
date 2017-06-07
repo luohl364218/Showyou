@@ -31,6 +31,7 @@ import cn.jpush.im.android.api.model.UserInfo;
 import static com.zju.campustour.model.common.Constants.GRADE_HIGH_SCHOOL;
 import static com.zju.campustour.model.common.Constants.GRADE_JUNIOR_HIGH_SCHOOL;
 import static com.zju.campustour.model.common.Constants.GRADE_PRIMARY_SCHOOL;
+import static com.zju.campustour.model.common.Constants.imageUrls;
 
 
 public class MeInfoView extends LinearLayout {
@@ -47,6 +48,7 @@ public class MeInfoView extends LinearLayout {
     private TextView mSchoolTv;
     private TextView mGradeTv;
     private TextView mEmailTv;
+    private TextView mMajorTv;
     private TextView mDescTv;
     private ImageButton mReturnBtn;
     private TextView mTitle;
@@ -59,14 +61,9 @@ public class MeInfoView extends LinearLayout {
     private LinearLayout mTypeLayout;
     private LinearLayout mSchoolLayout;
     private LinearLayout mGradeLayout;
+    private LinearLayout mMajorLayout;
     private LinearLayout mEmailLayout;
     private LinearLayout mDescLayout;
-
-
-
-
-
-
 
     private int gradeId;
     private Context mContext;
@@ -89,6 +86,10 @@ public class MeInfoView extends LinearLayout {
 
     public void setDesc(String desc){
         mDescTv.setText(desc);
+    }
+
+    public void setMajor(String major){
+        mMajorTv.setText(major);
     }
 
     public void setGender(boolean isMan) {
@@ -145,12 +146,14 @@ public class MeInfoView extends LinearLayout {
         mGradeLayout = (LinearLayout) findViewById(R.id.grade_rl);
         mEmailLayout = (LinearLayout) findViewById(R.id.email_rl);
         mDescLayout = (LinearLayout) findViewById(R.id.desc_rl);
+        mMajorLayout = (LinearLayout) findViewById(R.id.major_rl);
 
         mTypeTv = (TextView) findViewById(R.id.type_tv);
         mSchoolTv = (TextView) findViewById(R.id.school_tv);
         mGradeTv = (TextView) findViewById(R.id.grade_tv);
         mEmailTv = (TextView) findViewById(R.id.email_tv);
         mDescTv = (TextView) findViewById(R.id.desc_tv);
+        mMajorTv = (TextView) findViewById(R.id.major_tv);
 
         mTypeIv  = (ImageView) findViewById(R.id.type_icon);
 
@@ -199,10 +202,18 @@ public class MeInfoView extends LinearLayout {
             else
                 mTypeTv.setText("未定义");
 
+            String major =  currentUser.getString("major");
+            if (TextUtils.isEmpty(major)){
+                mMajorTv.setText("未填写");
+            }
+            else
+                mMajorTv.setText(major);
 
             gradeId = currentUser.getInt("gradeId");
             String grade = Constants.studentGrades[gradeId];
             mGradeTv.setText(grade);
+
+
 
             String school = "";
             if (gradeId <= GRADE_PRIMARY_SCHOOL){
@@ -247,6 +258,7 @@ public class MeInfoView extends LinearLayout {
         mGradeLayout.setOnClickListener(onClickListener);
         mEmailLayout.setOnClickListener(onClickListener);
         mDescLayout.setOnClickListener(onClickListener);
+        mMajorLayout.setOnClickListener(onClickListener);
 ////		JPushIMManager.getInstance().registerUserAvatarChangeObserver(this);
     }
 

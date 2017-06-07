@@ -19,6 +19,8 @@ public interface IUserInfoOpPresenter {
 
     public void userDelete(String userId);
 
+    public void queryMajorStudent(String majorName, int categoryId);
+
     public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId);
 
     public void queryProviderUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest);

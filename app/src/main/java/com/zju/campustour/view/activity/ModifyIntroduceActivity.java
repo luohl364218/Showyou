@@ -40,7 +40,7 @@ public class ModifyIntroduceActivity extends BaseActivity {
         mEditText = (ClearEditText) findViewById(R.id.edit_area_et);
         ParseUser currentUser = ParseUser.getCurrentUser();
 
-        mEditText.setHint(currentUser.getString("description"));
+        mEditText.setText(currentUser.getString("description"));
 
         mTitle.setText(this.getString(R.string.input_introduce_title));
         mReturnBtn.setOnClickListener(new View.OnClickListener() {

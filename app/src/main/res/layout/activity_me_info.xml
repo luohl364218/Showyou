@@ -233,6 +233,36 @@
                 android:background="@color/me_split_line_color"/>
 
             <LinearLayout
+                android:id="@+id/major_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/major_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/my_major"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/major"/>
+
+                <TextView
+                    android:id="@+id/major_tv"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
                 android:id="@+id/email_rl"
                 style="@style/MeItemStyle">
 

@@ -280,6 +280,43 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
     }
 
+
+    public void queryMajorStudent(String majorName, int categoryId){
+        if (!NetworkUtil.isNetworkAvailable(mContext) || majorName == null || categoryId < 0)
+            return;
+
+        ArrayList<ParseQuery<ParseUser>> mList = new ArrayList<>();
+        ParseQuery<ParseUser> query_1 = ParseUser.getQuery().whereEqualTo("major",majorName);
+        ParseQuery<ParseUser> query_2 = ParseUser.getQuery().whereEqualTo("categoryId",categoryId);
+        mList.add(query_1);
+        mList.add(query_2);
+        ParseQuery<ParseUser> query = ParseQuery.or(mList).orderByDescending("createdAt");
+        userResults = new ArrayList<>();
+        query.findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> userList, ParseException e) {
+                if (e == null) {
+                    /*信息转换*/
+                    for(ParseUser user: userList){
+                        User provider = getUser(user);
+                        userResults.add(provider);
+                    }
+                    Log.d(TAG, "find user-----------------: " + userList.size());
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserDone(userResults);
+
+                } else {
+                    Log.d(TAG,"get user error!!!!");
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserError(e);
+                }
+
+
+
+            }
+        });
+
+    }
+
     @Override
     public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId) {
         if (!NetworkUtil.isNetworkAvailable(mContext))

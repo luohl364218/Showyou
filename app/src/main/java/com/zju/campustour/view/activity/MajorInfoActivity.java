@@ -73,7 +73,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
             getBundleExtras(extras);
         }
         mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,getBaseContext());
-        mUserInfoOpPresenter.queryProviderUserWithConditions(null, null,0,-1,selectedGroupID);
+        mUserInfoOpPresenter.queryMajorStudent(selectedMajorName,selectedGroupID);
         initViewsAndEvents();
     }
 
@@ -188,7 +188,12 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
 
         if (mSimilarMajorProviderUserItemInfos.size() != 0){
             noResultTextView2.setVisibility(View.GONE);
-            showSimilarMajorProvider(mSimilarMajorProviderUserItemInfos);
+            List<User> mUserList;
+            if (mSimilarMajorProviderUserItemInfos.size() >= 10)
+                mUserList = mSimilarMajorProviderUserItemInfos.subList(0,10);
+            else
+                mUserList = mSimilarMajorProviderUserItemInfos;
+            showSimilarMajorProvider(mUserList);
         }
         else {
             noResultTextView2.setVisibility(View.VISIBLE);

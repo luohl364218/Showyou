@@ -70,6 +70,14 @@ public class MeInfoController implements OnClickListener {
                 mContext.startModifyMyDesc();
                 break;
 
+            case R.id.major_rl:
+                ParseUser user_1 = ParseUser.getCurrentUser();
+                int mGradeId = user_1.getInt("gradeId");
+                if (mGradeId <= GRADE_HIGH_SCHOOL )
+                    return;
+                mContext.selectMajor();
+                break;
+
         }
     }
 

@@ -263,6 +263,7 @@
     <string name="sign">个性签名</string>
     <string name="school">学校</string>
     <string name="grade">年级</string>
+    <string name="major">专业</string>
     <string name="email_addr">邮箱地址</string>
     <string name="desc">自我介绍</string>
     <string name="commit">确认</string>

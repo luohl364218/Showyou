@@ -10,5 +10,7 @@ public class SendLocationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_location);
+        showToast("暂未开通发送位置功能，敬请期待");
+        finish();
     }
 }

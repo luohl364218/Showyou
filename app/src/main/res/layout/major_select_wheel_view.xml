@@ -49,9 +49,9 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="20dp"
-        style="@style/bigYellowButton"
+        style="@style/bigWhiteButton"
         android:text="确定"
-        android:textColor="#ffffff"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp" >
     </Button>
 

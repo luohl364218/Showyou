@@ -876,13 +876,14 @@ public class ChatItemController {
                     break;
                 case location:
                     if (holder.picture != null && v.getId() == holder.picture.getId()) {
-                        Intent intent = new Intent(mContext, SendLocationActivity.class);
+                        break;
+                       /* Intent intent = new Intent(mContext, SendLocationActivity.class);
                         LocationContent locationContent = (LocationContent) msg.getContent();
                         intent.putExtra("latitude", locationContent.getLatitude().doubleValue());
                         intent.putExtra("longitude", locationContent.getLongitude().doubleValue());
                         intent.putExtra("locDesc", locationContent.getAddress());
                         intent.putExtra("sendLocation", false);
-                        mContext.startActivity(intent);
+                        mContext.startActivity(intent);*/
                     }
                     break;
                 case file:
