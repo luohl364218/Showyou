@@ -14,8 +14,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +28,8 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.util.SharePreferenceManager;
+import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
 import com.zju.campustour.view.widget.ClearEditText;
@@ -46,6 +48,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -71,9 +76,6 @@ public class RegisterInfoOneActivity extends BaseActivity{
     @BindView(R.id.user_grade)
     TextView userGrade;
 
-    @BindView(R.id.user_phone_num)
-    ClearEditText userPhone;
-
     @BindView(R.id.user_email_addr)
     ClearEditText userEmail;
 
@@ -84,7 +86,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
     ClearEditText userShortDesc;
 
     @BindView(R.id.user_grade_select)
-    LinearLayout userGradeSelect;
+    RelativeLayout userGradeSelect;
 
     @BindView(R.id.btn_one_next)
     Button btnNext;
@@ -93,7 +95,6 @@ public class RegisterInfoOneActivity extends BaseActivity{
     TextView title;
 
     private boolean isRealNameNotNull = false;
-    private boolean isUserPhoneNotNull = false;
     private boolean isUserShortDesc = false;
     private Context mContext = this;
     private boolean isImgSet = false;
@@ -106,9 +107,9 @@ public class RegisterInfoOneActivity extends BaseActivity{
     //当前用户
     String userName;
     String password;
+    String phoneNum;
     ParseUser currentUser;
 
-    private static int picId = 1;
     //是否是编辑模式
     private boolean isEditMode = false;
 
@@ -121,6 +122,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
         Intent mIntent = getIntent();
         userName = mIntent.getStringExtra("userName");
         password = mIntent.getStringExtra("password");
+        phoneNum = mIntent.getStringExtra("phone");
         isEditMode = mIntent.getBooleanExtra("isEditMode",false);
         currentUser = ParseUser.getCurrentUser();
         if (currentUser == null)
@@ -138,8 +140,6 @@ public class RegisterInfoOneActivity extends BaseActivity{
                 realName.setText(currentUser.getString("realname"));
                 isImgSet = true;
                 isRealNameNotNull = true;
-                userPhone.setText(currentUser.getString("phoneNum"));
-                isUserPhoneNotNull = true;
                 userEmail.setText(currentUser.getString("emailAddr"));
                 userGrade.setText(currentUser.getString("grade"));
                 userSexType.check(currentUser.getInt("sex") == 0 ? R.id.select_male : R.id.select_female);
@@ -163,16 +163,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
             @Override
             public void afterTextChanged(Editable s) {
                 isRealNameNotNull = !TextUtils.isEmpty(s.toString());
-                btnNext.setEnabled((isRealNameNotNull && isUserPhoneNotNull && isUserShortDesc));
-            }
-        });
-
-        userPhone.addTextChangedListener(new MyTextWatch() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                isUserPhoneNotNull = !TextUtils.isEmpty(s.toString());
-                btnNext.setEnabled((isRealNameNotNull && isUserPhoneNotNull && isUserShortDesc));
-
+                btnNext.setEnabled((isRealNameNotNull && isUserShortDesc));
             }
         });
 
@@ -180,7 +171,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
             @Override
             public void afterTextChanged(Editable s) {
                 isUserShortDesc = !TextUtils.isEmpty(s.toString());
-                btnNext.setEnabled((isRealNameNotNull && isUserPhoneNotNull && isUserShortDesc));
+                btnNext.setEnabled((isRealNameNotNull && isUserShortDesc));
             }
         });
 
@@ -208,17 +199,17 @@ public class RegisterInfoOneActivity extends BaseActivity{
 
     @OnClick(R.id.btn_one_next)
     protected void updateUserInfo(){
+        if (!isImgSet) {
+            showToast("请选择头像");
+            return;
+        }
+
         String userRealName = realName.getText().toString().trim();
         if (TextUtils.isEmpty(userRealName)) {
             showToast("请输入真实姓名");
             return;
         }
 
-        String phone = userPhone.getText().toString().trim();
-        if (TextUtils.isEmpty(phone)) {
-            showToast("请输入手机号码");
-            return;
-        }
 
         String grade = userGrade.getText().toString().trim();
         if ("点击选择".equals(grade)){
@@ -237,14 +228,39 @@ public class RegisterInfoOneActivity extends BaseActivity{
         }
 
         currentUser.put("realname",userRealName);
-        currentUser.put("phoneNum",phone);
+        currentUser.put("phoneNum",phoneNum);
         currentUser.put("emailAddr",email);
         currentUser.put("grade",grade);
         currentUser.put("sex",userSex);
-        if (!isImgSet)
-            currentUser.put("imgUrl",userSex == 1 ? Constants.URL_DEFAULT_WOMAN_IMG: Constants.URL_DEFAULT_MAN_IMG);
+
         currentUser.put("shortDescription",shortDesc);
         currentUser.put("gradeId",gradeId);
+
+        //上传极光 用户性别 个性签名
+        try {
+            UserInfo myUserInfo = JMessageClient.getMyInfo();
+            myUserInfo.setGender(userSex == 1 ? UserInfo.Gender.female : UserInfo.Gender.male);
+            JMessageClient.updateMyInfo(UserInfo.Field.gender, myUserInfo, new BasicCallback() {
+                @Override
+                public void gotResult(final int status, final String desc) {
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+
+            myUserInfo.setSignature(shortDesc);
+            JMessageClient.updateMyInfo(UserInfo.Field.signature, myUserInfo, new BasicCallback() {
+                @Override
+                public void gotResult(final int status, final String desc) {
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+        }catch (Exception e){
+
+        }
 
         currentUser.saveEventually();
         Intent mIntent = new Intent(this, RegisterInfoTwoActivity.class);
@@ -339,7 +355,8 @@ public class RegisterInfoOneActivity extends BaseActivity{
     private void startCrop(String url) {
         Uri sourceUri = Uri.fromFile(new File(url));
         //裁剪后保存到文件中
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
+        Date mDate = new Date();
+        Uri destinationUri = Uri.fromFile(new File(getCacheDir(),mDate.getTime()+"_showyou.jpeg"));
         UCrop.of(sourceUri, destinationUri).withAspectRatio(1, 1).withMaxResultSize(800, 800).start(this);
     }
 
@@ -352,6 +369,8 @@ public class RegisterInfoOneActivity extends BaseActivity{
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         File f = new File(localPath);
+        //上传极光聊天头像
+        JMessageClient.updateUserAvatar(f,null);
         builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
         Date mDate = new Date();
         String uriSuffix = currentUser.getObjectId()+suffix+mDate.getTime();
@@ -391,7 +410,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
                         public void run() {
                             showToast("报告同学，照片上传成功");
                             String imgUri = "http://119.23.248.205:8080/pictures/" + uriSuffix;
-                            EventBus.getDefault().post(new UserPictureUploadDone(imgUri));
+                            EventBus.getDefault().post(new UserPictureUploadDone(imgUri, localPath));
                         }
                     }));
                 }
@@ -405,13 +424,14 @@ public class RegisterInfoOneActivity extends BaseActivity{
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onPictureUploadDoneEvent(UserPictureUploadDone event) {
         currentUser = ParseUser.getCurrentUser();
-        if (event.getImgUrl() != null && currentUser != null){
+        if (event != null && currentUser != null){
             try{
-
-                currentUser.put("imgUrl",event.getImgUrl());
+                SharePreferenceManager.putString(this,Constants.DB_USERIMG,event.getLocalImgUrl());
+                currentUser.put("imgUrl",event.getCloudImgUrl());
                 currentUser.saveEventually();
+                Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
                 isImgSet = true;
-                Glide.with(this).load(event.getImgUrl()).into(userImg);
+                Glide.with(this).load(mUri).into(userImg);
             }catch (Exception e){
 
             }

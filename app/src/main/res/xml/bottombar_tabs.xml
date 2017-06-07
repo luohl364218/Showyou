@@ -18,4 +18,16 @@
         icon="@drawable/selector_icon_info"
         title="资讯"
         />
+
+    <tab
+        id="@+id/tab_chat"
+        icon="@drawable/selector_icon_chat"
+        title="聊天"
+        />
+
+    <tab
+        id="@+id/tab_contact"
+        icon="@drawable/selector_icon_contact"
+        title="校友"
+        />
 </tabs>

@@ -15,7 +15,7 @@
             android:id="@+id/dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="请选择学校所在地区"
+            android:text="选择地区"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_gravity="center"/>
@@ -55,9 +55,9 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="20dp"
-        style="@style/bigYellowButton"
+        style="@style/bigWhiteButton"
         android:text="确定"
-        android:textColor="#ffffff"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp" >
     </Button>
 

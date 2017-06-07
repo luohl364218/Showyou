@@ -1,6 +1,8 @@
 package com.zju.campustour;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,33 +11,36 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.hyphenate.chat.EMClient;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
@@ -45,6 +50,9 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.filter.Filter;
+import com.zju.campustour.model.chatting.utils.BitmapLoader;
+import com.zju.campustour.model.chatting.utils.DialogCreator;
+import com.zju.campustour.model.chatting.utils.FileHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
@@ -52,18 +60,26 @@ import com.zju.campustour.model.database.data.SchoolData;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
 import com.zju.campustour.model.util.NetworkUtil;
-import com.zju.campustour.model.util.PreferenceUtils;
+import com.zju.campustour.model.util.SharePreferenceManager;
+import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
-import com.zju.campustour.presenter.implement.IMImplement;
-import com.zju.campustour.presenter.listener.MyConnectionListener;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
 import com.zju.campustour.presenter.protocal.event.LogoutEvent;
+import com.zju.campustour.presenter.protocal.event.UnreadFriendVerifyNum;
+import com.zju.campustour.presenter.protocal.event.UnreadMsgEvent;
 import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
-import com.zju.campustour.view.IView.IUserFocusView;
+import com.zju.campustour.presenter.protocal.event.UserTypeChangeEvent;
+import com.zju.campustour.view.activity.FixProfileActivity;
+import com.zju.campustour.view.activity.MeInfoActivity;
+import com.zju.campustour.view.activity.ReloginActivity;
+import com.zju.campustour.view.activity.SettingActivity;
+import com.zju.campustour.view.fragment.ChatFragment;
+import com.zju.campustour.view.fragment.ContactsFragment;
+import com.zju.campustour.view.iview.IUserFocusView;
 import com.zju.campustour.view.activity.BaseMainActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MyProjectActivity;
@@ -90,6 +106,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.jiguang.api.JCoreInterface;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -101,7 +120,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static android.R.attr.uiOptions;
 
 public class MainActivity extends BaseMainActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView {
@@ -109,6 +127,7 @@ public class MainActivity extends BaseMainActivity
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    private ImageView mAvatarIv;
     private SimpleDraweeView userImg;
     private CircleImageView userEditLogo;
     private Context mContext = this;
@@ -122,6 +141,8 @@ public class MainActivity extends BaseMainActivity
 
     @BindView(R.id.bottomBar)
     BottomBar mBottomBar;
+    BottomBarTab chatTab;
+    BottomBarTab contactTab;
 
     @BindView(R.id.viewPager)
     SuperViewPager mViewPager;
@@ -149,7 +170,16 @@ public class MainActivity extends BaseMainActivity
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
+    //初始化fragment
+    private HomeFragment mHomeFragment;
+    private SearchFragment mSearchFragment;
+    private MessageFragment mMessageFragment;
+    private ChatFragment mChatFragment;
+    private ContactsFragment mContactsFragment;
+
     private ParseUser currentLoginUser;
+    private Dialog mDialog;
+    private int unreadMsg = 0;
 
     private String TAG = "mainActivity";
 
@@ -173,6 +203,28 @@ public class MainActivity extends BaseMainActivity
 
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        JCoreInterface.onResume(this);
+        UserInfo myInfo = JMessageClient.getMyInfo();
+        if (myInfo != null){
+            //已经登录过但是没设置头像,就跳转到设置头像界面
+            if (TextUtils.isEmpty(myInfo.getNickname())) {
+                Intent intent = new Intent();
+                intent.setClass(this, FixProfileActivity.class);
+                startActivity(intent);
+            }
+        }
+        mChatFragment.sortConvList();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        JCoreInterface.onPause(this);
+        super.onPause();
     }
 
     @Override
@@ -235,6 +287,7 @@ public class MainActivity extends BaseMainActivity
         headerLayout = mNavigationView.getHeaderView(0);
         userImg = (SimpleDraweeView) headerLayout.findViewById(R.id.current_user_img);
         userImg.setOnClickListener(this);
+        mAvatarIv = (ImageView)headerLayout.findViewById(R.id.my_avatar_iv);
         loginHint = (TextView) headerLayout.findViewById(R.id.login_hint);
         loginHint.setOnClickListener(this);
         userEditLogo = (CircleImageView) headerLayout.findViewById(R.id.user_edit);
@@ -242,7 +295,9 @@ public class MainActivity extends BaseMainActivity
         userName = (TextView) headerLayout.findViewById(R.id.username);
         userType = (TextView) headerLayout.findViewById(R.id.user_type);
         currentLoginUser = ParseUser.getCurrentUser();
+
         if (currentLoginUser == null){
+            //双重防护， 只有同时登陆成功才能进入
             userImg.setImageURI(Uri.parse("www.cxx"));
             loginHint.setVisibility(View.VISIBLE);
             userEditLogo.setVisibility(View.GONE);
@@ -263,7 +318,9 @@ public class MainActivity extends BaseMainActivity
         }
 
         mBottomBar.setDefaultTabPosition(0);
+        //初始化几个Fragment
         initViewPager();
+
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -287,6 +344,14 @@ public class MainActivity extends BaseMainActivity
                         /*mToolbar.setTitle("消息");
                         mToolbar.setNavigationIcon(R.mipmap.icon_user_default);*/
                         break;
+                    case R.id.tab_chat:
+                        mViewPager.setCurrentItemByTab(3,true);
+                      /*  if (chatTab != null)
+                            chatTab.removeBadge();*/
+                        break;
+                    case R.id.tab_contact:
+                        mViewPager.setCurrentItemByTab(4,true);
+                        break;
                     default:
                         break;
                 }
@@ -299,10 +364,20 @@ public class MainActivity extends BaseMainActivity
         fragmentList = new ArrayList<>();
         // 这里的添加顺序是否对 tab 页的前后顺序有影响
         //fragmentList.add(fragmentTabHost.getTabWidget().)
+        mHomeFragment = new HomeFragment();
+        mSearchFragment = new SearchFragment();
+        mMessageFragment = new MessageFragment();
+        mChatFragment = new ChatFragment();
+        mContactsFragment = new ContactsFragment();
 
-        fragmentList.add(new HomeFragment());
-        fragmentList.add(new SearchFragment());
-        fragmentList.add(new MessageFragment());
+        fragmentList.add(mHomeFragment);
+        fragmentList.add(mSearchFragment);
+        fragmentList.add(mMessageFragment);
+        fragmentList.add(mChatFragment);
+        fragmentList.add(mContactsFragment);
+
+        //让viewPager缓存一定的页面，不要销毁
+        mViewPager.setOffscreenPageLimit(3);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -343,51 +418,87 @@ public class MainActivity extends BaseMainActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        switch (id){
+            case R.id.edit_info:
+                //编辑我的信息
+                //// TODO: 2017/5/31 要把编辑信息的范围扩大
+                /*Intent mIntent = new Intent(this,RegisterInfoOneActivity.class);
+                mIntent.putExtra("isEditMode",true);
+                //修复BUG，需要登录验证
+                startActivity(mIntent,true);*/
 
-        if (id == R.id.my_project) {
-            Intent mIntent = new Intent(this,MyProjectActivity.class);
-            currentLoginUser = ParseUser.getCurrentUser();
-            if (currentLoginUser != null)
-                mIntent.putExtra("userType",currentLoginUser.getInt("userType"));
-            else
-                mIntent.putExtra("userType",0);
+                startActivity(new Intent(this, MeInfoActivity.class), true);
+                break;
+            case R.id.my_project:
+                //打开我的活动
 
-            startActivity(mIntent,true);
+                Intent mIntent_1 = new Intent(this,MyProjectActivity.class);
+                currentLoginUser = ParseUser.getCurrentUser();
+                if (currentLoginUser != null)
+                    mIntent_1.putExtra("userType",currentLoginUser.getInt("userType"));
+                else
+                    mIntent_1.putExtra("userType",0);
 
-        } else if (id == R.id.my_schoolmate) {
-            Intent mIntent = new Intent(this,MySchoolmateActivity.class);
-            startActivity(mIntent,true);
-        } else if (id == R.id.edit_info) {
-            Intent mIntent = new Intent(this,RegisterInfoOneActivity.class);
-            mIntent.putExtra("isEditMode",true);
-            //修复BUG，需要登录验证
-            startActivity(mIntent,true);
+                startActivity(mIntent_1,true);
+                break;
 
-        } else if (id == R.id.logout) {
+            case R.id.my_schoolmate:
+                //打开我的校友
+                startActivity(new Intent(this,MySchoolmateActivity.class),true);
+                break;
 
-            currentLoginUser = ParseUser.getCurrentUser();
+            case R.id.my_setting:
+                startActivity(new Intent(this, SettingActivity.class),true);
+                break;
+
+            case R.id.logout:
+                //退出登录
+                currentLoginUser = ParseUser.getCurrentUser();
             /*退出登录也要网络可用*/
-            if (currentLoginUser != null){
-                currentLoginUser.put("online",false);
-                currentLoginUser.saveEventually();
-                if (NetworkUtil.isNetworkAvailable(this))
-                    ParseUser.logOut();
-                EventBus.getDefault().post(new LogoutEvent(true));
-            }
+                if (currentLoginUser != null){
 
-        } else if (id == R.id.build_project) {
-            currentLoginUser = ParseUser.getCurrentUser();
-            //修复Bug，未登录状态下不能发布活动
-            if (currentLoginUser != null) {
-                UserType mUserType = UserType.values()[currentLoginUser.getInt("userType")];
-                if (mUserType == UserType.PROVIDER) {
-                    Intent mIntent = new Intent(this, ProjectNewActivity.class);
-                    mIntent.putExtra("isEditMode", false);
-                    startActivity(mIntent, true);
-                } else {
-                    showToast("同学你是普通用户，没有权限创建活动哦");
+                    View.OnClickListener listener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            switch (view.getId()) {
+                                case R.id.jmui_cancel_btn:
+                                    mDialog.cancel();
+                                    break;
+                                case R.id.jmui_commit_btn:
+                                    currentLoginUser.put("online",false);
+                                    currentLoginUser.saveEventually();
+
+                                    Logout();
+                                    cancelNotification();
+                                    NativeImageLoader.getInstance().releaseCache();
+                                    finish();
+                                    mDialog.cancel();
+                                    break;
+                            }
+                        }
+                    };
+                    mDialog = DialogCreator.createLogoutDialog(mContext, listener);
+                    mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+                    mDialog.show();
+
+
                 }
-            }
+                break;
+            case R.id.build_project:
+                //发布活动
+
+                currentLoginUser = ParseUser.getCurrentUser();
+                //修复Bug，未登录状态下不能发布活动
+                if (currentLoginUser != null) {
+                    UserType mUserType = UserType.values()[currentLoginUser.getInt("userType")];
+                    if (mUserType == UserType.PROVIDER) {
+                        Intent mIntent_2 = new Intent(this, ProjectNewActivity.class);
+                        mIntent_2.putExtra("isEditMode", false);
+                        startActivity(mIntent_2, true);
+                    } else {
+                        showToast("同学你是普通用户，没有权限创建活动哦");
+                    }
+                }
 
 
         }
@@ -395,6 +506,50 @@ public class MainActivity extends BaseMainActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    //退出登录
+    private void Logout() {
+
+
+
+        EventBus.getDefault().post(new LogoutEvent(true));
+        // TODO Auto-generated method stub
+        final Intent intent = new Intent();
+        UserInfo info = JMessageClient.getMyInfo();
+        if (null != info) {
+            intent.putExtra("userName", info.getUserName());
+            File file = info.getAvatarFile();
+            if (file != null && file.isFile()) {
+                intent.putExtra("avatarFilePath", file.getAbsolutePath());
+            } else {
+                String path = FileHelper.getUserAvatarPath(info.getUserName());
+                file = new File(path);
+                if (file.exists()) {
+                    intent.putExtra("avatarFilePath", file.getAbsolutePath());
+                }
+            }
+            SharePreferenceManager.putString(this,Constants.DB_USERNAME,info.getUserName());
+            SharePreferenceManager.putString(this,Constants.DB_USERIMG,file.getAbsolutePath());
+
+            if (NetworkUtil.isNetworkAvailable(mContext)){
+                JMessageClient.logout();
+                ParseUser.logOut();
+            }
+
+            intent.setClass(mContext, ReloginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Log.d(TAG, "user info is null!");
+        }
+    }
+
+    public void cancelNotification() {
+        NotificationManager manager = (NotificationManager) this.getApplicationContext()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancelAll();
     }
 
 
@@ -482,7 +637,8 @@ public class MainActivity extends BaseMainActivity
                 }
                 userImg.setImageURI(Uri.parse(img));
                 userEditLogo.setVisibility(View.VISIBLE);
-
+                SharePreferenceManager.putString(mContext,Constants.DB_USERIMG_ONLINE, img);
+                SharePreferenceManager.putString(mContext,Constants.DB_USERNAME, currentLoginUser.getUsername());
 
                 FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
                 mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
@@ -499,11 +655,13 @@ public class MainActivity extends BaseMainActivity
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onPictureUploadDoneEvent(UserPictureUploadDone event) {
         currentLoginUser = ParseUser.getCurrentUser();
-        if (event.getImgUrl() != null && currentLoginUser != null){
+        if (event != null && currentLoginUser != null){
             try{
-                currentLoginUser.put("imgUrl",event.getImgUrl());
+                currentLoginUser.put("imgUrl",event.getCloudImgUrl());
                 currentLoginUser.saveEventually();
-                userImg.setImageURI(Uri.parse(event.getImgUrl()));
+                Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
+                userImg.setImageURI(mUri);
+                SharePreferenceManager.putString(this,Constants.DB_USERIMG,event.getLocalImgUrl());
             }catch (Exception e){
 
             }
@@ -518,7 +676,7 @@ public class MainActivity extends BaseMainActivity
                 userImg.setImageURI(Uri.parse("www.cxx"));
                 loginHint.setVisibility(View.VISIBLE);
                 userEditLogo.setVisibility(View.GONE);
-                userName.setText("第0行代码团队");
+                userName.setText("第0行代码");
                 userType.setText("1124281072@qq.com");
                 currentLoginUser = null;
             }catch (Exception e){
@@ -526,6 +684,17 @@ public class MainActivity extends BaseMainActivity
             }
 
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUserTypeChangeEvent(UserTypeChangeEvent event){
+        if (event.isCommonUser()){
+            userType.setText(UserType.USER.getName());
+        }
+        else {
+            userType.setText(UserType.PROVIDER.getName());
+        }
+
     }
 
 
@@ -558,7 +727,7 @@ public class MainActivity extends BaseMainActivity
         int id = event.getItemId();
 
         //点击二维码扫描
-        if (id == R.id.toolbar_scan) {
+        if (id == R.id.fragment_home_right_btn) {
 
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED){
@@ -571,6 +740,37 @@ public class MainActivity extends BaseMainActivity
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivedUnreadMsg(UnreadMsgEvent event){
+      /*  int count = event.getUnreadMsg();
+        if (count > 0 ) {
+            chatTab = mBottomBar.getTabWithId(R.id.tab_chat);
+            chatTab.setBadgeCount("");
+        }
+        else {
+            if (chatTab != null)
+                chatTab.removeBadge();
+        }*/
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivedFriendVerifyMsg(UnreadFriendVerifyNum event){
+        int count = event.getFriendVerifyNum();
+        if (count > 0 && count < 100){
+            contactTab = mBottomBar.getTabWithId(R.id.tab_contact);
+            contactTab.setBadgeCount(count);
+        }
+        else if (count >= 100 ){
+            contactTab = mBottomBar.getTabWithId(R.id.tab_chat);
+            contactTab.setBadgeCount(99);
+        }
+        else {
+            if (contactTab != null)
+                contactTab.removeBadge();
+        }
+    }
+
 
     @Override
     public void onFocusActionError(boolean flag) {
@@ -602,14 +802,11 @@ public class MainActivity extends BaseMainActivity
     class NetworkChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isConnected() && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+            if (NetworkUtil.isNetworkAvailable(mContext)){
 
                 // 当前所连接的网络可用
                 isNetworkUseful = true;
                 EventBus.getDefault().post(new NetworkChangeEvent(true));
-
                 initUserCloudInfo();
 
             }
@@ -634,17 +831,10 @@ public class MainActivity extends BaseMainActivity
                     mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
                     try {
                         currentLoginUser.fetch();
+                        String img = currentLoginUser.getString("imgUrl");
+                        SharePreferenceManager.putString(mContext,Constants.DB_USERIMG_ONLINE, img);
                     } catch (ParseException mE) {
                         mE.printStackTrace();
-                    }
-
-
-                    try {
-                        String userName = PreferenceUtils.getString(mContext, "userName");
-                        String pwd = PreferenceUtils.getString(mContext, "password");
-
-                    }catch (Exception e){
-
                     }
                 }
             }
@@ -660,7 +850,7 @@ public class MainActivity extends BaseMainActivity
                 this.finish();
             else{
                 lastPressTime = new Date().getTime();
-                Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
+                showToast("再按一次返回键退出");
             }
             return true;
 
@@ -687,9 +877,9 @@ public class MainActivity extends BaseMainActivity
                     }
                     if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                         String result = bundle.getString(CodeUtils.RESULT_STRING);
-                        Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                        showToast("解析结果:" + result);
                     } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                        Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
+                        showToast("解析二维码失败");
                     }
                 }
                 break;
@@ -732,7 +922,8 @@ public class MainActivity extends BaseMainActivity
     private void startCrop(String url) {
         Uri sourceUri = Uri.fromFile(new File(url));
         //裁剪后保存到文件中
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
+        Date mDate = new Date();
+        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), mDate.getTime()+"_showyou.jpeg"));
         UCrop.of(sourceUri, destinationUri).withAspectRatio(1, 1).withMaxResultSize(800, 800).start(this);
     }
 
@@ -762,6 +953,8 @@ public class MainActivity extends BaseMainActivity
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         File f = new File(localPath);
+        //上传极光聊天头像
+        JMessageClient.updateUserAvatar(f,null);
         builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
         Date mDate = new Date();
         String uriSuffix = currentLoginUser.getObjectId()+suffix + mDate.getTime();
@@ -802,7 +995,7 @@ public class MainActivity extends BaseMainActivity
                         public void run() {
                             showToast("报告同学，照片上传成功");
                             String imgUri = "http://119.23.248.205:8080/pictures/" + uriSuffix;
-                            EventBus.getDefault().post(new UserPictureUploadDone(imgUri));
+                            EventBus.getDefault().post(new UserPictureUploadDone(imgUri,localPath));
                         }
                     }));
                 }
@@ -810,5 +1003,30 @@ public class MainActivity extends BaseMainActivity
             }
         });
 
+    }
+
+    //这个方法作为预留方法，以后再完善
+    public void showPhoto(final String path) {
+        if (path == null)
+            return;
+        Log.i("MeView", "updated path:  " + path);
+        final Bitmap bitmap = BitmapLoader.getBitmapFromFile(path, mWidth, mHeight);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (bitmap != null) {
+                    try {
+                        Bitmap bmp = BitmapLoader.doBlur(bitmap, false);
+                        if (mAvatarIv != null && bmp != null) {
+                            mAvatarIv.setImageBitmap(bitmap);
+                            mAvatarIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        }
+                    }catch (Exception e){
+
+                    }
+                }
+            }
+        });
+        thread.start();
     }
 }

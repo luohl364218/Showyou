@@ -9,15 +9,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.zju.campustour.model.database.models.Comment;
-import com.zju.campustour.model.database.models.UserFocusMap;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
-import com.zju.campustour.presenter.ipresenter.ICommentPresenter;
 import com.zju.campustour.presenter.ipresenter.IProjectCommentPresenter;
-import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
-import com.zju.campustour.view.IView.ICommentView;
-import com.zju.campustour.view.IView.IProjectCommentView;
-import com.zju.campustour.view.IView.IUserFocusView;
+import com.zju.campustour.view.iview.ICommentView;
+import com.zju.campustour.view.iview.IProjectCommentView;
 
 import java.util.ArrayList;
 import java.util.List;

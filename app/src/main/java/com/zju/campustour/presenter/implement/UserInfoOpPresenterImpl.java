@@ -1,32 +1,33 @@
 package com.zju.campustour.presenter.implement;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.Toast;
+
 import java.util.List;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.database.models.UserEntry;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
-import com.zju.campustour.view.IView.IUserLoginView;
-import com.zju.campustour.view.IView.IUserRegisterView;
-import com.zju.campustour.view.IView.IUserView;
-import com.zju.campustour.view.activity.ProjectActivity;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
+import com.zju.campustour.view.iview.IUserLoginView;
+import com.zju.campustour.view.iview.IUserRegisterView;
+import com.zju.campustour.view.iview.IUserView;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.zju.campustour.model.database.data.SchoolData.allAreaSchoolList;
@@ -79,20 +80,87 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
             public void done(ParseException e) {
                 if (e == null) {
                     // Hooray! Let them use the app now.
-                    mDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    mDialog.getProgressHelper().setBarColor(Color.parseColor("#eb4f38"));
-                    mDialog.setTitleText("注册成功")
-                            .setContentText("欢迎你加入校游，去寻找校友吧!")
-                            .setConfirmText("下一步")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    mDialog.dismissWithAnimation();
-                                    mUserRegisterView.userSignedUpSuccessfully(userName,password);
-                                }
-                            });
-                    mDialog.setCancelable(false);
+                    /*注册极光账号*/
+                    JMessageClient.register(userName, password, new BasicCallback() {
 
+                        @Override
+                        public void gotResult(final int status, final String desc) {
+
+                            if (status == 0) {
+                                JMessageClient.login(userName, password, new BasicCallback() {
+                                    @Override
+                                    public void gotResult(final int status, String desc) {
+                                        if (status == 0) {
+                                            String username = JMessageClient.getMyInfo().getUserName();
+                                            String appKey = JMessageClient.getMyInfo().getAppKey();
+                                            UserEntry user = UserEntry.getUser(username, appKey);
+                                            if (null == user) {
+                                                user = new UserEntry(username, appKey);
+                                                user.save();
+                                            }
+                                            mDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                            mDialog.getProgressHelper().setBarColor(Color.parseColor("#eb4f38"));
+                                            mDialog.setTitleText("注册成功")
+                                                    .setContentText("欢迎你加入校游，去寻找校友吧!")
+                                                    .setConfirmText("下一步")
+                                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                        @Override
+                                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                            mDialog.dismissWithAnimation();
+                                                            mUserRegisterView.userSignedUpSuccessfully(userName,password);
+                                                        }
+                                                    });
+                                            mDialog.setCancelable(false);
+
+                                        }
+                                        else {
+                                            mDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                                            mDialog.getProgressHelper().setBarColor(Color.parseColor("#dc143c"));
+                                            mDialog.setTitleText("注册成功but登录出错啦~");
+                                            mDialog.setContentText("同学，请点击确认再次尝试");
+                                            mDialog.setCancelable(false);
+                                            mDialog.setConfirmText("确认")
+                                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                        @Override
+                                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                            mDialog.dismissWithAnimation();
+                                                            JMessageClient.login(userName, password, new BasicCallback() {
+                                                                @Override
+                                                                public void gotResult(final int status, String desc) {
+                                                                    if (status != 0)
+                                                                        Toast.makeText(mContext, desc, Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                });
+                            }
+                            else{
+                                mDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                                mDialog.getProgressHelper().setBarColor(Color.parseColor("#dc143c"));
+                                mDialog.setTitleText("注册出错啦~");
+                                mDialog.setContentText("同学，请点击确认再次尝试");
+                                mDialog.setCancelable(false);
+                                mDialog.setConfirmText("确认")
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                mDialog.dismissWithAnimation();
+                                                JMessageClient.register(userName, password, new BasicCallback() {
+                                                    @Override
+                                                    public void gotResult(final int status, String desc) {
+                                                        if (status != 0)
+                                                            Toast.makeText(mContext, desc, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                        });
+                                mUserRegisterView.userSignUpDidNotSucceed(new Exception(desc));
+                            }
+                        }
+                    });
 
                 } else {
                     // Sign up didn't succeed. Look at the ParseException
@@ -101,6 +169,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                     mDialog.getProgressHelper().setBarColor(Color.parseColor("#dc143c"));
                     mDialog.setTitleText("注册失败");
                     mDialog.setContentText("同学，该用户名已经存在");
+                    mDialog.setCancelable(false);
                     mDialog.setConfirmText("朕知道了")
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
@@ -152,15 +221,46 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
         mIUserLoginView = (IUserLoginView)mUserView;
         ParseUser.logInInBackground(loginName, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
-                mDialog.dismissWithAnimation();
+
                 if (e == null && user != null) {
-                    //设置用户的登录标志为true
-                    user.put("online",true);
-                    user.saveEventually();
-                    mIUserLoginView.loginSuccessful();
+                    /*登录极光账户*/
+                    JMessageClient.login(loginName, password, new BasicCallback() {
+                        @Override
+                        public void gotResult(final int status, final String desc) {
+                            mDialog.dismissWithAnimation();
+                            if (status == 0) {
+                                String username = JMessageClient.getMyInfo().getUserName();
+                                String appKey = JMessageClient.getMyInfo().getAppKey();
+                                UserEntry mUserEntry = UserEntry.getUser(username, appKey);
+                                if (null == mUserEntry) {
+                                    mUserEntry = new UserEntry(username, appKey);
+                                    mUserEntry.save();
+                                }
+                                Log.i("Login","极光登陆成功");
+                                //设置用户的登录标志为true
+                                user.put("online",true);
+                                user.saveEventually();
+                                mIUserLoginView.loginSuccessful();
+
+                            } else {
+                                if (status == 801003){
+                                    //user not exist
+                                    registerIMAccount(loginName, password, user);
+                                }
+                                else {
+                                    mIUserLoginView.usernameOrPasswordIsInvalid(desc);
+                                }
+
+                                Log.i("LoginController", "status = " + status);
+                            }
+                        }
+                    });
+
                 } else if (user == null) {
-                    mIUserLoginView.usernameOrPasswordIsInvalid();
+                    mDialog.dismissWithAnimation();
+                    mIUserLoginView.usernameOrPasswordIsInvalid("");
                 } else {
+                    mDialog.dismissWithAnimation();
                     mIUserLoginView.loginError(e);
                 }
             }
@@ -342,6 +442,46 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
 
 
+            }
+        });
+    }
+
+    public void registerIMAccount(String userName, String password, ParseUser user) {
+
+        mIUserLoginView = (IUserLoginView)mUserView;
+        JMessageClient.register(userName, password, new BasicCallback() {
+
+            @Override
+            public void gotResult(final int status, final String desc) {
+
+                if (status == 0) {
+                    JMessageClient.login(userName, password, new BasicCallback() {
+                        @Override
+                        public void gotResult(final int status, String desc) {
+                            if (status == 0) {
+                                String username = JMessageClient.getMyInfo().getUserName();
+                                String appKey = JMessageClient.getMyInfo().getAppKey();
+                                UserEntry mUserEntry = UserEntry.getUser(username, appKey);
+                                if (null == mUserEntry) {
+                                    mUserEntry = new UserEntry(username, appKey);
+                                    mUserEntry.save();
+                                }
+
+                                //设置用户的登录标志为true
+                                user.put("online",true);
+                                user.saveEventually();
+                                mIUserLoginView.loginSuccessful();
+
+                            }
+                            else {
+                                mIUserLoginView.usernameOrPasswordIsInvalid(desc);
+                            }
+                        }
+                    });
+                }
+                else {
+                    mIUserLoginView.usernameOrPasswordIsInvalid(desc);
+                }
             }
         });
     }

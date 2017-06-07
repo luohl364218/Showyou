@@ -5,19 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,6 +31,7 @@ import com.zju.campustour.model.database.models.HomepageSlideImg;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
+import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.HomePageImgLoader;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
@@ -42,8 +39,8 @@ import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
-import com.zju.campustour.view.IView.IHomepageImgLoadView;
-import com.zju.campustour.view.IView.ISearchProjectInfoView;
+import com.zju.campustour.view.iview.IHomepageImgLoadView;
+import com.zju.campustour.view.iview.ISearchProjectInfoView;
 import com.zju.campustour.view.activity.InfoWebActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MajorListActivity;
@@ -58,7 +55,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import it.sephiroth.android.library.easing.Linear;
 
 import static com.zju.campustour.model.common.Constants.STATE_MORE;
 import static com.zju.campustour.model.common.Constants.STATE_NORMAL;
@@ -72,9 +68,9 @@ import static com.zju.campustour.model.common.Constants.imageUrls;
 public class HomeFragment extends BaseFragment implements View.OnClickListener, ISearchProjectInfoView,IHomepageImgLoadView{
 
     private View mRootView;
-    private Toolbar mToolbar;
     private SliderLayout mSliderShow;
-   /* private PullToRefreshScrollView mMaterialRefreshLayout;*/
+    private ImageButton userBtn;
+    private ImageButton scanBtn;
     //首页科目分类按钮
     private LinearLayout renwenBtn;
     private LinearLayout gongxueBtn;
@@ -105,8 +101,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private List<Project> mProjectList;
 
     //定义二维码扫描请求
-    private int REQUEST_CODE = 1;
-    private int CAMERA_REQUEST_CODE = 2;
 
     private boolean isLatest = false;
     private boolean isHotest = false;
@@ -118,7 +112,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);//加上这句话，menu才会显示出来
     }
 
     @Nullable
@@ -139,7 +132,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             mProjectInfoPresenter.getLimitProjectInfo(0,10,isLatest,isHotest);
 
             EventBus.getDefault().register(this);
-            //initRefreshLayout();
 
         }
 
@@ -152,13 +144,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void initView() {
-        mToolbar = (Toolbar) mRootView.findViewById(R.id.fragment_toolbar);
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        mToolbar.inflateMenu(R.menu.main);
-        mToolbar.setTitle("校游 Show You");
-        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        userBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_user_icon);
+        scanBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_right_btn);
+
+        userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
@@ -167,6 +157,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 }
             }
         });
+        scanBtn.setOnClickListener(this);
 
 
         //mMaterialRefreshLayout = (PullToRefreshScrollView) mRootView.findViewById(R.id.home_refresh_view);
@@ -284,13 +275,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onGetProjectInfoDone(List<? extends Object> mProjects) {
         //mRecyclerView
-        if (mProjects.size() != 0){
+        if (mProjects.size() > 0 && mProjects.size() <= 10){
             noResultHint.setVisibility(View.GONE);
             if (mProjectAdapter == null)
                 state = STATE_NORMAL;
             showProjectRecycleView((List<Project>)mProjects);
         }
-        else {
+        else if (mProjects.size() == 0){
             //showLocalProjectItemInfoData();
             //mMaterialRefreshLayout.onRefreshComplete();
             noResultHint.setVisibility(View.VISIBLE);
@@ -377,7 +368,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onNetworkChangeEvent(NetworkChangeEvent event) {
-        if (event.isValid()){
+        if (NetworkUtil.isNetworkAvailable(getContext())){
             noResultHint.setVisibility(View.GONE);
             isNetworkUseful = true;
             /*如果当前界面已经显示了就不需要刷新*/
@@ -487,6 +478,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 hotestIcon.setVisibility(View.VISIBLE);
                 break;
 
+            case R.id.fragment_home_right_btn:
+                //点击二维码扫描
+                EventBus.getDefault().post(new ToolbarItemClickEvent(R.id.fragment_home_right_btn));
+
             default:
                 break;
 
@@ -497,26 +492,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);//解除订阅
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater mInflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //menu.clear();
-        super.onCreateOptionsMenu(menu, mInflater);
-        mInflater.inflate(R.menu.main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //点击二维码扫描
-        EventBus.getDefault().post(new ToolbarItemClickEvent(id));
-        return true;
     }
 
     private void initRefreshLayout() {

@@ -6,13 +6,19 @@ package com.zju.campustour.presenter.protocal.event;
 
 public class UserPictureUploadDone {
 
-    String imgUrl;
+    String cloudImgUrl;
+    String localImgUrl;
 
-    public UserPictureUploadDone(String mImgUrl) {
-        imgUrl = mImgUrl;
+    public UserPictureUploadDone(String mCloudImgUrl, String mLocalImgUrl) {
+        cloudImgUrl = mCloudImgUrl;
+        localImgUrl = mLocalImgUrl;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getCloudImgUrl() {
+        return cloudImgUrl;
+    }
+
+    public String getLocalImgUrl() {
+        return localImgUrl;
     }
 }

@@ -23,17 +23,25 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <!-- sms -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 蓝牙分享所需的权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
-<!--    &lt;!&ndash; huanxin &ndash;&gt;
+    <!-- JMessage Demo required for record jmui_audio -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+
+    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
     <application
         android:name=".view.application.CampusTourApplication"
@@ -44,6 +52,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="jchat.db"/>
+        <meta-data
+            android:name="AA_MODELS"
+            android:value="com.zju.campustour.model.database.models.UserEntry, com.zju.campustour.model.database.models.FriendEntry,              com.zju.campustour.model.database.models.FriendRecommendEntry"/>
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="4"/>
 
         <activity
             android:name=".MainActivity"
@@ -160,8 +177,123 @@
             android:name=".view.activity.SearchActivity"
             android:theme="@style/WelcomeNoActionBar">
         </activity>
-        <activity android:name=".view.activity.ChatActivity"
-                  android:theme="@style/WelcomeNoActionBar">
+        <activity
+            android:name=".view.activity.ChatActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.ResetPasswordActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.ReloginActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.FriendInfoActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.EditNoteNameActivity"
+            android:theme="@style/LoginToolBar">
+        </activity>
+
+        <activity
+            android:name=".view.activity.ModifySchoolActivity"
+            android:theme="@style/LoginToolBar">
+        </activity>
+
+        <activity
+            android:name=".view.activity.ModifyEmailActivity"
+            android:theme="@style/LoginToolBar">
+        </activity>
+
+        <activity
+            android:name=".view.activity.ModifyIntroduceActivity"
+            android:theme="@style/LoginToolBar">
+        </activity>
+
+        <activity
+            android:name=".view.activity.BrowserViewPagerActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.AtMemberActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.SendLocationActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.MeInfoActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.SearchFriendDetailActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.ResetNickNameActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.SelectAreaActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.EditSignatureActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.SendInvitationActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.PickPictureTotalActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.PickPictureActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.SendFileActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.PlayVideoActivity">
+        </activity>
+        <activity
+            android:name=".view.activity.ChatDetailActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.MembersInChatActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.SelectFriendActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.FriendRecommendActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.SettingActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.NotificationSettingActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.AboutActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.FixProfileActivity"
+            android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>
 

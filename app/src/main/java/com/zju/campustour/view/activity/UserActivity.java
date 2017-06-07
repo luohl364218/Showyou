@@ -1,5 +1,6 @@
 package com.zju.campustour.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,10 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseException;
@@ -29,6 +28,7 @@ import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectUserMap;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
+import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
@@ -37,10 +37,10 @@ import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
-import com.zju.campustour.view.IView.IProjectCollectorView;
-import com.zju.campustour.view.IView.ISearchProjectInfoView;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
-import com.zju.campustour.view.IView.IUserFocusView;
+import com.zju.campustour.view.iview.IProjectCollectorView;
+import com.zju.campustour.view.iview.ISearchProjectInfoView;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
+import com.zju.campustour.view.iview.IUserFocusView;
 import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
@@ -49,6 +49,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -125,9 +129,12 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
     private FocusMapOpPresenterImpl mFocusMapOpPresenter;
     private ProjectUserMapOpPresenterImpl mProjectUserMapOpPresenter;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
         ShareSDK.initSDK(this);
@@ -137,6 +144,8 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
         if (defaultUser == null){
             finish();
         }
+
+
         currentUserId = defaultUser.getId();
         currentUserType = defaultUser.getUserType();
         if (currentUserType == UserType.PROVIDER){
@@ -163,11 +172,14 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
         if (currentLoginUser != null)
             mFocusMapOpPresenter.query(currentUserId,currentLoginUser.getObjectId(), FocusStateType.FOCUS);
 
-        /*如果是当前用户进自己的界面，不显示关注按钮*/
+        /*如果是当前用户进自己的界面，不显示关注按钮,不显示聊天界面*/
         if (defaultUser != null
                 && currentLoginUser != null
                 && currentLoginUser.getObjectId().equals(currentUserId)){
             isMyselfPage = true;
+            contactTA.setVisibility(View.GONE);
+            between_1.setVisibility(View.GONE);
+
         }
         else
             isMyselfPage = false;
@@ -514,9 +526,29 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
 
     @OnClick(R.id.major_provider_page_chat_button)
     public void talkToSomeone(){
-        Intent mIntent = new Intent(this,ChatActivity.class);
-        mIntent.putExtra("user",defaultUser);
-        startActivity(mIntent,true);
+
+        //获取极光用户信息
+        JMessageClient.getUserInfo(defaultUser.getUserName(), new GetUserInfoCallback() {
+            @Override
+            public void gotResult(int status, String desc, UserInfo userInfo) {
+
+                if (status == 0) {
+                    Intent intent = new Intent();
+
+                    if (userInfo.isFriend()) {
+                        intent.setClass(mContext, FriendInfoActivity.class);
+                        intent.putExtra("fromContact", true);
+                    } else {
+                        intent.setClass(mContext, SearchFriendDetailActivity.class);
+                    }
+                    intent.putExtra(Constants.TARGET_ID, userInfo.getUserName());
+                    intent.putExtra(Constants.TARGET_APP_KEY, userInfo.getAppKey());
+                    mContext.startActivity(intent);
+                } else {
+                    showToast("该用户尚未开通聊天功能");
+                }
+            }
+        });
     }
 
 }

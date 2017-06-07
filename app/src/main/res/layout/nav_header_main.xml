@@ -1,69 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/side_nav_bar"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 
-    <FrameLayout
-        android:id="@+id/user_edit_logo"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/my_avatar_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:scaleType="centerCrop"/>
 
-        <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/current_user_img"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:scaleType="centerCrop"
-        fresco:failureImage="@mipmap/nav_boy_user"
-        fresco:failureImageScaleType="centerInside"
-        fresco:roundAsCircle="true"
-        fresco:roundedCornerRadius="1dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_edit"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_gravity="bottom|right"
-            android:src="@mipmap/edit_user"
-            android:visibility="visible"/>
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/user_edit_logo"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/login_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/user_edit_logo"
-        android:layout_centerVertical="true"
-        android:text="点击登录"/>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/current_user_img"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                fresco:failureImage="@mipmap/take_photo_me"
+                fresco:failureImageScaleType="centerInside"
+                fresco:roundAsCircle="true"
+                fresco:roundedCornerRadius="1dp"/>
 
-    <TextView
-        android:id="@+id/user_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:textColor="@color/white"
-        android:text="@string/default_email"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_edit"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="bottom|right"
+                android:src="@mipmap/edit_user"
+                android:visibility="visible"/>
 
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/user_type"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="@string/default_username"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        </FrameLayout>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/login_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/user_edit_logo"
+            android:layout_centerVertical="true"
+            android:text="点击登录"/>
+
+        <TextView
+            android:id="@+id/user_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/white"
+            android:text="@string/default_email"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/user_type"
+            android:text="@string/default_username"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    </RelativeLayout>
+
+
+
+</FrameLayout>

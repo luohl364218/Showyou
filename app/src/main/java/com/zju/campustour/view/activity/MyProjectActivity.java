@@ -3,34 +3,28 @@ package com.zju.campustour.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.NetworkUtil;
-import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
-import com.zju.campustour.presenter.protocal.event.LoadingDone;
-import com.zju.campustour.view.IView.ISearchProjectInfoView;
+import com.zju.campustour.view.iview.ISearchProjectInfoView;
 import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 

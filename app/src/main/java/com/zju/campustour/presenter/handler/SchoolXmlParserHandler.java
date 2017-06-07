@@ -1,8 +1,5 @@
 package com.zju.campustour.presenter.handler;
 
-import com.zju.campustour.model.area.CityModel;
-import com.zju.campustour.model.area.DistrictModel;
-import com.zju.campustour.model.area.ProvinceModel;
 import com.zju.campustour.model.database.data.ProvinceWithCollegeModel;
 import com.zju.campustour.model.database.data.SchoolModel;
 

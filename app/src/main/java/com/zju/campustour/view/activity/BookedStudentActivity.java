@@ -3,7 +3,6 @@ package com.zju.campustour.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,16 +13,14 @@ import android.view.View;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.NetworkUtil;
-import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
-import com.zju.campustour.view.IView.IProjectUserInfoView;
+import com.zju.campustour.view.iview.IProjectUserInfoView;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 

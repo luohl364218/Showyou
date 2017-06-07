@@ -7,7 +7,9 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.zju.campustour.model.database.models.NewsModule;
-import com.zju.campustour.view.IView.INewsShowView;
+import com.zju.campustour.model.util.NetworkUtil;
+import com.zju.campustour.presenter.protocal.enumerate.NewsType;
+import com.zju.campustour.view.iview.INewsShowView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,17 @@ public class NewsGetImpl {
         this.mContext = mContext;
     }
 
-    public void getNewsInfo(){
-        ParseQuery<ParseObject> mQuery = ParseQuery.getQuery("NewsRecommend").orderByDescending("createdAt");
+    public void getNewsInfo(NewsType type, int start, int limit){
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+
+        ParseQuery<ParseObject> mQuery = ParseQuery
+                .getQuery("NewsRecommend")
+                .orderByDescending("createdAt")
+                .setSkip(start)
+                .setLimit(limit)
+                .whereEqualTo("newsType",type.getTypeId());
+
         mQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -41,6 +52,7 @@ public class NewsGetImpl {
                         mModule.setImgUrl(mObject.getString("imgUrl"));
                         mModule.setLinkUrl(mObject.getString("linkUrl"));
                         mModule.setText(mObject.getString("content"));
+                        mModule.setNewsTime(mObject.getDate("newsTime"));
                         mNewsModuleList.add(mModule);
 
                     }

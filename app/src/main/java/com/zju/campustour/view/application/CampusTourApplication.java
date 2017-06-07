@@ -1,23 +1,28 @@
 package com.zju.campustour.view.application;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMOptions;
 import com.parse.Parse;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+import com.zju.campustour.model.database.models.UserEntry;
+import com.zju.campustour.presenter.receiver.NotificationClickEventReceiver;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.im.android.api.JMessageClient;
 
 
 /**
  * Created by HeyLink on 2017/4/23.
  */
 
-public class CampusTourApplication extends Application {
+public class CampusTourApplication extends com.activeandroid.app.Application {
+
+    public static boolean isNeedAtMsg = true;
+    public static String PICTURE_DIR = "sdcard/showyou/pictures/";
 
     @Override
     public void onCreate() {
@@ -37,7 +42,14 @@ public class CampusTourApplication extends Application {
         Fresco.initialize(this,config);
 
         ZXingLibrary.initDisplayOpinion(this);
-
+        //初始化极光推送
+        JPushInterface.init(this);
+        //初始化JMessage-sdk，第二个参数表示开启漫游
+        JMessageClient.init(getApplicationContext(), true);
+        //设置Notification的模式
+        JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_DEFAULT);
+        //注册Notification点击的接收器
+        new NotificationClickEventReceiver(getApplicationContext());
         mInstance = this;
 
     }
@@ -64,6 +76,12 @@ public class CampusTourApplication extends Application {
 
         context.startActivity(intent);
         this.intent =null;
+    }
+
+
+
+    public static UserEntry getUserEntry() {
+        return UserEntry.getUser(JMessageClient.getMyInfo().getUserName(), JMessageClient.getMyInfo().getAppKey());
     }
 
 }

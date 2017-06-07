@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@mipmap/major_user_select"
+    <item android:drawable="@mipmap/type_major"
           android:state_checked="true" />
 
-    <item android:drawable="@mipmap/major_user_default"
+    <item android:drawable="@mipmap/type_default"
           android:state_checked="false" />
 </selector>

@@ -6,9 +6,8 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_color"
-    android:fitsSystemWindows="true"
-    tools:context="com.zju.campustour.view.activity.ProjectActivity">
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:orientation="vertical"
@@ -26,7 +25,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:navigationIcon="@mipmap/icon_return"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
                 <TextView
@@ -41,66 +39,134 @@
         </android.support.design.widget.AppBarLayout>
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/selector_view_block"
-            android:orientation="vertical"
-            android:padding="@dimen/largePadding">
+            android:layout_height="38dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_marginTop="25dp" >
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <ImageView
+                android:id="@+id/iv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/username" />
+
+            <com.zju.campustour.view.widget.ClearEditText
+                android:id="@+id/login_user_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="11dp"
+                android:layout_toRightOf="@id/iv_username"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                android:hint="@string/username_hint"
+                android:textColorHint="@color/main_font_color"
+                android:singleLine="true"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:digits="0123456789"
+                android:textSize="18sp"
+                android:textColor="@color/black" >
 
-                <com.zju.campustour.view.widget.ClearEditText
-                    android:id="@+id/login_user_name"
-                    style="@style/editText_base"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:hint="请输入用户名"
-                    android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@._"
-                    android:inputType="text"
-                    />
-            </LinearLayout>
-
-
-
+                <requestFocus />
+            </com.zju.campustour.view.widget.ClearEditText>
 
             <View
-                style="@style/line_horizontal"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="0.2dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimary"  />
+        </RelativeLayout>
 
 
-                <com.zju.campustour.view.widget.ClearEditText
-                    android:id="@+id/login_user_pwd"
-                    style="@style/editText_base"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:hint="请输入密码"
-                    android:inputType="textPassword"
-                    android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
-                    />
-            </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_marginTop="25dp" >
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/password" />
+
+            <com.zju.campustour.view.widget.ClearEditText
+                android:id="@+id/login_user_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="11dp"
+                android:layout_toRightOf="@id/iv_password"
+                android:background="@null"
+                android:hint="@string/pwd_hint"
+                android:textColorHint="@color/main_font_color"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimary" />
+        </RelativeLayout>
+
 
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_marginTop="25dp"
             style="@style/bigYellowButton"
             android:text="登 录"
             android:enabled="false"
-            android:layout_marginTop="30dp"
             />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/forget_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:text="忘记密码？"
+                android:textColor="@color/gray"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/login_register_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="30dp"
+                android:background="@null"
+                android:drawableTop="@mipmap/login_regist"
+                android:text="@string/register"
+                android:textColor="@color/gray" />
+        </RelativeLayout>
 
     </LinearLayout>
 

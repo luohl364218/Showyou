@@ -1,6 +1,5 @@
 package com.zju.campustour.model.database.data;
 
-import java.util.List;
 
 /**
  * Created by HeyLink on 2017/5/16.

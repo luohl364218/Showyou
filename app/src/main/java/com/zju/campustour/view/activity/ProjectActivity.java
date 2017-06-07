@@ -1,5 +1,6 @@
 package com.zju.campustour.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -35,9 +36,9 @@ import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.presenter.protocal.event.CommentSuccessEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
-import com.zju.campustour.view.IView.IProjectCollectorView;
-import com.zju.campustour.view.IView.IProjectCommentView;
-import com.zju.campustour.view.IView.ISearchProjectInfoView;
+import com.zju.campustour.view.iview.IProjectCollectorView;
+import com.zju.campustour.view.iview.IProjectCommentView;
+import com.zju.campustour.view.iview.ISearchProjectInfoView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +49,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.model.UserInfo;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -56,9 +60,8 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_MAN_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_PROJECT_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_WOMAN_IMG;
-import static com.zju.campustour.model.common.Constants.imageUrls;
-import static com.zju.campustour.model.util.PreferenceUtils.ConvertDateToDetailString;
-import static com.zju.campustour.model.util.PreferenceUtils.ConvertDateToString;
+import static com.zju.campustour.model.util.SharePreferenceManager.ConvertDateToDetailString;
+import static com.zju.campustour.model.util.SharePreferenceManager.ConvertDateToString;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.BOOK_ACCEPT;
 import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.PROJECT_STOP;
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.BOOK_SUCCESS;
@@ -136,6 +139,8 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     CardView managerInterface;
     @BindView(R.id.project_contact_ta)
     CardView contactTa;
+    @BindView(R.id.between_3)
+    ImageView betweenLine;
     @BindView(R.id.cardview_provider_info)
     CardView providerInfo;
     @BindView(R.id.project_manager_btn_left)
@@ -158,11 +163,13 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
 
     private ParseUser currentLoginUser;
     private UserProjectStateType userBookedState;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
+        mContext = this;
         ButterKnife.bind(this);
         ShareSDK.initSDK(this);
         EventBus.getDefault().register(this);
@@ -214,9 +221,12 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         if (currentLoginUser != null)
             mCollectorPresenter.query(currentLoginUser.getObjectId(),projectId,null);
 
-        /*如果是当前用户进自己的界面，不显示关注按钮*/
+        /*如果是当前用户进自己的界面，不显示关注按钮,不显示聊天界面*/
         if (defaultUser != null && currentLoginUser != null
                 && currentLoginUser.getObjectId().equals(defaultUser.getId())){
+            contactTa.setVisibility(View.GONE);
+            betweenLine.setVisibility(View.GONE);
+
             /*开启管理员模式*/
             openManagerMode();
         }
@@ -321,6 +331,8 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                 projectBookBtn.setText("活动结束");
                 projectBookBtn.setEnabled(false);
                 break;
+            default:
+                break;
 
         }
 
@@ -350,6 +362,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                     if (userBookedState == null && currentProject.getProjectState() == BOOK_ACCEPT) {
                         SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE);
                         dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                        dialog.setCancelable(false);
                         dialog.setTitleText("预约成功")
                                 .setContentText("活动预约成功，你可以在“我的活动”中查看，活动发起人会在近期与您联系")
                                 .setConfirmText("确定")
@@ -369,6 +382,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                     } else if (userBookedState == BOOK_SUCCESS && currentProject.getProjectState() == BOOK_ACCEPT) {
                         SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
                         dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                        dialog.setCancelable(false);
                         dialog.setTitleText("取消预约")
                                 .setContentText("您真的要取消这次活动么？")
                                 .setConfirmText("确定")
@@ -416,6 +430,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                             if (id == R.id.project_manager_btn_right) {
                                 SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
                                 dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setCancelable(false);
                                 dialog.setTitleText("你确定吗?")
                                         .setContentText("结束报名后将无法再接收有意向参加的学生!")
                                         .setConfirmText("确定")
@@ -448,6 +463,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                             if (id == R.id.project_manager_btn_right) {
                                 SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
                                 dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setCancelable(false);
                                 dialog.setTitleText("你确定吗?")
                                         .setContentText("活动即将开始，请确认参加人员到齐！")
                                         .setConfirmText("确定")
@@ -481,6 +497,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                             if (id == R.id.project_manager_btn_right) {
                                 SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE);
                                 dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setCancelable(false);
                                 dialog.setTitleText("恭喜你完成活动")
                                         .setContentText("辛苦啦~希望你多多组织活动让更多学生参与进来哈")
                                         .setConfirmText("好的")
@@ -507,6 +524,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                             if (id == R.id.project_manager_btn_right) {
                                 SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
                                 dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                dialog.setCancelable(false);
                                 dialog.setTitleText("重启活动")
                                         .setContentText("活动重启后将接受学生报名")
                                         .setConfirmText("确定")
@@ -785,6 +803,8 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
 
                 showToast(text);
                 break;
+            default:
+                break;
         }
 
     }
@@ -830,9 +850,30 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
 
     @OnClick(R.id.activity_project_chat_button)
     public void onChatClickListener(){
-        Intent mIntent = new Intent(this,ChatActivity.class);
-        mIntent.putExtra("user",defaultUser);
-        startActivity(mIntent,true);
+
+        //获取极光用户信息
+        JMessageClient.getUserInfo(defaultUser.getUserName(), new GetUserInfoCallback() {
+            @Override
+            public void gotResult(int status, String desc, UserInfo userInfo) {
+
+                if (status == 0) {
+                    Intent intent = new Intent();
+
+                    if (userInfo.isFriend()) {
+                        intent.setClass(mContext, FriendInfoActivity.class);
+                        intent.putExtra("fromContact", true);
+                    } else {
+                        intent.setClass(mContext, SearchFriendDetailActivity.class);
+                    }
+                    intent.putExtra(Constants.TARGET_ID, userInfo.getUserName());
+                    intent.putExtra(Constants.TARGET_APP_KEY, userInfo.getAppKey());
+                    mContext.startActivity(intent);
+                } else {
+                    showToast("该用户尚未开通聊天功能");
+                }
+            }
+        });
+
     }
 
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/header_selector" >
+
+    <com.zju.campustour.view.chatting.UnderlineTextView
+        android:id="@+id/section_tv"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|left"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/section_text_color"
+        android:textSize="10sp"
+        android:text="A"
+        android:textStyle="bold" />
+</RelativeLayout>

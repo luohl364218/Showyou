@@ -9,8 +9,8 @@ import com.parse.ParseQuery;
 import com.zju.campustour.model.database.models.HomepageSlideImg;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IImgDownLoadPresenter;
-import com.zju.campustour.view.IView.IHomepageImgLoadView;
-import com.zju.campustour.view.IView.IImgLoadView;
+import com.zju.campustour.view.iview.IHomepageImgLoadView;
+import com.zju.campustour.view.iview.IImgLoadView;
 
 import java.util.ArrayList;
 import java.util.List;

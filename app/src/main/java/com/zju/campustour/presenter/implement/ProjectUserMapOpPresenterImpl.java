@@ -1,32 +1,27 @@
 package com.zju.campustour.presenter.implement;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectUserMap;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IProjectUserMapOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
-import com.zju.campustour.view.IView.IProjectCollectorView;
-import com.zju.campustour.view.IView.IProjectUserInfoView;
-import com.zju.campustour.view.IView.IProjectView;
+import com.zju.campustour.view.iview.IProjectCollectorView;
+import com.zju.campustour.view.iview.IProjectUserInfoView;
+import com.zju.campustour.view.iview.IProjectView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.zju.campustour.R.string.userName;
 import static com.zju.campustour.model.util.DbUtils.getUser;
 import static java.util.Arrays.asList;
 

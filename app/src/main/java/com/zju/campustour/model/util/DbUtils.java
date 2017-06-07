@@ -23,9 +23,7 @@ import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static com.zju.campustour.model.common.Constants.GRADE_HIGH_SCHOOL;
 import static com.zju.campustour.model.common.Constants.GRADE_JUNIOR_HIGH_SCHOOL;

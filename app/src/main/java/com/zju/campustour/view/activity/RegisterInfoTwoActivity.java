@@ -3,7 +3,6 @@ package com.zju.campustour.view.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.IdRes;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,12 +12,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
@@ -31,25 +32,28 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 
 public class RegisterInfoTwoActivity extends BaseActivity {
 
     private int gradeIndex;
 
     @BindView(R.id.school_area_select)
-    LinearLayout schoolAreaSelect;
+    RelativeLayout schoolAreaSelect;
 
     @BindView(R.id.school_area)
     TextView schoolArea;
 
     @BindView(R.id.school_select)
-    LinearLayout schoolSelect;
+    RelativeLayout schoolSelect;
 
     @BindView(R.id.user_school)
     EditText schoolName;
 
     @BindView(R.id.major_select)
-    LinearLayout majorSelect;
+    RelativeLayout majorSelect;
 
     @BindView(R.id.user_major)
     EditText majorName;
@@ -397,6 +401,8 @@ public class RegisterInfoTwoActivity extends BaseActivity {
         currentUser.put("district",schoolDistrict);
         currentUser.put("description",userDescription);
 
+
+
        //按年级存储
 
         //1. 大学生+
@@ -433,6 +439,25 @@ public class RegisterInfoTwoActivity extends BaseActivity {
 
 
         currentUser.saveEventually();
+        //上传用户的昵称和地区
+        try {
+            UserInfo myUserInfo = JMessageClient.getMyInfo();
+            myUserInfo.setNickname(school+" " + currentUser.getString("realname"));
+            JMessageClient.updateMyInfo(UserInfo.Field.nickname, myUserInfo, null);
+
+            myUserInfo.setRegion(schoolProvince+ schoolCity+schoolDistrict);
+            JMessageClient.updateMyInfo(UserInfo.Field.region, myUserInfo, new BasicCallback() {
+                @Override
+                public void gotResult(final int status, final String desc) {
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+        }catch (Exception e){
+
+        }
+
         EventBus.getDefault().post(new EditUserInfoDone(true));
         Intent mIntent = new Intent(this, MainActivity.class);
         if (isEditMode)

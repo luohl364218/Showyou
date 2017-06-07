@@ -744,6 +744,7 @@
             </android.support.v7.widget.CardView>
 
             <ImageView
+                android:id="@+id/between_3"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="@color/divide_05_black"/>

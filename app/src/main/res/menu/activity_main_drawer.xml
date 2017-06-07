@@ -3,21 +3,26 @@
 
     <group android:checkableBehavior="none">
         <item
+            android:id="@+id/edit_info"
+            android:icon="@mipmap/icon_mine"
+            android:title="@string/my_info"/>
+
+        <item
             android:id="@+id/my_project"
             android:icon="@mipmap/icon_my_project"
-            android:title="我的活动"/>
+            android:title="@string/my_project"/>
         <item
             android:id="@+id/my_schoolmate"
             android:icon="@mipmap/icon_my_focus"
-            android:title="我的校友"/>
+            android:title="@string/my_schoolmate"/>
         <item
-            android:id="@+id/edit_info"
-            android:icon="@mipmap/icon_change_self"
-            android:title="修改信息"/>
+            android:id="@+id/my_setting"
+            android:icon="@mipmap/icon_setting"
+            android:title="@string/app_setting"/>
         <item
             android:id="@+id/logout"
             android:icon="@mipmap/icon_exist"
-            android:title="退出"/>
+            android:title="@string/logout"/>
     </group>
 
     <item android:title="">

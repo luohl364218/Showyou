@@ -1,7 +1,5 @@
 package com.zju.campustour.presenter.ipresenter;
 
-import com.zju.campustour.model.database.models.User;
-
 
 /**
  * Created by HeyLink on 2017/4/24.

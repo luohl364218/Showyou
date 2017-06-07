@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zju.campustour.view.chatting.MeInfoView xmlns:android="http://schemas.android.com/apk/res/android"
+                                  android:id="@+id/me_info_view"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  android:background="@android:color/white"
+                                  android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <include layout="@layout/menu_title_bar"/>
+
+            <LinearLayout
+                android:id="@+id/nick_name_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/avatar_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/me_man"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/nickname_hit"/>
+
+                <TextView
+                    android:id="@+id/nick_name_tv"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/sex_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/sex_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/sex_man"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/sex"/>
+
+                <TextView
+                    android:id="@+id/gender_tv"
+                    style="@style/MeInfoItemContent"
+                    android:textColor="#808080"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/type_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/type_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/type_common"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/type"/>
+
+                <TextView
+                    android:id="@+id/type_tv"
+                    style="@style/MeInfoItemContent"
+                    android:textColor="#808080"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/location_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/area_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/area"/>
+
+                <TextView
+                    android:id="@+id/area_tv"
+                    style="@style/info_left_txt_style"
+                    android:text="@string/area"/>
+
+                <TextView
+                    android:id="@+id/region_tv"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/sign_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/signature_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/sign"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/sign"/>
+
+                <TextView
+                    android:id="@+id/signature_tv"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/school_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/school_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/my_school"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/school"/>
+
+                <TextView
+                    android:id="@+id/school_tv"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/grade_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/grade_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/my_grade_blue"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/grade"/>
+
+                <TextView
+                    android:id="@+id/grade_tv"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/email_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/email_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/my_email_blue"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/email_addr"/>
+
+                <TextView
+                    android:id="@+id/email_tv"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
+                android:id="@+id/desc_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/desc_icon_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/my_desc"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/desc"/>
+
+                <TextView
+                    android:id="@+id/desc_tv"
+                    android:maxLength="15"
+                    style="@style/MeInfoItemContent"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</com.zju.campustour.view.chatting.MeInfoView>

@@ -9,8 +9,11 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
 import com.zju.campustour.model.database.models.NewsModule;
+import com.zju.campustour.model.database.models.User;
 
 import java.util.List;
+
+import static com.zju.campustour.model.util.SharePreferenceManager.ConvertDateToDetailString;
 
 /**
  * Created by HeyLink on 2017/5/20.
@@ -38,6 +41,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         NewsModule mModule  = mNewsModules.get(position);
         holder.newsPic.setImageURI(mModule.getImgUrl());
         holder.newsContent.setText(mModule.getText());
+        holder.newsTime.setText(ConvertDateToDetailString(mModule.getNewsTime()));
 
     }
 
@@ -50,11 +54,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
 
         SimpleDraweeView newsPic;
         TextView newsContent;
+        TextView newsTime;
 
         public ViewHolder(View itemView) {
             super(itemView);
             newsPic = (SimpleDraweeView) itemView.findViewById(R.id.news_pic);
             newsContent = (TextView) itemView.findViewById(R.id.news_describe);
+            newsTime = (TextView) itemView.findViewById(R.id.news_time);
 
             //9.设置监听事件
             itemView.setOnClickListener(a->{
@@ -73,5 +79,25 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         this.mListener = listener;
     }
 
+    public List<NewsModule> getDatas(){
+        return mNewsModules;
+    }
+
+    public void clearData(){
+        int length = mNewsModules.size();
+        mNewsModules.clear();
+        notifyItemRangeRemoved(0,length);
+    }
+
+    public void addData(List<NewsModule> mNewsModuleList){
+        this.addData(0, mNewsModuleList);
+    }
+
+    public void addData(int position, List<NewsModule> mNewsModuleList){
+        if (mNewsModuleList != null && mNewsModuleList.size() > 0){
+            mNewsModules.addAll(mNewsModuleList);
+            notifyItemRangeChanged(position, mNewsModules.size());
+        }
+    }
 
 }

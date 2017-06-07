@@ -19,7 +19,7 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 

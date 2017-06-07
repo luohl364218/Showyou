@@ -1,78 +1,79 @@
 package com.zju.campustour.presenter.implement;
 
 import android.util.Log;
+import android.widget.Toast;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
-import com.zju.campustour.presenter.ipresenter.IMinterface;
+import com.zju.campustour.model.database.models.UserEntry;
+import com.zju.campustour.presenter.ipresenter.IMPresenter;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 
 /**
  * Created by HeyLink on 2017/5/20.
  */
 
-public class IMImplement implements IMinterface {
+public class IMImplement implements IMPresenter {
 
 
     @Override
-    public void registerIMAccount(final String userName, final String password) {
-        //huanxin
-        new Thread(new Runnable() {
+    public void registerIMAccount(String userName, String password) {
+
+        JMessageClient.register(userName, password, new BasicCallback() {
+
             @Override
-            public void run() {
-                try {
-                    EMClient.getInstance().createAccount(userName, password);//同步方法
-                    loginIMAccount(userName,password);
-                } catch (HyphenateException mE) {
-                    mE.printStackTrace();
+            public void gotResult(final int status, final String desc) {
+
+                if (status == 0) {
+                    JMessageClient.login(userName, password, new BasicCallback() {
+                        @Override
+                        public void gotResult(final int status, String desc) {
+                            if (status == 0) {
+                                String username = JMessageClient.getMyInfo().getUserName();
+                                String appKey = JMessageClient.getMyInfo().getAppKey();
+                                UserEntry user = UserEntry.getUser(username, appKey);
+                                if (null == user) {
+                                    user = new UserEntry(username, appKey);
+                                    user.save();
+                                }
+
+                            }
+                        }
+                    });
                 }
             }
-        }).start();
+        });
     }
 
     @Override
     public void loginIMAccount(String userName, String password) {
 
-        EMClient.getInstance().login(userName,password,new EMCallBack() {//回调
+        JMessageClient.login(userName, password, new BasicCallback() {
             @Override
-            public void onSuccess() {
-                EMClient.getInstance().groupManager().loadAllGroups();
-                EMClient.getInstance().chatManager().loadAllConversations();
-                Log.d("main", "登录聊天服务器成功！");
-            }
+            public void gotResult(final int status, final String desc) {
+                if (status == 0) {
+                    String username = JMessageClient.getMyInfo().getUserName();
+                    String appKey = JMessageClient.getMyInfo().getAppKey();
+                    UserEntry user = UserEntry.getUser(username, appKey);
+                    if (null == user) {
+                        user = new UserEntry(username, appKey);
+                        user.save();
+                    }
+                    Log.i("Login","极光登陆成功");
 
-            @Override
-            public void onProgress(int progress, String status) {
+                } else {
+                    if (status == 801003){
+                        //user not exist
+                        registerIMAccount(userName, password);
+                    }
 
-            }
-
-            @Override
-            public void onError(int code, String message) {
-                Log.d("main", "登录聊天服务器失败！");
+                    Log.i("LoginController", "status = " + status);
+                }
             }
         });
     }
 
     public void logout(){
-        EMClient.getInstance().logout(true, new EMCallBack() {
 
-            @Override
-            public void onSuccess() {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProgress(int progress, String status) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onError(int code, String message) {
-                // TODO Auto-generated method stub
-
-            }
-        });
     }
 }

@@ -1,5 +1,7 @@
 package com.zju.campustour.model.database.models;
 
+import java.util.Date;
+
 /**
  * Created by HeyLink on 2017/5/20.
  */
@@ -8,16 +10,9 @@ public class NewsModule {
 
     String imgUrl;
     String text;
-
-    public String getLinkUrl() {
-        return linkUrl;
-    }
-
-    public void setLinkUrl(String mLinkUrl) {
-        linkUrl = mLinkUrl;
-    }
-
     String linkUrl;
+    Date newsTime;
+
 
     public NewsModule() {
     }
@@ -43,4 +38,24 @@ public class NewsModule {
     public void setText(String mText) {
         text = mText;
     }
+
+    public String getLinkUrl() {
+        return linkUrl;
+    }
+
+    public void setLinkUrl(String mLinkUrl) {
+        linkUrl = mLinkUrl;
+    }
+
+
+    public Date getNewsTime() {
+        return newsTime;
+    }
+
+    public void setNewsTime(Date mNewsTime) {
+        newsTime = mNewsTime;
+    }
+
+
+
 }

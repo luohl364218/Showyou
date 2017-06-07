@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/chat_toolbar_talk"
+        android:icon="@mipmap/icon_talk_white"
+        android:title="@string/create_group"
+        android:orderInCategory="10"
+        app:showAsAction="never|withText" />
+
+    <item
+        android:id="@+id/chat_toolbar_add_friend"
+        android:icon="@mipmap/icon_add_friend_white"
+        android:title="@string/add_friend"
+        android:orderInCategory="20"
+        app:showAsAction="never|withText" />
+
+</menu>

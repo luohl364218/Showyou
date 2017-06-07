@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.DragEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +18,7 @@ import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.presenter.implement.ProjectCommentImpl;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.event.CommentSuccessEvent;
-import com.zju.campustour.view.IView.ICommentView;
-import com.zju.campustour.view.IView.IProjectCommentView;
+import com.zju.campustour.view.iview.IProjectCommentView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,7 +28,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class CommentActivity extends BaseActivity implements IProjectCommentView {
 

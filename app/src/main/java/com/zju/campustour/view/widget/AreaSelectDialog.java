@@ -1,7 +1,6 @@
 package com.zju.campustour.view.widget;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -96,7 +95,7 @@ public class AreaSelectDialog extends Dialog {
             Display d = windowMgr.getDefaultDisplay(); // 获取屏幕宽、高用
 
             mDialog.addContentView(areaSelectView, new ActionBar.LayoutParams(
-                    (int) (d.getWidth() * 0.85), ViewGroup.LayoutParams.WRAP_CONTENT
+                    (int) (d.getWidth() * 0.8), ViewGroup.LayoutParams.WRAP_CONTENT
             ));
 
             setUpViews(areaSelectView);

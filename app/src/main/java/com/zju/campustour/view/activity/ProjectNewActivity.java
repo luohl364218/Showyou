@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -36,7 +35,6 @@ import com.zhihu.matisse.filter.Filter;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
-import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.view.widget.ClearEditText;
 import com.zju.campustour.view.widget.GifSizeFilter;
@@ -586,7 +584,7 @@ public class ProjectNewActivity extends BaseActivity{
                             String imgUriTemp = "http://119.23.248.205:8080/pictures/" + uriSuffix;
                             isImgSet = true;
                             imgUrl = imgUriTemp;
-                            Glide.with(mContext).load(imgUrl).into(backgroundPic);
+                            Glide.with(mContext).load(localPath).into(backgroundPic);
                         }
                     }));
                 }

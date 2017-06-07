@@ -6,7 +6,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_color"
+    android:background="@color/white"
     android:fitsSystemWindows="true"
     tools:context="com.zju.campustour.view.activity.ProjectActivity">
 
@@ -52,7 +52,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="10dp"
                 android:weightSum="1">
 
                 <ImageView
@@ -69,218 +68,212 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
                     android:gravity="center_horizontal"
-                    android:text="点击选择活动背景图片"/>
+                    android:text="点击选择活动说明图片"/>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_border_color_white"
-                    android:orientation="horizontal"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="15dp">
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="5dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/iv_project_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="活动名称"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp"/>
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:background="#d2d2d2"/>
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/note_info" />
 
                     <com.zju.campustour.view.widget.ClearEditText
                         android:id="@+id/project_name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@id/iv_project_name"
                         android:background="@null"
-                        android:hint="好的名称是活动成功的一半"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:textColor="#444444"
+                        android:cursorVisible="true"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:hint="请输入活动名称"
                         android:textColorHint="@color/main_font_color"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:paddingLeft="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="*"
-                        android:textColor="@color/red"
+                        android:maxLines="1"
+                        android:inputType="text"
                         android:textSize="16sp"
-                        />
-                </LinearLayout>
+                        android:textColor="@color/black" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_border_color_white"
-                    android:orientation="horizontal"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="活动人数"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp"/>
+                        <requestFocus />
+                    </com.zju.campustour.view.widget.ClearEditText>
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:background="#d2d2d2"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="0.2dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/alpha_20_black"  />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="5dp" >
+
+                    <ImageView
+                        android:id="@+id/iv_project_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/my_real_name_blue" />
 
                     <com.zju.campustour.view.widget.ClearEditText
                         android:id="@+id/project_max_accept_num"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@id/iv_project_num"
                         android:background="@null"
-                        android:hint="请输入人数"
+                        android:cursorVisible="true"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:hint="请输入活动人数"
+                        android:textColorHint="@color/main_font_color"
                         android:inputType="number"
                         android:maxLength="4"
                         android:maxLines="1"
-                        android:textColor="#444444"
-                        android:textColorHint="@color/main_font_color"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:paddingLeft="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="*"
-                        android:textColor="@color/red"
                         android:textSize="16sp"
-                        />
-                </LinearLayout>
+                        android:textColor="@color/black" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_border_color_white"
-                    android:orientation="horizontal"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="15dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="活动原价"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp"/>
+                    </com.zju.campustour.view.widget.ClearEditText>
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:background="#d2d2d2"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="0.2dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/alpha_20_black"  />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="5dp" >
+
+                    <ImageView
+                        android:id="@+id/iv_project_original_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/me_man" />
 
                     <com.zju.campustour.view.widget.ClearEditText
                         android:id="@+id/project_original_price"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@id/iv_project_original_price"
                         android:background="@null"
-                        android:hint="请输入原价"
+                        android:cursorVisible="true"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:hint="请输入活动原价"
+                        android:textColorHint="@color/main_font_color"
                         android:inputType="number"
                         android:maxLength="5"
                         android:maxLines="1"
-                        android:textColor="#444444"
-                        android:textColorHint="@color/main_font_color"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:paddingLeft="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="*"
-                        android:textColor="@color/red"
                         android:textSize="16sp"
-                        />
-                </LinearLayout>
+                        android:textColor="@color/black" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_border_color_white"
-                    android:orientation="horizontal"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="活动现价"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp"/>
+                    </com.zju.campustour.view.widget.ClearEditText>
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:background="#d2d2d2"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="0.2dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/alpha_20_black"  />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="5dp" >
+
+                    <ImageView
+                        android:id="@+id/iv_project_real_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/real_price" />
 
                     <com.zju.campustour.view.widget.ClearEditText
                         android:id="@+id/project_real_price"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@id/iv_project_real_price"
                         android:background="@null"
-                        android:hint="请输入现价，可与原价一致"
+                        android:cursorVisible="true"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:hint="请输入活动现价"
+                        android:textColorHint="@color/main_font_color"
                         android:inputType="number"
                         android:maxLength="5"
                         android:maxLines="1"
-                        android:textColor="#444444"
-                        android:textColorHint="@color/main_font_color"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp"
+                        android:textColor="@color/black" >
 
-                    <TextView
-                        android:paddingLeft="8dp"
+
+                    </com.zju.campustour.view.widget.ClearEditText>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.2dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/alpha_20_black"  />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="5dp" >
+
+                    <ImageView
+                        android:id="@+id/iv_project_desc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="16sp"
-                        />
-                </LinearLayout>
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/my_desc" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="活动描述"
-                    android:textColor="#444444"
-                    android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/project_desc_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/iv_project_desc"
+                        android:layout_marginTop="10dp"
+                        android:text="活动描述"
+                        android:textColor="@color/main_font_color"
+                        android:textSize="16sp"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
                     android:background="@drawable/bg_border_color_white"
                     android:orientation="horizontal"
                     android:paddingBottom="15dp"
@@ -304,29 +297,41 @@
                         android:textColor="#444444"
                         android:textColorHint="@color/main_font_color"
                         android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="16sp"
-                        />
+                    
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="活动提示"
-                    android:textColor="#444444"
-                    android:textSize="16sp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="5dp" >
+
+                    <ImageView
+                        android:id="@+id/iv_project_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/icon_info_select" />
+
+                    <TextView
+                        android:id="@+id/project_hint_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/iv_project_hint"
+                        android:layout_marginTop="10dp"
+                        android:text="活动提示"
+                        android:textColor="@color/main_font_color"
+                        android:textSize="16sp"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
                     android:background="@drawable/bg_border_color_white"
                     android:orientation="horizontal"
                     android:paddingBottom="15dp"
@@ -350,26 +355,36 @@
                         android:textColor="#444444"
                         android:textColorHint="@color/main_font_color"
                         android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="16sp"
-                        />
+                    
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="5dp" >
 
+                    <ImageView
+                        android:id="@+id/iv_project_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/icon_my_project" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="活动时间"
-                    android:textColor="#444444"
-                    android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/project_time_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/iv_project_time"
+                        android:layout_marginTop="10dp"
+                        android:text="活动时间"
+                        android:textColor="@color/main_font_color"
+                        android:textSize="16sp"/>
+
+                </RelativeLayout>
+                
 
                 <CalendarView
                     android:id="@+id/project_start_time"
@@ -384,8 +399,8 @@
                     style="@style/bigYellowButton"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
                     android:enabled="false"

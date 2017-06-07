@@ -12,6 +12,15 @@ import static java.util.Arrays.asList;
 
 public class Constants {
 
+
+    public static final String bmobAppKey = "1dc82556be41f";
+    public static final String bmobAppPwd = "8303895984769248cae27a25055ba839";
+
+
+    public static final String DB_USERNAME = "userName";
+    public static final String DB_USERIMG = "userImgUrl";
+    public static final String DB_USERIMG_ONLINE = "userImgOnline";
+
     public static final int FULL_VIEW = 0;
     public static final int PART_VIEW = 1;
     public static final int COLLECT_VIEW = 2;
@@ -20,6 +29,11 @@ public class Constants {
     public static final int TAG_HOT_RECOMMEND = 1;
     public static final int TAG_SAME_PROVINCE = 2;
     public static final int TAG_LATEST = 3;
+
+    public static final int TAG_RECOMMEND = 1;
+    public static final int TAG_STUDY = 2;
+    public static final int TAG_SCIENCE = 3;
+    public static final int TAG_NEWS = 4;
 
     public static final int TAG_MINE = 4;
     public static final int TAG_FAVOR = 5;
@@ -126,5 +140,55 @@ public class Constants {
             "初中一年级","初中二年级","初中三年级","高中一年级","高中二年级","高中三年级","就业-高中","大学一年级","大学二年级","大学三年级","大学四年级",
             "大学五年级","就业-本科","研究生一年级","研究生二年级","研究生三年级","就业-硕士","研究生四年级","研究生五年级",
             "研究生五年+","博士-就业","博士后","助理研究员","讲师","副研究员","副教授","研究员","教授"};
+
+
+    /*下面为与聊天相关定义常量*/
+    public static final int REQUEST_CODE_TAKE_PHOTO = 4;
+    public static final int REQUEST_CODE_SELECT_PICTURE = 6;
+    public static final int RESULT_CODE_SELECT_PICTURE = 8;
+    public static final int REQUEST_CODE_SELECT_ALBUM = 10;
+    public static final int RESULT_CODE_SELECT_ALBUM = 11;
+    public static final int REQUEST_CODE_BROWSER_PICTURE = 12;
+    public static final int RESULT_CODE_BROWSER_PICTURE = 13;
+    public static final int REQUEST_CODE_CHAT_DETAIL = 14;
+    public static final int RESULT_CODE_CHAT_DETAIL = 15;
+    public static final int REQUEST_CODE_FRIEND_INFO = 16;
+    public static final int RESULT_CODE_FRIEND_INFO = 17;
+    public static final int REQUEST_CODE_CROP_PICTURE = 18;
+    public static final int REQUEST_CODE_ME_INFO = 19;
+    public static final int RESULT_CODE_ME_INFO = 20;
+    public static final int REQUEST_CODE_ALL_MEMBER = 21;
+    public static final int RESULT_CODE_ALL_MEMBER = 22;
+    public static final int RESULT_CODE_SELECT_FRIEND = 23;
+    public static final int REQUEST_CODE_SEND_LOCATION = 24;
+    public static final int RESULT_CODE_SEND_LOCATION = 25;
+    public static final int REQUEST_CODE_SEND_FILE = 26;
+    public static final int RESULT_CODE_SEND_FILE = 27;
+    public static final int REQUEST_CODE_EDIT_NOTENAME = 28;
+    public static final int RESULT_CODE_EDIT_NOTENAME = 29;
+    public static final int REQUEST_CODE_AT_MEMBER = 30;
+    public static final int RESULT_CODE_AT_MEMBER = 31;
+    public static final int ON_GROUP_EVENT = 3004;
+
+    private static final String JCHAT_CONFIGS = "JChat_configs";
+    public static final String CONV_TITLE = "convTitle";
+    public static final String TARGET_APP_KEY = "targetAppKey";
+    public static final String TARGET_ID = "targetId";
+    public static final String AVATAR = "avatar";
+    public static final String NAME = "name";
+    public static final String NICKNAME = "nickname";
+    public static final String GROUP_ID = "groupId";
+    public static final String GROUP_NAME = "groupName";
+    public static final String NOTENAME = "notename";
+    public static final String GENDER = "gender";
+    public static final String REGION = "region";
+    public static final String SIGNATURE = "signature";
+    public static final String STATUS = "status";
+    public static final String POSITION = "position";
+    public static final String MsgIDs = "msgIDs";
+    public static final String DRAFT = "draft";
+    public static final String DELETE_MODE = "deleteMode";
+    public static final String MEMBERS_COUNT = "membersCount";
+    public static String FILE_DIR = "sdcard/showyou/recvFiles/";
 
 }

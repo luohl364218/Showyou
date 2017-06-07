@@ -12,20 +12,18 @@ import com.parse.SaveCallback;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
-import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IProjectInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
-import com.zju.campustour.view.IView.IProjectView;
-import com.zju.campustour.view.IView.ISearchProjectInfoView;
+import com.zju.campustour.view.iview.IProjectView;
+import com.zju.campustour.view.iview.ISearchProjectInfoView;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.zju.campustour.model.util.DbUtils.getUser;
 import static java.util.Arrays.asList;
 
 
@@ -140,7 +138,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         if (!NetworkUtil.isNetworkAvailable(mContext) || projectId == null)
             return;
 
-        ParseQuery query = ParseQuery.getQuery("Project");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
 
         // Retrieve the object by id
         query.getInBackground(projectId, new GetCallback<ParseObject>() {

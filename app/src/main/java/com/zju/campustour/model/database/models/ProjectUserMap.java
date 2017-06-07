@@ -2,8 +2,6 @@ package com.zju.campustour.model.database.models;
 
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 
-import org.litepal.annotation.Column;
-import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 

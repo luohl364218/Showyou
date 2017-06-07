@@ -3,21 +3,16 @@ package com.zju.campustour.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,13 +27,10 @@ import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
-import com.zju.campustour.presenter.protocal.event.AreaAndSchoolSelectedEvent;
-import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
 import com.zju.campustour.view.activity.SearchActivity;
 import com.zju.campustour.view.activity.UserActivity;
-import com.zju.campustour.view.activity.SchoolListActivity;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
@@ -49,11 +41,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 
+
 /**
  * Created by HeyLink on 2017/4/1.
  */
 
-public class SearchFragment extends BaseFragment implements ISearchUserInfoView,TabLayout.OnTabSelectedListener {
+public class SearchFragment extends BaseFragment implements ISearchUserInfoView,TabLayout.OnTabSelectedListener , View.OnClickListener{
 
     private String TAG = "SearchFragment";
     private View mRootView;
@@ -62,11 +55,13 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     private int state = Constants.STATE_NORMAL;
     private MaterialRefreshLayout mMaterialRefreshLayout;
     IUserInfoOpPresenter mUserInfoOpPresenter;
+    private ImageButton userBtn;
+    private ImageButton switchBtn;
+    private ImageButton searchBtn;
 
     private LinearLayout noResultHintWrapper;
     private TextView noResultHint;
     private TabLayout mTabLayout;
-    private Toolbar mToolbar;
 
     //area index in array
     int searchArea = -1;
@@ -89,7 +84,15 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);//加上这句话，menu才会显示出来
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mUserList == null || mUserList.size() == 0)
+            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,
+                    0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+
     }
 
     @Nullable
@@ -118,28 +121,19 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
         noResultHint = (TextView) mRootView.findViewById(R.id.fragment_search_noResult_hint);
         mMaterialRefreshLayout = (MaterialRefreshLayout) mRootView.findViewById(R.id.refresh_view);
         mTabLayout = (TabLayout) mRootView.findViewById(R.id.fragment_search_tab_layout);
-        mToolbar = (Toolbar) mRootView.findViewById(R.id.fragment_search_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        userBtn = (ImageButton) mRootView.findViewById(R.id.fragment_search_user_icon);
+        switchBtn = (ImageButton) mRootView.findViewById(R.id.fragment_search_switch_user);
+        searchBtn = (ImageButton) mRootView.findViewById(R.id.fragment_search_search_btn);
 
-        mToolbar.inflateMenu(R.menu.search_fragment_menu);
-        mToolbar.setTitle(R.string.toolbar_title);
-        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                if (!drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.openDrawer(GravityCompat.START);
-                }
-            }
-        });
+        userBtn.setOnClickListener(this);
+        switchBtn.setOnClickListener(this);
+        searchBtn.setOnClickListener(this);
 
         mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,getContext());
         isOrderByFans = false;
         isOrderByLatest = true;
         state = Constants.STATE_NORMAL;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,
-                0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+
         initTab();
     }
 
@@ -273,7 +267,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     @Override
     public void onGetProviderUserDone(List<User> mUsers) {
 
-        if (mUsers.size() != 0){
+        if (mUsers.size() > 0 && mUsers.size() <= 10){
             if (mUserList != null && state == Constants.STATE_NORMAL)
                 state = Constants.STATE_REFRESH;
 
@@ -281,7 +275,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
             noResultHint.setVisibility(View.GONE);
             showRecycleView(mUsers);
         }
-        else {
+        else if (mUsers.size() == 0){
             try {
                 mMaterialRefreshLayout.finishRefresh();
                 mMaterialRefreshLayout.finishRefreshLoadMore();
@@ -339,6 +333,8 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
 
         }
         else {
+            if (NetworkUtil.isNetworkAvailable(getContext()))
+                return;
             isNetworkUseful = false;
             mMaterialRefreshLayout.finishRefresh();
             mMaterialRefreshLayout.finishRefreshLoadMore();
@@ -450,54 +446,40 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater mInflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        super.onCreateOptionsMenu(menu, mInflater);
-        mInflater.inflate(R.menu.search_fragment_menu, menu);
-        if (isMajorNotCommon)
-            menu.getItem(0).setIcon(R.mipmap.icon_major_user);
-        else
-            menu.getItem(0).setIcon(R.mipmap.icon_common_user);
-    }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
+    public void onClick(View v) {
 
+        switch (v.getId()){
+            case  R.id.fragment_search_user_icon:
+                DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+                if (!drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+                break;
+            case R.id.fragment_search_switch_user:
+                if (isMajorNotCommon){
+                    showToast(getContext(),"普通用户");
+                    isMajorNotCommon = false;
+                    state = Constants.STATE_REFRESH;
+                    mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
 
-    }
+                }
+                else {
+                    showToast(getContext(),"专业用户");
+                    isMajorNotCommon = true;
+                    state = Constants.STATE_REFRESH;
+                    mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.list_grid_change_btn){
-            if (isMajorNotCommon){
-                showToast(getContext(),"普通用户");
-                item.setIcon(R.mipmap.icon_common_user);
-                isMajorNotCommon = false;
-                state = Constants.STATE_REFRESH;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
-
-            }
-            else {
-                showToast(getContext(),"专业用户");
-                item.setIcon(R.mipmap.icon_major_user);
-                isMajorNotCommon = true;
-                state = Constants.STATE_REFRESH;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
-            }
-
-        }
-        else if (id == R.id.fragment_search_btn){
-            Intent mIntent = new Intent(getActivity(),SearchActivity.class);
-            startActivity(mIntent);
+                break;
+            case R.id.fragment_search_search_btn:
+                Intent mIntent = new Intent(getActivity(),SearchActivity.class);
+                startActivity(mIntent);
+                break;
+            default:
+                break;
         }
 
-        return true;
     }
 }

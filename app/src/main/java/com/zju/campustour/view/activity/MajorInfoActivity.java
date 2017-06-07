@@ -24,7 +24,7 @@ import com.zju.campustour.model.database.models.Major;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 

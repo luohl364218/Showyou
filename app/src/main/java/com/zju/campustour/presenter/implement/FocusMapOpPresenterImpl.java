@@ -1,12 +1,9 @@
 package com.zju.campustour.presenter.implement;
 
 import android.content.Context;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.util.Log;
 
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -14,14 +11,12 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
-import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IFocusMapOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.FocusStateType;
-import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
-import com.zju.campustour.view.IView.ISearchUserInfoView;
-import com.zju.campustour.view.IView.IUserFocusView;
-import com.zju.campustour.view.IView.IUserView;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
+import com.zju.campustour.view.iview.IUserFocusView;
+import com.zju.campustour.view.iview.IUserView;
 
 import java.util.ArrayList;
 import java.util.List;

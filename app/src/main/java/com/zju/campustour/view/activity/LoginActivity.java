@@ -1,5 +1,6 @@
 package com.zju.campustour.view.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,16 +9,19 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.parse.ParseUser;
+import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
-import com.zju.campustour.model.util.PreferenceUtils;
-import com.zju.campustour.presenter.implement.IMImplement;
+import com.zju.campustour.model.util.SharePreferenceManager;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
-import com.zju.campustour.view.IView.IUserLoginView;
+import com.zju.campustour.view.iview.IUserLoginView;
 import com.zju.campustour.view.application.CampusTourApplication;
 import com.zju.campustour.view.widget.ClearEditText;
 
@@ -26,6 +30,8 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.zju.campustour.model.common.Constants.DB_USERNAME;
 
 public class LoginActivity extends BaseActivity implements IUserLoginView {
 
@@ -40,6 +46,9 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
 
     @BindView(R.id.btn_login)
     Button loginBtn;
+
+    @BindView(R.id.forget_pwd)
+    TextView forgetPwd;
 
     //注册的用户名和密码
     String currentUserName;
@@ -67,15 +76,7 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
 
     private void initView(){
 
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginActivity.this.finish();
-            }
-        });
-
-
-        currentUserName = PreferenceUtils.getString(this,"currentUserName","");
+        currentUserName = SharePreferenceManager.getString(this,DB_USERNAME,"");
         if (!"".equals(currentUserName)){
             userName.setText(currentUserName);
             isUsernameNotNull = true;
@@ -103,6 +104,15 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
 
     @OnClick(R.id.btn_login)
     protected void login(View view) {
+        //隐藏软键盘
+        InputMethodManager manager = ((InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE));
+        if (getWindow().getAttributes().softInputMode
+                != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+            if (getCurrentFocus() != null) {
+                manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
 
         String loginName = userName.getText().toString().trim();
         if (TextUtils.isEmpty(loginName)) {
@@ -117,8 +127,21 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
         }
 
         userLoginImpl.userLogin(loginName,pwd);
-        PreferenceUtils.putString(this,"userName",loginName);
-        PreferenceUtils.putString(this,"password",pwd);
+    }
+
+    @OnClick(R.id.login_register_btn)
+    public void register(){
+        Intent mIntent = new Intent(this,RegisterActivity.class);
+        startActivity(mIntent);
+        finish();
+    }
+
+    //忘记密码
+    @OnClick(R.id.forget_pwd)
+    public void forgetPassword(){
+        Intent mIntent = new Intent(this, InfoWebActivity.class);
+        mIntent.putExtra("web","http://www.jianshu.com/p/677a0aaf760e");
+        startActivity(mIntent);
     }
 
     @Override
@@ -145,25 +168,29 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
 
     @Override
     public void loginSuccessful() {
+        EventBus.getDefault().post(new LoginDoneEvent(true));
+        SharePreferenceManager.putString(this,DB_USERNAME,ParseUser.getCurrentUser().getUsername());
 
-        PreferenceUtils.putString(this,"currentUserName",ParseUser.getCurrentUser().getUsername());
         CampusTourApplication application =  CampusTourApplication.getInstance();
 
-        if(application.getIntent() == null){
+        if(application == null || application.getIntent() == null){
             //todo 登录成功后通知左侧滑动栏头像加载
-            EventBus.getDefault().post(new LoginDoneEvent(true));
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         }else{
-            EventBus.getDefault().post(new LoginDoneEvent(true));
-            application.jumpToTargetActivity(LoginActivity.this);
+            application.jumpToTargetActivity(this);
             finish();
-
         }
+
+
     }
 
     @Override
-    public void usernameOrPasswordIsInvalid() {
-        showToast("抱歉，用户不存在或密码错误");
+    public void usernameOrPasswordIsInvalid(String error) {
+        if (TextUtils.isEmpty(error))
+            showToast("抱歉，用户不存在或密码错误");
+        else
+            showToast(error);
     }
 
     @Override

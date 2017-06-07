@@ -1,6 +1,5 @@
 package com.zju.campustour.presenter.ipresenter;
 
-import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 
 /**

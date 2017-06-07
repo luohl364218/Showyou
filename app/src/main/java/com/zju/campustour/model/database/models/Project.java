@@ -5,7 +5,6 @@ import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by HeyLink on 2017/4/24.

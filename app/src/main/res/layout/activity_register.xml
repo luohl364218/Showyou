@@ -6,7 +6,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_color"
+    android:background="@color/white"
     android:fitsSystemWindows="true"
     tools:context="com.zju.campustour.view.activity.ProjectActivity">
 
@@ -26,7 +26,6 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:title=""
-                app:navigationIcon="@mipmap/icon_return"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
                 <TextView
@@ -35,7 +34,7 @@
                     android:layout_gravity="center"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:text="@string/register_button_text"/>
+                    android:text="校游注册"/>
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
@@ -46,130 +45,227 @@
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:orientation="vertical"
-            android:padding="10dp" >
+            android:padding="10dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_border_color_white"
-                android:orientation="horizontal"
-                android:paddingBottom="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="15dp" >
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:paddingTop="@dimen/largePadding"
+                android:paddingBottom="@dimen/largePadding"
+
+                >
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/userName"
-                    android:textColor="#444444"
-                    android:textSize="16sp" />
+                    android:text="国家和地区"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_alignParentLeft="true"
+                    />
+
+
+                <TextView
+                    android:id="@+id/txtCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="中国"
+                    android:textColor="@color/re_login_btn_def_color"
+                    android:textSize="16sp"
+                    android:layout_alignParentRight="true"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/alpha_10_black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:paddingTop="@dimen/largePadding"
+                android:paddingBottom="@dimen/largePadding"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:id="@+id/txtCountryCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+86"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginRight="10dp"
+
+                    />
 
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:background="#d2d2d2" />
+                    style="@style/line_vertical"/>
 
                 <com.zju.campustour.view.widget.ClearEditText
                     android:id="@+id/register_name"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="11dp"
+                    android:padding="8dp"
                     android:background="@null"
-                    android:ellipsize="end"
-                    android:hint="建议使用手机/QQ/邮箱号码"
-                    android:textColor="#444444"
-                    android:inputType="text"
-                    android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@._"
-                    android:maxLines="1"
-                    android:textColorHint="@color/main_font_color"
-                    android:textSize="16sp" />
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                    android:hint="@string/username_hint"
+                    android:textColorHint="@color/gray"
+                    android:singleLine="true"
+                    android:inputType="phone"
+                    android:maxLength="20"
+                    android:digits="0123456789"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
+
+
+
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/alpha_10_black"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_border_color_white"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:paddingTop="@dimen/largePadding"
+                android:paddingBottom="@dimen/largePadding"
                 android:orientation="horizontal"
-                android:paddingBottom="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="15dp" >
+                >
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="密    码"
-                    android:textColor="#444444"
-                    android:textSize="16sp" />
+                    android:text="密码"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginRight="10dp"
+
+                    />
 
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:background="#d2d2d2" />
+                    style="@style/line_vertical"/>
 
                 <com.zju.campustour.view.widget.ClearEditText
                     android:id="@+id/register_password"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="11dp"
+                    android:padding="8dp"
                     android:background="@null"
-                    android:hint="@string/regPwd"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                    android:hint="6-16位字母/数字"
                     android:inputType="textPassword"
-                    android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
-                    android:maxLength="30"
+                    android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:maxLength="16"
                     android:maxLines="1"
                     android:textColor="#444444"
                     android:textColorHint="@color/main_font_color"
                     android:textSize="16sp" />
+
+
+
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/alpha_10_black"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_border_color_white"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:gravity="center"
+                android:paddingTop="@dimen/largePadding"
+                android:paddingBottom="@dimen/largePadding"
                 android:orientation="horizontal"
-                android:paddingBottom="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="15dp" >
+                >
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="确认密码"
-                    android:textColor="#444444"
-                    android:textSize="16sp" />
+                    android:text="验证码"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginRight="10dp"
+
+                    />
 
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:background="#d2d2d2" />
+                    style="@style/line_vertical"/>
 
-                <EditText
-                    android:id="@+id/register_pwd_again"
+                <com.zju.campustour.view.widget.ClearEditText
+                    android:id="@+id/register_verification"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="11dp"
+                    android:padding="8dp"
                     android:background="@null"
-                    android:hint="请再次输入密码"
-                    android:inputType="textPassword"
-                    android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
-                    android:maxLength="30"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                    android:hint="请输入验证码"
+                    android:inputType="number"
+                    android:digits="0123456789"
+                    android:maxLength="10"
                     android:maxLines="1"
                     android:textColor="#444444"
                     android:textColorHint="@color/main_font_color"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
+
+
+                    <Button
+                        android:id="@+id/verify_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:padding="5dp"
+                        android:text="获取验证码"
+                        android:background="@drawable/login_btn_bg"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"/>
+
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/alpha_10_black"/>
+
+            <TextView
+                android:id="@+id/txtTip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:padding="@dimen/largePadding"
+                android:textColor="@color/border_color"
+                android:textSize="12sp"
+
+                />
 
             <Button
                 android:id="@+id/btn_register"
@@ -180,7 +276,7 @@
                 android:layout_marginTop="20dp"
                 android:enabled="false"
                 style="@style/bigYellowButton"
-                android:text="注册"
+                android:text="下一步"
                 android:textColor="#ffffff"
                 android:textSize="16sp" >
             </Button>

@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.parse.ParseUser;
 import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.util.PreferenceUtils;
+import com.zju.campustour.model.util.SharePreferenceManager;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
 
 public class SplashActivity extends BaseActivity {
 
@@ -21,7 +25,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // 判断是否是第一次开启应用
-        boolean notFirstOpen = PreferenceUtils.getBoolean(this, Constants.First_Open);
+        boolean notFirstOpen = SharePreferenceManager.getBoolean(this, Constants.First_Open);
 
         // 如果是第一次启动，则先进入功能引导页
         if (!notFirstOpen) {
@@ -46,8 +50,24 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void enterMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        ParseUser user = ParseUser.getCurrentUser();
+        UserInfo myInfo = JMessageClient.getMyInfo();
+        if (user == null || myInfo == null){
+            Intent intent = new Intent();
+            if (null != SharePreferenceManager.getString(this,Constants.DB_USERNAME)) {
+                intent.setClass(this, ReloginActivity.class);
+            } else {
+                intent.setClass(this, LoginActivity.class);
+            }
+            startActivity(intent);
+            finish();
+        }
+        else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+
     }
 }

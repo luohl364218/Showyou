@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/list_grid_change_btn"
-        android:icon="@mipmap/icon_major_user"
+        android:icon="@mipmap/icon_search_60"
         android:title="切换视图"
         android:orderInCategory="20"
         app:showAsAction="ifRoom" />

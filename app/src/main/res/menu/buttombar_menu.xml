@@ -12,4 +12,13 @@
         android:id="@+id/bb_menu_info"
         android:icon="@drawable/selector_icon_info"
         android:title="@string/info" />
+
+    <item
+        android:id="@+id/bb_menu_chat"
+        android:icon="@drawable/selector_icon_chat"
+        android:title="@string/chat" />
+    <item
+        android:id="@+id/bb_menu_contact"
+        android:icon="@drawable/selector_icon_contact"
+        android:title="@string/contacts" />
 </menu>

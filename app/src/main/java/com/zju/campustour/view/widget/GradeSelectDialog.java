@@ -48,11 +48,17 @@ public class GradeSelectDialog extends Dialog {
         private OnGradeSelectClickListener mClickListener;
         protected String mCurrentGrade;
         private int pCurrent;
+        //用户当前的年级，用于修改功能
+        private int mUserGrade = 9;
 
 
         public Builder(Context context) {
             mContext = context;
 
+        }
+
+        public void setUserGrade(int userGrade){
+            mUserGrade = userGrade;
         }
 
         /**
@@ -77,7 +83,7 @@ public class GradeSelectDialog extends Dialog {
             Display d = windowMgr.getDefaultDisplay(); // 获取屏幕宽、高用
 
             mDialog.addContentView(gradeSelectView, new ActionBar.LayoutParams(
-                    (int) (d.getWidth() * 0.85), ViewGroup.LayoutParams.WRAP_CONTENT
+                    (int) (d.getWidth() * 0.8), ViewGroup.LayoutParams.WRAP_CONTENT
             ));
             setUpViews(gradeSelectView);
 
@@ -113,7 +119,7 @@ public class GradeSelectDialog extends Dialog {
             mViewGrade.setViewAdapter(new ArrayWheelAdapter<String>(mContext, mGrades));
             // 设置可见条目数量
             mViewGrade.setVisibleItems(7);
-            mViewGrade.setCurrentItem(9);
+            mViewGrade.setCurrentItem(mUserGrade);
         }
 
 

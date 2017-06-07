@@ -41,7 +41,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="4"
                 android:orientation="vertical">
@@ -49,13 +49,26 @@
                 <TextView
                     android:id="@+id/news_describe"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="left"
-                    android:maxLines="3"
+                    android:maxLines="2"
                     android:text="一句话业务描述"
+                    android:textColor="@color/alpha_50_black"
                     android:textSize="16sp"
                     />
+
+                <TextView
+                    android:id="@+id/news_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:ellipsize="end"
+                    android:text="2017-06-03"
+                    android:maxLines="1"
+                    android:textColor="@color/alpha_30_black"
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 

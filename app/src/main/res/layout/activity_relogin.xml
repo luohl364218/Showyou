@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                   android:id="@+id/relogin_view"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="match_parent"
+                                   android:background="@android:color/white"
+                                   android:orientation="vertical">
+
+    <include layout="@layout/base_title_bar" />
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/view_left_right_padding"
+            android:paddingRight="@dimen/view_left_right_padding">
+
+            <TextView
+                android:id="@+id/relogin_switch_user_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="20dp"
+                android:text="切换账号"
+                android:textColor="#555555"
+                android:textSize="15sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <com.zju.campustour.view.chatting.widget.CircleImageView
+                    android:id="@+id/relogin_head_icon"
+                    android:layout_width="@dimen/login_regist_head_icon_size"
+                    android:layout_height="@dimen/login_regist_head_icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/jmui_head_icon"/>
+
+                <TextView
+                    android:id="@+id/username_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#555555"
+                    android:textSize="24sp"/>
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/password"/>
+
+                <com.zju.campustour.view.widget.ClearEditText
+                    android:id="@+id/relogin_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/iv_password"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:hint="@string/password_hit"
+                    android:inputType="textPassword"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="20dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/login_split_line_color"/>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/relogin_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/login_btn_bg"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="@string/login"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="15dp"
+                android:text="忘记密码？"
+                android:textColor="#555555"
+                android:visibility="gone"/>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom">
+
+                <Button
+                    android:id="@+id/register_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="80dp"
+                    android:background="@null"
+                    android:drawableTop="@mipmap/login_regist"
+                    android:text="@string/register"
+                    android:textColor="@color/relogin_txt_color"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

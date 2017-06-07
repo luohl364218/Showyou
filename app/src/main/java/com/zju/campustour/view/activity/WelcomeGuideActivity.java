@@ -15,10 +15,13 @@ import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
 import com.zju.campustour.view.adapter.GuideViewPagerAdapter;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.util.PreferenceUtils;
+import com.zju.campustour.model.util.SharePreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
 
 public class WelcomeGuideActivity extends BaseActivity implements View.OnClickListener{
 
@@ -81,7 +84,7 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         // 如果切换到后台，就设置下次不进入功能引导页
-        PreferenceUtils.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
+        SharePreferenceManager.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
         finish();
     }
 
@@ -142,7 +145,8 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if ("enter".equals(v.getTag())) {
-            enterMainActivity();
+
+            enterLoginActivity();
             return;
         }
 
@@ -152,11 +156,11 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private void enterMainActivity() {
+    private void enterLoginActivity() {
         Intent intent = new Intent(WelcomeGuideActivity.this,
-                MainActivity.class);
+                LoginActivity.class);
         startActivity(intent);
-        PreferenceUtils.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
+        SharePreferenceManager.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
         finish();
     }
 
