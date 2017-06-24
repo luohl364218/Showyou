@@ -4,7 +4,7 @@
         <major name="伦理学"  tag="0" />
         <major name="哲学"  tag="0" />
         <major name="宗教学"  tag="0" />
-        <major name="其他"  tag="0" />
+        <major name="手写输入"  tag="0" />
     </class>
 
     <class name="经济学">
@@ -20,7 +20,7 @@
         <major name="财政学" tag="1"/>
         <major name="税收学" tag="1"/>
         <major name="国际经济与贸易" tag="1"/>
-        <major name="其他"  tag="1" />
+        <major name="手写输入"  tag="1" />
     </class>
     <class name="法学">
         <major name="法学"  tag="2"/>
@@ -37,7 +37,7 @@
         <major name="国际政治经济学" tag="2"/>
         <major name="国际事务" tag="2"/>
         <major name="政治学与行政学" tag="2"/>
-        <major name="其他"  tag="2" />
+        <major name="手写输入"  tag="2" />
     </class>
     <class name="教育学">
         
@@ -48,7 +48,7 @@
 
         <major name="运动人体科学" tag="3"/>
         <major name="社会体育"  tag="3"/>
-        <major name="其他"  tag="3" />
+        <major name="手写输入"  tag="3" />
     </class>
     <class name="文学">
         <major name="汉语言文学"  tag="4"/>
@@ -68,7 +68,7 @@
         <major name="马来语" tag="4"/>
         <major name="葡萄牙语" tag="4"/>
         <major name="意大利语" tag="4" />
-        <major name="其他"  tag="4" />
+        <major name="手写输入"  tag="4" />
     </class>
     <class name="历史学">
         
@@ -76,7 +76,7 @@
         <major name="世界历史" tag="5"/>
         <major name="考古学" tag="5"/>
         <major name="文物保护技术" tag="5"/>
-        <major name="其他"  tag="5" />
+        <major name="手写输入"  tag="5" />
     </class>
     <class name="理学">
        
@@ -96,7 +96,7 @@
         <major name="军事海洋学"  tag="6"/>
         <major name="心理学"  tag="6"/>
         <major name="统计学"  tag="6"/>
-        <major name="其他"  tag="6" />
+        <major name="手写输入"  tag="6" />
     </class>
     <class name="工学">
 
@@ -154,7 +154,7 @@
         <major name="生物医学工程" tag="7"/>
 
 
-        <major name="其他"  tag="7" />
+        <major name="手写输入"  tag="7" />
     </class>
     <class name="农学">
        
@@ -166,7 +166,7 @@
         <major name="动物医学"  tag="8"/>
         <major name="水产养殖学"  tag="8"/>
         <major name="海洋渔业科学与技术" tag="8"/>
-        <major name="其他"  tag="8" />
+        <major name="手写输入"  tag="8" />
     </class>
     <class name="医学">
        
@@ -179,7 +179,7 @@
         <major name="放射医学" tag="9"/>
         <major name="营养学" tag="9"/>
         <major name="精神医学" tag="9"/>
-        <major name="其他"  tag="9" />
+        <major name="手写输入"  tag="9" />
     </class>
     <class name="管理学">
        
@@ -192,7 +192,7 @@
         <major name="国际商务" tag="10"/>
         <major name="公共关系学" tag="10"/>
         <major name="信息资源管理" tag="10"/>
-        <major name="其他"  tag="10" />
+        <major name="手写输入"  tag="10" />
     </class>
 
     <class name="艺术学">
@@ -203,7 +203,7 @@
         <major name="导演" tag="11"/>
         <major name="表演"  tag="11"/>
         <major name="音乐学" tag="11"/>
-        <major name="其他"  tag="11" />
+        <major name="手写输入"  tag="11" />
     </class>
    
 

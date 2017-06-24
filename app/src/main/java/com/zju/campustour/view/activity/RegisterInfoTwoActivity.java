@@ -225,9 +225,9 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, String currentProvince, String currentSchool, String currentTag) {
                             dialog.dismiss();
-                            if ("全部".equals(currentSchool) || "其他".equals(currentSchool)){
+                            if ("全部".equals(currentSchool) || "手写输入".equals(currentSchool)){
                                 schoolName.setEnabled(true);
-                                schoolName.setText("请输入你的大学名称");
+                                schoolName.setHint("请输入你的大学名称");
                                 schoolProvince = currentProvince;
                                 collegeTag = currentTag;
                                 schoolName.setClickable(false);
@@ -257,9 +257,9 @@ public class RegisterInfoTwoActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, String currentMajorClass, String currentMajor, String currentTag) {
                             dialog.dismiss();
-                            if ("其他".equals(currentMajor)){
+                            if ("手写输入".equals(currentMajor)){
                                 majorName.setEnabled(true);
-                                majorName.setText("请输入你的专业名称");
+                                majorName.setHint("请输入你的专业名称");
                                 majorName.setClickable(false);
                                 majorClass = currentMajorClass;
                                 majorId = Integer.valueOf(currentTag);

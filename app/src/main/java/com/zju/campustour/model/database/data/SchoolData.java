@@ -6,26 +6,117 @@ package com.zju.campustour.model.database.data;
 
 public class SchoolData {
 
-    public static String[] allAreaGroup = new String[]{"北京市","天津市","河北省","山西省","内蒙古自治区","上海市","江苏省","浙江省","安徽省","福建省","江西省","山东省",
-            "辽宁省","吉林省","黑龙江省","河南省","湖北省","湖南省","广东省","广西壮族自治区","海南省","重庆市","四川省","贵州省","云南省","西藏自治区","陕西省","甘肃省","青海省",
-            "宁夏回族自治区","新疆维吾尔自治区","香港特别行政区","澳门特别行政区"};
+    public static String[] allAreaGroup = new String[]{
+            "北京市",
+            "天津市",
+            "河北省",
+            "山西省",
+            "内蒙古自治区",
+            "上海市",
+            "江苏省",
+            "浙江省",
+            "安徽省",
+            "福建省",
+            "江西省",
+            "山东省",
+            "辽宁省",
+            "吉林省",
+            "黑龙江省",
+            "河南省",
+            "湖北省",
+            "湖南省",
+            "广东省",
+            "广西壮族自治区",
+            "海南省",
+            "重庆市",
+            "四川省",
+            "贵州省",
+            "云南省",
+            "西藏自治区",
+            "陕西省",
+            "甘肃省",
+            "青海省",
+            "宁夏回族自治区",
+            "新疆维吾尔自治区",
+            "香港特别行政区",
+            "澳门特别行政区",
+            "台湾地区"};
 
 
-    public static String[] beijingSchools = new String[]{"全部","北京大学","中国人民大学","清华大学","北京航天航空","北京理工大学","北京交通大学","北京科技大学","北京外国语大学","中国政法大学","中国农业大学","北京师范大学"};
+    public static String[] beijingSchools = new String[]{
+            "全部",
+            "中央民族大学",
+            "清华大学",
+            "北京大学",
+            "中国人民大学",
+            "北京航空航天大学",
+            "北京师范大学",
+            "北京理工大学",
+            "北京工业大学",
+            "北京化工大学",
+            "北京邮电大学",
+            "对外经济贸易大学",
+            "中国传媒大学",
+            "中国矿业大学(北京)",
+            "中央财经大学",
+            "中国政法大学",
+            "中国石油大学(北京)",
+            "中央音乐学院",
+            "北京体育大学",
+            "北京外国语大学",
+            "北京交通大学",
+            "北京科技大学",
+            "北京林业大学",
+            "中国农业大学",
+            "北京中医药大学",
+            "华北电力大学(北京)",
+            "中国地质大学(北京)"};
 
-    public static String[] tianjinSchools = new String[]{"全部","南开大学","天津大学","河北工业大学","天津工业大学","天津科技大学"};
+    public static String[] tianjinSchools = new String[]{
+            "全部",
+            "南开大学",
+            "天津大学",
+            "河北工业大学",
+            "天津工业大学",
+            "天津科技大学"};
 
-    public static String[] hebeiSchools = new String[]{"全部","华北电力大学","河北大学","河北科技大学","河北师范大学"};
+    public static String[] hebeiSchools = new String[]{
+            "全部",
+            "华北电力大学",
+            "河北大学",
+            "河北科技大学",
+            "河北师范大学"};
     //山西
     public static String[] shanxi1Schools = new String[]{"全部","山西大学","太原理工大学","山西农业大学","山西医科大学"};
 
     public static String[] neimengguSchools = new String[]{"全部","内蒙古大学","内蒙古工业大学","内蒙古师范大学","内蒙古农业大学"};
 
-    public static String[] shanghaiSchools = new String[]{"全部","复旦大学","同济大学","上海交通大学","华东师范大学","华东理工大学","上海财经大学","上海大学"};
+    public static String[] shanghaiSchools = new String[]{
+            "全部",
+            "华东师范大学",
+            "复旦大学",
+            "同济大学",
+            "东华大学",
+            "上海交通大学",
+            "华东理工大学",
+            "上海财经大学",
+            "上海外国语大学",
+            "上海大学"};
 
-    public static String[] jiangsuSchools = new String[]{"全部","南京大学","东南大学","中国矿业大学","苏州大学","南京航空航天","南京理工大学","河海大学","江南大学"};
+    public static String[] jiangsuSchools = new String[]{
+            "全部",
+            "南京大学",
+            "东南大学",
+            "中国矿业大学",
+            "苏州大学",
+            "南京航空航天",
+            "南京理工大学",
+            "南京师范大学",
+            "河海大学",
+            "江南大学",
+            "南京农业大学"};
 
-    public static String[] zhejiangSchools = new String[]{"全部","浙江大学","浙江工业大学","浙江理工大学","温州医科大学","浙江师范大学"};
+    public static String[] zhejiangSchools = new String[]{"全部","浙江大学","浙江工业大学","杭州电子科技大学", "浙江理工大学","温州医科大学","浙江师范大学"};
 
     public static String[] anhuiSchools = new String[]{"全部","安徽大学","中国科学技术大学","合肥工业大学","安徽理工大学"};
 
@@ -39,15 +130,15 @@ public class SchoolData {
 
     public static String[] jilinSchools = new String[]{"全部","吉林大学","东北师范大学","延边大学","东北电力大学"};
 
-    public static String[] heilongjiangSchools = new String[]{"全部","哈尔滨工业大学","东北林业大学","黑龙江大学","东北农业大学"};
+    public static String[] heilongjiangSchools = new String[]{"全部","哈尔滨工业大学","哈尔滨工程大学","东北林业大学","黑龙江大学","东北农业大学"};
 
     public static String[] henanSchools = new String[]{"全部","郑州大学","河南科技大学","河南农业大学","河南师范大学"};
 
     public static String[] hubeiSchools = new String[]{"全部","武汉大学","华中科技大学","华中农业大学","华中师范大学","中南财经政法","武汉理工大学"};
 
-    public static String[] hunanSchools = new String[]{"全部","湖南大学","中南大学","湖南师范大学"};
+    public static String[] hunanSchools = new String[]{"全部","国防科技大学","湖南大学","中南大学","湖南师范大学"};
 
-    public static String[] guangdongSchools = new String[]{"全部","中山大学","华南理工大学","暨南大学","华南师范大学"};
+    public static String[] guangdongSchools = new String[]{"全部","中山大学","华南理工大学","暨南大学","华南师范大学","南方科技大学"};
 
     public static String[] guangxiSchools = new String[]{"全部","广西大学","广西科技大学","广西医科大学"};
 
@@ -55,7 +146,7 @@ public class SchoolData {
 
     public static String[] chongqingSchools = new String[]{"全部","重庆大学","西南大学","重庆邮电大学","重庆交通大学"};
 
-    public static String[] sichuanSchools = new String[]{"全部","电子科技大学","四川大学","西南交通大学","西南财经大学"};
+    public static String[] sichuanSchools = new String[]{"全部","电子科技大学","四川大学","四川农业大学","西南交通大学","西南财经大学"};
 
     public static String[] guizhouSchools = new String[]{"全部","贵州大学","贵州医科大学"};
 
@@ -63,7 +154,16 @@ public class SchoolData {
 
     public static String[] xizhangSchools = new String[]{"全部","西藏大学","西藏民族学院"};
     //陕西
-    public static String[] shanxi2Schools = new String[]{"全部","西安交通大学","西北工业大学","西北农林科技","西北大学","西安电子科技"};
+    public static String[] shanxi2Schools = new String[]{
+            "全部",
+            "西安交通大学",
+            "西北农林科大",
+            "西北工业大学",
+            "西北农林科技",
+            "西北大学",
+            "长安大学",
+            "陕西师范大学",
+            "西安电子科技"};
 
     public static String[] gansuSchools = new String[]{"全部","兰州大学","兰州理工大学","甘肃农业大学"};
 
@@ -77,10 +177,12 @@ public class SchoolData {
 
     public static String[] aomenSchools = new String[]{"全部","澳门科技大学"};
 
+    public static String[] taiwanSchools = new String[]{"全部","台湾大学","成功大学","台湾交通大学","台湾清华大学","台湾政治大学"};
+
     public static Object[] allAreaSchoolList = new Object[]{
             beijingSchools,tianjinSchools,hebeiSchools,shanxi1Schools,neimengguSchools,shanghaiSchools,jiangsuSchools,zhejiangSchools,anhuiSchools,
             fujianSchools,jiangxiSchools,shangdongSchools,liaoningSchools,jilinSchools,heilongjiangSchools,henanSchools,hubeiSchools,hunanSchools,
             guangdongSchools,guangxiSchools,hainanSchools,chongqingSchools,sichuanSchools,guizhouSchools,yunnanSchools,xizhangSchools,shanxi2Schools,
-            gansuSchools,qinghaiSchools,ningxiaSchools,xinjiangSchools,xianggangSchools,aomenSchools
+            gansuSchools,qinghaiSchools,ningxiaSchools,xinjiangSchools,xianggangSchools,aomenSchools,taiwanSchools
     };
 }

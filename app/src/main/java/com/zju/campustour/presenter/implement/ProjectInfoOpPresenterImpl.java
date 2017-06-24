@@ -157,7 +157,6 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
             }
         });
 
-
     }
 
     @Override

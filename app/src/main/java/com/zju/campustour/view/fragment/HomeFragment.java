@@ -128,7 +128,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             mHomePageImgLoader.getImgList();
 
             isLatest = false;
-            isHotest = false;
+            isHotest = true;
             mProjectInfoPresenter.getLimitProjectInfo(0,10,isLatest,isHotest);
 
             EventBus.getDefault().register(this);
