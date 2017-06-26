@@ -859,23 +859,21 @@ public class MainActivity extends BaseMainActivity
 
     @Override
     public void onUpdateMajorInfoGot(List<MajorModel> mMajorModelList) {
-        if (mMajorModelList.size() == 0){
-            //如果获取的专业数据为空，没有需要更新的专业
-            return;
-        }
-
         sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         MajorFIlesDao majorFIlesDao = new MajorFIlesDao(this);
 
-        majorFIlesDao.updateMajorInfo(mMajorModelList);
+        if (mMajorModelList.size() != 0){
+            //如果获取的专业数据为空，没有需要更新的专业
+            majorFIlesDao.updateMajorInfo(mMajorModelList);
 
-        Log.d(TAG,"update database");
+            Log.d(TAG,"update database");
 
-        editor.putBoolean("init_database",true);
-        Date updateTime = new Date();
-        editor.putLong("update_time", updateTime.getTime());
-        editor.apply();
+            editor.putBoolean("init_database",true);
+            Date updateTime = new Date();
+            editor.putLong("update_time", updateTime.getTime());
+            editor.apply();
+        }
 
         //初始化grouplist和更新后的itemList
         groupList = new ArrayList<>(Arrays.asList(MajorData.majorGroup));
