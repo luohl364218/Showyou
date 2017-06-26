@@ -194,7 +194,7 @@ public class MajorSelectDialog extends Dialog {
                 input.close();
                 // 获取解析出来的数据
                 mMajorClassList = handler.getDataList();
-                ///* 初始化默认选中的省、学校
+                ///* 初始化默认选中的专业类别，专业
                 if (mMajorClassList!= null && !mMajorClassList.isEmpty()) {
                     mCurrentMajorClass = mMajorClassList.get(0).getName();
                     List<MajorModel> schoolList = mMajorClassList.get(0).getMajorList();

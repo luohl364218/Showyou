@@ -15,7 +15,9 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.database.data.MajorModel;
 import com.zju.campustour.model.database.models.Comment;
+import com.zju.campustour.model.database.models.Major;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
 import com.zju.campustour.model.database.models.User;
@@ -198,4 +200,26 @@ public class DbUtils {
 
         return new ProjectSaleInfo(refundable,identified,official,totalScore,commentNum,comment);
     }
+
+    public static MajorModel getMajorInfo(ParseObject major){
+        String name = major.getString(Constants.MajorInfo_name);
+        int majorClass = major.getInt(Constants.MajorInfo_class);
+        String majorCode = major.getString(Constants.MajorInfo_code);
+        String majorAbstract = major.getString(Constants.MajorInfo_abstract);
+        boolean isRecommend = major.getBoolean(Constants.MajorInfo_isRecommend);
+        String majorType = major.getString(Constants.MajorInfo_classType);
+        boolean isUpdate = major.getBoolean(Constants.MajorInfo_isUpdate);
+        Date updateAt = major.getUpdatedAt();
+        String imgUrl = major.getString(Constants.MajorInfo_imgUrl);
+        int interests = major.getInt(Constants.MajorInfo_interests);
+
+
+        return new MajorModel(
+                name, majorClass,
+                majorCode,majorAbstract,
+                isRecommend,majorType,
+                isUpdate,updateAt,
+                imgUrl,interests);
+    }
+
 }

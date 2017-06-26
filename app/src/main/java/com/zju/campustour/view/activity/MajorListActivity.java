@@ -35,6 +35,10 @@ public class MajorListActivity extends BaseActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_major_list);
+        //如果专业信息未初始化完成，返回
+        if (MainActivity.itemsList.size() == 0)
+            return;
+
         expandableListView = (ExpandableListView) findViewById(R.id.activity_major_list_expandablelistview);
         toolbar = (Toolbar) this.findViewById(R.id.major_list_toolbar);
 

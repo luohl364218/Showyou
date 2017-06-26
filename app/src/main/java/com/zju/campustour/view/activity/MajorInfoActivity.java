@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +15,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.parse.ParseException;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
+import com.zju.campustour.model.database.data.MajorModel;
 import com.zju.campustour.model.database.models.Major;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
@@ -30,6 +33,9 @@ import com.zju.campustour.view.widget.DividerItemDecortion;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoView {
@@ -46,17 +52,33 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     String selectedMajorName = "";
 
     //此页面的Major
-    Major theMajor;
+    MajorModel theMajor;
+    @BindView(R.id.expand_text_view)
     ExpandableTextView expandableTextView;
+    @BindView(R.id.activity_major_info_listview_like)
     RecyclerView listViewLike;
+    @BindView(R.id.activity_major_info_listview_recommend)
     RecyclerView listViewRecommend;
+    @BindView(R.id.activity_major_info_color1_imageview)
     ImageView color1ImageView;
+    @BindView(R.id.activity_major_info_color2_imageview)
     ImageView color2ImageView;
+    @BindView(R.id.activity_major_info_color3_imageview)
     ImageView color3ImageView;
+    @BindView(R.id.activity_major_info_noresult_hint1)
     TextView noResultTextView1;
+    @BindView(R.id.activity_major_info_noresult_hint2)
     TextView noResultTextView2;
+    @BindView(R.id.major_info_toolbar)
     Toolbar mToolbar;
+    @BindView(R.id.major_info_collapsing_toolbar)
     CollapsingToolbarLayout mToolbarLayout;
+
+    @BindView(R.id.major_image_view)
+    ImageView majorBackgroundImg;
+    @BindView(R.id.major_favor_tab)
+    FloatingActionButton interestTab;
+
     private String TAG = getClass().getSimpleName();
     IUserInfoOpPresenter mUserInfoOpPresenter;
     private List<User> mTheSameMajorProviderUserItemInfos;
@@ -67,6 +89,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_major_info);
+        ButterKnife.bind(this);
 
         Bundle extras = getIntent().getExtras();
         if (null != extras) {
@@ -96,15 +119,6 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
 
     private void initBasicView() {
 
-        expandableTextView = (ExpandableTextView) findViewById(R.id.expand_text_view);
-        listViewLike = (RecyclerView) findViewById(R.id.activity_major_info_listview_like);
-        listViewRecommend = (RecyclerView) findViewById(R.id.activity_major_info_listview_recommend);
-        color1ImageView = (ImageView) findViewById(R.id.activity_major_info_color1_imageview);
-        color2ImageView = (ImageView) findViewById(R.id.activity_major_info_color2_imageview);
-        color3ImageView = (ImageView) findViewById(R.id.activity_major_info_color3_imageview);
-        noResultTextView1 = (TextView) findViewById(R.id.activity_major_info_noresult_hint1);
-        noResultTextView2 = (TextView) findViewById(R.id.activity_major_info_noresult_hint2);
-        mToolbar = (Toolbar) findViewById(R.id.major_info_toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +127,6 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
             }
         });
 
-        mToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.major_info_collapsing_toolbar);
 
 
         ActionBar mActionBar = getSupportActionBar();
@@ -132,23 +145,34 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
         Cursor majorCursor = majorFIlesDao.selectByMajorName(selectedMajorName, Constants.majorsTableName[selectedGroupID]);
         theMajor = majorCursorToMajor(majorCursor);
 
-        mToolbarLayout.setTitle(theMajor.getMajorName());
+        if (null != majorCursor) {
+            majorCursor.close();
+        }
+
+        mToolbarLayout.setTitle(theMajor.getName());
 
         expandableTextView.setText(theMajor.getMajorAbstract());
 
-
+        Glide.with(this).load(theMajor.getImgUrl()).into(majorBackgroundImg);
     }
 
-    private Major majorCursorToMajor(Cursor majorCursor) {
-        Major major = null;
+    private MajorModel majorCursorToMajor(Cursor majorCursor) {
+        MajorModel major = new MajorModel();
 
         if (majorCursor.moveToFirst()) {
             String majorAbstracts = majorCursor.getString(majorCursor.getColumnIndex("major_abstract"));
             int majorClass = majorCursor.getInt(majorCursor.getColumnIndex("major_class"));
             String majorCode = majorCursor.getString(majorCursor.getColumnIndex("major_code"));
             String majorName = majorCursor.getString(majorCursor.getColumnIndex("major_name"));
+            String majorImg = majorCursor.getString(majorCursor.getColumnIndex("major_img"));
+            int majorInterests = majorCursor.getInt(majorCursor.getColumnIndex("major_interests"));
 
-            major = new Major(majorAbstracts, majorClass, majorCode, majorName);
+            major.setMajorAbstract(majorAbstracts);
+            major.setMajorClass(majorClass);
+            major.setMajorCode(majorCode);
+            major.setName(majorName);
+            major.setInterests(majorInterests);
+            major.setImgUrl(majorImg);
         }
 
         return major;

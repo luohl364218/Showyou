@@ -32,6 +32,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     "major_class integer," +
                     "major_name String," +
                     "major_code String," +
+                    "major_img String,"+
+                    "major_interests integer,"+
                     "major_abstract String)";
 
             db.execSQL(sql);

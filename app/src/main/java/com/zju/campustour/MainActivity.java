@@ -1,6 +1,7 @@
 package com.zju.campustour;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -15,6 +16,7 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
@@ -56,6 +58,7 @@ import com.zju.campustour.model.chatting.utils.FileHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
+import com.zju.campustour.model.database.data.MajorModel;
 import com.zju.campustour.model.database.data.SchoolData;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.database.models.UserFocusMap;
@@ -63,6 +66,8 @@ import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.model.util.SharePreferenceManager;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
+import com.zju.campustour.presenter.implement.MajorInfoPresenterImpl;
+import com.zju.campustour.presenter.ipresenter.IMajorInfoPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
@@ -79,6 +84,7 @@ import com.zju.campustour.view.activity.ReloginActivity;
 import com.zju.campustour.view.activity.SettingActivity;
 import com.zju.campustour.view.fragment.ChatFragment;
 import com.zju.campustour.view.fragment.ContactsFragment;
+import com.zju.campustour.view.iview.IMajorInfoView;
 import com.zju.campustour.view.iview.IUserFocusView;
 import com.zju.campustour.view.activity.BaseMainActivity;
 import com.zju.campustour.view.activity.LoginActivity;
@@ -102,7 +108,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -122,7 +131,7 @@ import okhttp3.Response;
 
 
 public class MainActivity extends BaseMainActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView ,IMajorInfoView{
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -190,7 +199,7 @@ public class MainActivity extends BaseMainActivity
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         initLayoutElements();
-        initMajorListViewData();
+
         initSchoolListViewData();
         initDatabase();
         mIntentFilter = new IntentFilter();
@@ -248,30 +257,53 @@ public class MainActivity extends BaseMainActivity
         sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         Boolean hasInited = sharedPreferences.getBoolean("init_database",false);
+        IMajorInfoPresenter mMajorInfoPresenter = new MajorInfoPresenterImpl(this, this);
         if (!hasInited) {
-            MajorFIlesDao majorFIlesDao = new MajorFIlesDao(this);
-
-            majorFIlesDao.init();
-
-            Log.d(TAG,"init database");
-
-            editor.putBoolean("init_database",true);
-            editor.apply();
+            mMajorInfoPresenter.getAllMajorInfo();
         }
-
-
+        else {
+            mMajorInfoPresenter.getUpdateMajorInfo();
+        }
     }
 
-    public  void initMajorListViewData(){
+    @TargetApi(Build.VERSION_CODES.N)
+    public  void initMajorListViewData(List<MajorModel> mMajorModelList){
 
         groupList = new ArrayList<>(Arrays.asList(MajorData.majorGroup));
 
-        for (int i = 0;i<MajorData.allMajorNames.length;i++){
-            List<String> majorList = new ArrayList<>(Arrays.asList((String[])MajorData.allMajorNames[i]));
+        Map<String, List<String>> majorGroup = new HashMap<>(groupList.size());
+
+        for (MajorModel major : mMajorModelList){
+
+            if (majorGroup.get(major.getMajorType()) == null){
+                List<String> majorList = new ArrayList<>();
+                majorList.add(major.getName());
+                majorGroup.put(major.getMajorType(),majorList);
+            }
+            else
+            {
+                majorGroup.get(major.getMajorType()).add(major.getName());
+            }
+
+        }
+
+        for (String majorName : groupList){
+            itemsList.add(majorGroup.get(majorName));
+        }
+
+        //android暂时不支持stream用法
+    /*    for (int i = 0; i < groupList.size(); i++){
+            String majorType = groupList.get(i);
+            List<String> majorList = mMajorModelList.stream()
+                    .filter(a->a.getMajorType().equals(majorType))
+                    .map(MajorModel::getName)
+                    .distinct()
+                    .collect(Collectors.toList());
 
             itemsList.add(majorList);
-        }
+        }*/
     }
+
 
     public  void initSchoolListViewData(){
         areaGroup = new ArrayList<>(Arrays.asList(SchoolData.allAreaGroup));
@@ -795,6 +827,85 @@ public class MainActivity extends BaseMainActivity
 
     @Override
     public void onQueryMyFocusDone(List<User> focusList) {
+
+    }
+
+    @Override
+    public void onAllMajorInfoGot(List<MajorModel> mMajorModelList) {
+        if (mMajorModelList.size() == 0){
+            //todo 如果获取的专业数据为空，则要禁止首页的专业点击跳转动作
+
+            return;
+        }
+
+        sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        MajorFIlesDao majorFIlesDao = new MajorFIlesDao(this);
+
+        majorFIlesDao.init(mMajorModelList);
+
+        Log.d(TAG,"init database");
+
+        editor.putBoolean("init_database",true);
+        Date updateTime = new Date();
+        editor.putLong("update_time", updateTime.getTime());
+        editor.apply();
+
+
+        initMajorListViewData(mMajorModelList);
+
+    }
+
+    @Override
+    public void onUpdateMajorInfoGot(List<MajorModel> mMajorModelList) {
+        if (mMajorModelList.size() == 0){
+            //如果获取的专业数据为空，没有需要更新的专业
+            return;
+        }
+
+        sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        MajorFIlesDao majorFIlesDao = new MajorFIlesDao(this);
+
+        majorFIlesDao.updateMajorInfo(mMajorModelList);
+
+        Log.d(TAG,"update database");
+
+        editor.putBoolean("init_database",true);
+        Date updateTime = new Date();
+        editor.putLong("update_time", updateTime.getTime());
+        editor.apply();
+
+        //初始化grouplist和更新后的itemList
+        groupList = new ArrayList<>(Arrays.asList(MajorData.majorGroup));
+        if (itemsList.size() > 0){
+            itemsList.clear();
+        }
+
+        for (int i = 0; i < groupList.size(); i++) {
+            List<String> majorList = new ArrayList<>();
+            Cursor majorCursor = majorFIlesDao.selectByMajorClass(Constants.majorsTableName[i]);
+            if (majorCursor.moveToFirst()){
+                do {
+                    String majorName = majorCursor.getString(majorCursor.getColumnIndex("major_name"));
+                    majorList.add(majorName);
+                }while (majorCursor.moveToNext());
+
+                itemsList.add(majorList);
+            }
+
+            if (null != majorCursor) {
+                majorCursor.close();
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onGetMajorInfoError(Exception e) {
+        //todo 如果获取的专业数据失败，则要禁止首页的专业点击跳转动作
 
     }
 

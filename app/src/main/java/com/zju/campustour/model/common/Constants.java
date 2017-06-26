@@ -191,4 +191,21 @@ public class Constants {
     public static final String MEMBERS_COUNT = "membersCount";
     public static String FILE_DIR = "sdcard/showyou/recvFiles/";
 
+    /*与parse服务端数据表有关*/
+
+    //MajorInfo表
+    public static String MajorInfo_tableName = "MajorInfo";
+    public static String MajorInfo_name = "name";
+    public static String MajorInfo_code = "code";
+    public static String MajorInfo_class = "class";
+    public static String MajorInfo_abstract = "abstract";
+    public static String MajorInfo_isRecommend = "isRecommend";
+    public static String MajorInfo_classType = "classType";
+    public static String MajorInfo_isUpdate = "isUpdate";
+    public static String MajorInfo_imgUrl = "imgUrl";
+    public static String MajorInfo_interests = "interests";
+
+
+
+
 }

@@ -29,14 +29,15 @@
         <major name="人类学" tag="2"/>
 
         <major name="家政学"  tag="2"/>
-        <major name="侦察学" tag="2"/>
+        <major name="侦查学" tag="2"/>
         <major name="治安学" tag="2"/>
-        <major name="经济犯罪侦察" tag="2"/>
+        <major name="经济犯罪侦查" tag="2"/>
 
         <major name="外交学"  tag="2"/>
         <major name="国际政治经济学" tag="2"/>
         <major name="国际事务" tag="2"/>
         <major name="政治学与行政学" tag="2"/>
+        <major name="国际政治" tag="2"/>
         <major name="手写输入"  tag="2" />
     </class>
     <class name="教育学">
@@ -68,6 +69,9 @@
         <major name="马来语" tag="4"/>
         <major name="葡萄牙语" tag="4"/>
         <major name="意大利语" tag="4" />
+        <major name="古典文献学" tag="4"/>
+        <major name="广播电视学" tag="4"/>
+        <major name="汉语国际教育" tag="4"/>
         <major name="手写输入"  tag="4" />
     </class>
     <class name="历史学">
@@ -76,6 +80,7 @@
         <major name="世界历史" tag="5"/>
         <major name="考古学" tag="5"/>
         <major name="文物保护技术" tag="5"/>
+        <major name="文物与博物馆学" tag="5"/>
         <major name="手写输入"  tag="5" />
     </class>
     <class name="理学">
@@ -90,12 +95,19 @@
         <major name="生物信息技术"  tag="6"/>
         <major name="天文学"  tag="6"/>
         <major name="地质学"  tag="6"/>
-        <major name="地理信息系统"  tag="6"/>
+        <major name="地理信息科学"  tag="6"/>
         <major name="地球物理学"  tag="6"/>
         <major name="应用气象学"  tag="6"/>
         <major name="军事海洋学"  tag="6"/>
         <major name="心理学"  tag="6"/>
+        <major name="应用心理学"  tag="6"/>
         <major name="统计学"  tag="6"/>
+        <major name="生物技术"  tag="6"/>
+        <major name="生态学"  tag="6"/>
+        <major name="信息与计算科学"  tag="6"/>
+        <major name="地球信息科学与技术"  tag="6"/>
+        <major name="人文地理与城乡规划"  tag="6"/>
+        <major name="大气科学"  tag="6"/>
         <major name="手写输入"  tag="6" />
     </class>
     <class name="工学">
@@ -107,42 +119,36 @@
         <major name="材料科学与工程" tag="7"/>
         <major name="新能源科学与工程" tag="7"/>
         <major name="能源与环境系统工程" tag="7"/>
-
         <major name="电气工程及其自动化" tag="7"/>
         <major name="自动化（电气）" tag="7"/>
         <major name="电子信息工程" tag="7"/>
         <major name="土木工程" tag="7"/>
         <major name="城乡规划" tag="7"/>
-
         <major name="水利水电工程" tag="7"/>
         <major name="交通工程" tag="7"/>
         <major name="过程装备与控制工程" tag="7"/>
         <major name="化学工程与工艺" tag="7"/>
         <major name="制药工程" tag="7"/>
-
         <major name="生物工程" tag="7"/>
         <major name="工程力学" tag="7"/>
         <major name="飞行器设计与工程" tag="7"/>
         <major name="高分子材料与工程" tag="7"/>
         <major name="港口航道与海岸工程" tag="7"/>
-
         <major name="海洋工程与技术" tag="7"/>
         <major name="海洋科学" tag="7"/>
         <major name="建筑学" tag="7"/>
-        <major name="环境科学与工程" tag="7"/>
-
+        <major name="环境科学" tag="7"/>
+        <major name="环境工程" tag="7"/>
+        <major name="资源环境科学" tag="7"/>
         <major name="船舶与海洋工程" tag="7"/>
         <major name="航空航天工程" tag="7"/>
         <major name="海事管理" tag="7"/>
-
-
         <major name="信息工程" tag="7"/>
         <major name="电子科学与技术" tag="7"/>
         <major name="微电子科学与工程" tag="7"/>
         <major name="自动化（控制）" tag="7"/>
-
         <major name="测控技术及仪器" tag="7"/>
-        <major name="热能与动力工程" tag="7"/>
+        <major name="能源与动力工程" tag="7"/>
         <major name="核工程与核技术" tag="7"/>
         <major name="计算机科学与技术" tag="7"/>
         <major name="软件工程" tag="7"/>
@@ -150,18 +156,20 @@
         <major name="工业设计" tag="7"/>
         <major name="信息安全" tag="7"/>
         <major name="通信工程" tag="7"/>
-        <major name="光电信息工程" tag="7"/>
+        <major name="光电信息科学与工程" tag="7"/>
         <major name="生物医学工程" tag="7"/>
-
-
+        <major name="食品科学与工程" tag="7"/>
+        <major name="农业工程" tag="7"/>
         <major name="手写输入"  tag="7" />
     </class>
     <class name="农学">
-       
+        <major name="农业资源与环境"  tag="8"/>
         <major name="农学"  tag="8"/>
         <major name="园艺"  tag="8"/>
+        <major name="植物保护"  tag="8"/>
         <major name="茶学"  tag="8"/>
         <major name="应用生物科学" tag="8"/>
+        <major name="园林"  tag="8"/>
         <major name="动物科学"  tag="8"/>
         <major name="动物医学"  tag="8"/>
         <major name="水产养殖学"  tag="8"/>
@@ -169,7 +177,7 @@
         <major name="手写输入"  tag="8" />
     </class>
     <class name="医学">
-       
+        <major name="预防医学"  tag="9"/>
         <major name="中医学"  tag="9"/>
         <major name="临床医学"  tag="9"/>
         <major name="法医学" tag="9"/>
@@ -192,6 +200,14 @@
         <major name="国际商务" tag="10"/>
         <major name="公共关系学" tag="10"/>
         <major name="信息资源管理" tag="10"/>
+
+        <major name="公共事业管理" tag="10"/>
+        <major name="信息管理与信息系统" tag="10"/>
+        <major name="旅游管理" tag="10"/>
+        <major name="农林经济管理"  tag="10"/>
+        <major name="行政管理" tag="10"/>
+        <major name="劳动与社会保障" tag="10"/>
+        <major name="土地资源管理" tag="10"/>
         <major name="手写输入"  tag="10" />
     </class>
 

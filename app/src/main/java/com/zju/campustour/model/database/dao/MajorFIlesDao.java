@@ -8,7 +8,10 @@ import android.util.Log;
 
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.data.MajorData;
+import com.zju.campustour.model.database.data.MajorModel;
 import com.zju.campustour.model.database.models.Major;
+
+import java.util.List;
 
 
 public class MajorFIlesDao {
@@ -21,8 +24,8 @@ public class MajorFIlesDao {
         dbHelper = new DBHelper(context);
     }
 
-    public void init(){
-        if (isEqual(new int[]{MajorData.allMajorAbstracts.length,MajorData.allMajorClass.length,MajorData.allMajorCodes.length,MajorData.allMajorNames.length})){
+    public void init(List<MajorModel> mMajorModelList){
+       /* if (isEqual(new int[]{MajorData.allMajorAbstracts.length,MajorData.allMajorClass.length,MajorData.allMajorCodes.length,MajorData.allMajorNames.length})){
             for (int i = 0;i<MajorData.allMajorNames.length;i++){
 
                 String[] majorNames = (String[])MajorData.allMajorNames[i];
@@ -38,34 +41,42 @@ public class MajorFIlesDao {
                     }
                 }
             }
+        }*/
+
+        for (int i = 0; i < mMajorModelList.size(); i++){
+            MajorModel mMajorModel = mMajorModelList.get(i);
+            add(mMajorModel, Constants.majorsTableName[mMajorModel.getMajorClass()]);
         }
 
         Log.d("databaseinit","major database init");
 
-//        if (isEqual(new int[]{MajorData.zhexueMajorNames.length,MajorData.zhexueMajorAbstracts.length,MajorData.zhexueMajorClass.length,MajorData.zhexueMajorcodes.length})) {
-//            for (int i = 0; i < MajorData.zhexueMajorNames.length; i++) {
-//                Major major = new Major(MajorData.zhexueMajorAbstracts[i],MajorData.zhexueMajorClass[i],MajorData.zhexueMajorcodes[i],MajorData.zhexueMajorNames[i]);
-//
-//                //add(major,Constants.zhexue);
-//            }
-//        }
+    }
 
+    public void updateMajorInfo(List<MajorModel> mMajorModelList){
+        for (int i = 0; i < mMajorModelList.size(); i++){
+            MajorModel mMajorModel = mMajorModelList.get(i);
+            update(mMajorModel, Constants.majorsTableName[mMajorModel.getMajorClass()]);
+        }
+
+        Log.d("databaseinit","major database update");
     }
 
     /**
      * 添加专业
      * @param
      */
-    public void add(Major major,String tableName){
+    public void add(MajorModel major,String tableName){
         //得到数据库
         db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         //开始组装第一条数据
         values.put("major_class",major.getMajorClass());
-        values.put("major_name",major.getMajorName());
+        values.put("major_name",major.getName());
         values.put("major_code",major.getMajorCode());
         values.put("major_abstract",major.getMajorAbstract());
+        values.put("major_img",major.getImgUrl());
+        values.put("major_interests",major.getInterests());
 
         db.insert(tableName, null, values);
 
@@ -87,12 +98,24 @@ public class MajorFIlesDao {
         Log.d(TAG, "---delete major success!---");
     }
 
-    public Boolean update(Major major,String tableName){
+    public Boolean update(MajorModel major,String tableName){
         try {
             //得到数据库
             db = dbHelper.getWritableDatabase();
-            String sql = "update " + tableName + " set major_class = ?,major_code = ?,major_abstract=? where major_name = ?";
-            db.execSQL(sql, new Object[]{major.getMajorClass(),major.getMajorCode(),major.getMajorAbstract(),major.getMajorName()});
+
+            String querySql = "select * from "+ tableName+" where major_name = ?";
+            Cursor cursor = db.rawQuery(querySql, new String[]{major.getName()});
+
+            if (cursor != null && cursor.getCount() > 0) {
+                //更新操作
+                String sql = "update " + tableName + " set major_class = ?,major_code = ?,major_abstract=?,major_img=?, major_interests = ? where major_name = ?";
+                db.execSQL(sql, new Object[]{major.getMajorClass(),major.getMajorCode(),major.getMajorAbstract(),major.getImgUrl(),major.getInterests(),major.getName()});
+
+            }
+            else{
+                //插入操作
+                add(major,tableName);
+            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -107,6 +130,12 @@ public class MajorFIlesDao {
         String sql = "select * from "+ tableName+" where major_name = ?";
         Cursor cursor = db.rawQuery(sql, new String[]{majorName});
 
+        return cursor;
+    }
+
+    public Cursor selectByMajorClass(String tableName){
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(tableName,null,null,null,null,null,null);
         return cursor;
     }
 

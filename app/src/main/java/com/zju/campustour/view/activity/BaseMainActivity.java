@@ -117,11 +117,12 @@ public class BaseMainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ActivityCollector.removeActivity(this);
+
         JMessageClient.unRegisterEventReceiver(this);
         if (dialog != null){
             dialog.dismiss();
         }
+        ActivityCollector.finishAll();
     }
 
 
