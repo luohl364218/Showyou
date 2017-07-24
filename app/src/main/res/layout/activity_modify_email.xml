@@ -22,6 +22,7 @@
         android:textSize="20sp"
         android:maxLines="1"
         android:inputType="textEmailAddress"
+        android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_./\"
         android:maxLength="64"
         android:focusable="true"
         android:background="@drawable/default_input_bg"

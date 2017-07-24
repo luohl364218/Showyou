@@ -49,6 +49,7 @@ public class Constants {
     public static final int GRADE_PRIMARY_SCHOOL = 5;
     public static final int GRADE_JUNIOR_HIGH_SCHOOL = 8;
     public static final int GRADE_HIGH_SCHOOL = 12;
+    public static final int GRADE_COLLEGE_SCHOOL =27;
 
 
     public static final String First_Open = "isFirstOpen";
@@ -65,6 +66,8 @@ public class Constants {
     public static final String URL_DEFAULT_WOMAN_IMG = "https://a-ssl.duitang.com/uploads/item/201605/24/20160524072338_CVLZB.thumb.700_0.jpeg";
 
     public static final String URL_DEFAULT_PROJECT_IMG = "http://mmbiz.qpic.cn/mmbiz/TT9v08cQf2Svq1UswDp5NCQu3Q14cDtWDCicLk8icBbkmDhvxic8peFmyKtiakDWTXicZfkA3KOSkK7ukIoxE7uECUw/640?wx_fmt=jpeg";
+
+    public static final String URL_VERIFIED_ID_BG = "http://campustour.oss-cn-shenzhen.aliyuncs.com/verify_id_bg.jpg";
 
     public static final int[] imageUrls = {
             R.drawable.home1,
@@ -139,7 +142,7 @@ public class Constants {
     public final static String[] studentGrades = {"小学一年级","小学二年级","小学三年级","小学四年级","小学五年级","小学六年级",
             "初中一年级","初中二年级","初中三年级","高中一年级","高中二年级","高中三年级","就业-高中","大学一年级","大学二年级","大学三年级","大学四年级",
             "大学五年级","就业-本科","研究生一年级","研究生二年级","研究生三年级","就业-硕士","研究生四年级","研究生五年级",
-            "研究生五年+","博士-就业","博士后","助理研究员","讲师","副研究员","副教授","研究员","教授"};
+            "研究生五年+","就业-博士","博士后","助理研究员","讲师","副研究员","副教授","研究员","教授"};
 
 
     /*下面为与聊天相关定义常量*/
@@ -205,7 +208,25 @@ public class Constants {
     public static String MajorInfo_imgUrl = "imgUrl";
     public static String MajorInfo_interests = "interests";
 
+    //User表
+    public static String User_userType = "userType";
+    public static String User_identityType = "identityType";
+    public static String User_fansNum = "fansNum";
+    public static String User_province = "province";
+    public static String User_city = "city";
+    public static String User_district = "district";
+    public static String User_grade = "gradeId";
+    public static String User_isVerified = "isVerified";
+    public static String User_collegeSchool = "school";
+    public static String User_highSchool = "highSchool";
+    public static String User_juniorHighSchool = "juniorHighSchool";
+    public static String User_primarySchool = "primarySchool";
+    public static String User_major = "major";
+    public static String User_majorCategory = "categoryId";
 
-
+    public static String AliEndPoint = "http://oss-cn-shenzhen.aliyuncs.com";
+    public static String AccessKeyId = "LTAIQeF79xVMLn7c";
+    public static String AccessKeySecret = "Iwz0Cnh3fonteUN8QCPG3nCDC6RE7J";
+    public static String BucketName = "campustour";
 
 }

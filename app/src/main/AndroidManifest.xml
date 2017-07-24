@@ -197,22 +197,18 @@
             android:name=".view.activity.EditNoteNameActivity"
             android:theme="@style/LoginToolBar">
         </activity>
-
         <activity
             android:name=".view.activity.ModifySchoolActivity"
             android:theme="@style/LoginToolBar">
         </activity>
-
         <activity
             android:name=".view.activity.ModifyEmailActivity"
             android:theme="@style/LoginToolBar">
         </activity>
-
         <activity
             android:name=".view.activity.ModifyIntroduceActivity"
             android:theme="@style/LoginToolBar">
         </activity>
-
         <activity
             android:name=".view.activity.BrowserViewPagerActivity"
             android:theme="@style/WelcomeNoActionBar">
@@ -294,6 +290,37 @@
         <activity
             android:name=".view.activity.FixProfileActivity"
             android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.IdentityConfirmActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.RegisterLookAroundActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.RegisterParentActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.RegisterTeacherActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.RegisterGraduateStudentActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.RegisterSchoolStudentActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity
+            android:name=".view.activity.RegisterCollegeStudentActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.VerifyIdentityActivity"
+                  android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>
 

@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="信息完善 1/2"
+                android:text="@string/teacher_reg"
                 android:textColor="@color/white"
                 android:textSize="20sp"/>
         </android.support.v7.widget.Toolbar>
@@ -90,8 +90,7 @@
                         android:layout_toRightOf="@id/iv_username"
                         android:background="@null"
                         android:cursorVisible="true"
-                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
-                        android:hint="请输入真实姓名"
+                        android:hint="请输入您的姓名"
                         android:textColorHint="@color/main_font_color"
                         android:singleLine="true"
                         android:inputType="textPersonName"
@@ -112,58 +111,78 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/school_area_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginTop="15dp">
 
+                    <ImageView
+                        android:id="@+id/iv_user_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/area" />
+
+                    <TextView
+                        android:id="@+id/school_area"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical|left"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@id/iv_user_area"
+                        android:background="@null"
+                        android:hint="@string/teacher_choose_hint"
+                        android:textColorHint="@color/main_font_color"
+                        android:singleLine="true"
+                        android:textSize="16sp"
+                        android:textColor="@color/black" >
+                    </TextView>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.2dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/alpha_20_black"  />
+
+                </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/school_select"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
                     android:layout_marginTop="15dp" >
 
-                    <RadioGroup
-                        android:id="@+id/user_sex_type"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="left"
-                        android:layout_marginBottom="5dp"
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/iv_user_school"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="2dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="10dp">
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/my_school" />
 
-                        <RadioButton
-                            android:id="@+id/select_male"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/radiobutton_male"
-                            android:button="@null"/>
-                        <TextView
-                            android:layout_marginLeft="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="男"
-                            android:textSize="16sp"
-                            android:textColor="@color/main_font_color"
-                            />
+                    <com.zju.campustour.view.widget.ClearEditText
+                        android:id="@+id/user_school"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical|left"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@id/iv_user_school"
+                        android:background="@null"
+                        android:hint="@string/teacher_school_name"
+                        android:textColorHint="@color/main_font_color"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="16sp"
+                        android:textColor="@color/black" >
+                    </com.zju.campustour.view.widget.ClearEditText>
 
-                        <RadioButton
-                            android:id="@+id/select_female"
-                            android:layout_marginLeft="40dp"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/radiobutton_female"
-                            android:button="@null"/>
-                        <TextView
-                            android:layout_marginLeft="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="女"
-                            android:textSize="16sp"
-                            android:textColor="@color/main_font_color"
-                            />
-
-                    </RadioGroup>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.2dp"
@@ -196,7 +215,7 @@
                         android:layout_marginLeft="11dp"
                         android:layout_toRightOf="@id/iv_user_grade"
                         android:background="@null"
-                        android:hint="点击选择年级/学历"
+                        android:hint="@string/teacher_choose_grade"
                         android:textColorHint="@color/main_font_color"
                         android:singleLine="true"
                         android:textSize="16sp"
@@ -211,93 +230,8 @@
 
                 </RelativeLayout>
 
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="18dp"
-                    android:layout_marginTop="25dp" >
-
-                    <ImageView
-                        android:id="@+id/iv_user_email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/my_email_blue" />
-
-
-                    <com.zju.campustour.view.widget.ClearEditText
-                        android:id="@+id/user_email_addr"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="11dp"
-                        android:layout_toRightOf="@id/iv_user_email"
-                        android:background="@null"
-                        android:cursorVisible="true"
-                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
-                        android:hint="请输入邮箱地址"
-                        android:textColorHint="@color/main_font_color"
-                        android:inputType="textEmailAddress"
-                        android:maxLength="40"
-                        android:maxLines="1"
-                        android:textSize="16sp"
-                        android:textColor="@color/black" />
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.2dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/alpha_20_black"  />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="18dp"
-                    android:layout_marginTop="25dp" >
-
-                    <ImageView
-                        android:id="@+id/iv_user_note"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/sign" />
-
-
-                    <com.zju.campustour.view.widget.ClearEditText
-                        android:id="@+id/user_short_desc"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="11dp"
-                        android:layout_toRightOf="@id/iv_user_note"
-                        android:background="@null"
-                        android:cursorVisible="true"
-                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
-                        android:hint="请输入个性签名"
-                        android:textColorHint="@color/main_font_color"
-                        android:inputType="text"
-                        android:maxLength="40"
-                        android:maxLines="1"
-                        android:textSize="16sp"
-                        android:textColor="@color/black" />
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.2dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/alpha_20_black"  />
-
-                </RelativeLayout>
-
                 <Button
-                    android:id="@+id/btn_one_next"
+                    android:id="@+id/btn_finish"
                     style="@style/bigYellowButton"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -306,14 +240,14 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="40dp"
                     android:enabled="false"
-                    android:text="下一步"
+                    android:text="完成"
                     android:textColor="#ffffff"
                     android:textSize="16sp">
                 </Button>
 
 
 
-        </LinearLayout>
+            </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
     </LinearLayout>

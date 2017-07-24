@@ -66,6 +66,7 @@ public class ModifyIntroduceActivity extends BaseActivity {
                     currentUser.saveEventually(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
+                            dialog.dismiss();
                             if (e == null) {
                                 showToast(mContext.getString(R.string.modify_success_toast));
                                 Intent intent = new Intent();
@@ -73,6 +74,7 @@ public class ModifyIntroduceActivity extends BaseActivity {
                                 setResult(1, intent);
                                 finish();
                             } else {
+                                showToast(getString(R.string.edit_failed_hint));
                                 dismissSoftInput();
                             }
                         }

@@ -113,6 +113,29 @@ public class DialogCreator {
         return dialog;
     }
 
+    /*模仿长按弹窗，做一个学位选择的Dialog*/
+    public static Dialog createDegreeChooseDialog(Context context,
+                                                      View.OnClickListener listener){
+        Dialog dialog = new Dialog(context, IdHelper.getStyle(context, "jmui_default_dialog_style"));
+        View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context,
+                "dialog_degree_choose"), null);
+        dialog.setContentView(view);
+        Button undergraduateBtn = (Button) view
+                .findViewById(IdHelper.getViewID(context, "degree_choose_undergraduate_btn"));
+        Button postgraduateBtn = (Button) view
+                .findViewById(IdHelper.getViewID(context, "degree_choose_postgraduate_btn"));
+        View line1 = view.findViewById(IdHelper.getViewID(context, "jmui_forward_split_line"));
+        View line2 = view.findViewById(IdHelper.getViewID(context, "jmui_delete_split_line"));
+        Button doctorBtn = (Button) view.findViewById(IdHelper.getViewID(context, "degree_choose_doctor_btn"));
+        undergraduateBtn.setOnClickListener(listener);
+        postgraduateBtn.setOnClickListener(listener);
+        doctorBtn.setOnClickListener(listener);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
+    }
+
+
     public static Dialog createResendDialog(Context context, View.OnClickListener listener){
         Dialog dialog = new Dialog(context, IdHelper.getStyle(context, "jmui_default_dialog_style"));
         View view = LayoutInflater.from(context).inflate(

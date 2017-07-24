@@ -47,7 +47,6 @@ public class MeInfoController implements OnClickListener {
                 mContext.startModifySignatureActivity();
                 break;
             case R.id.type_rl:
-
                 ParseUser user = ParseUser.getCurrentUser();
                 int grade = user.getInt("gradeId");
                 if (grade <= GRADE_HIGH_SCHOOL )
@@ -57,6 +56,9 @@ public class MeInfoController implements OnClickListener {
                 break;
             case R.id.school_rl:
                 mContext.startModifySchool(mMeInfoView.getSchool(), mMeInfoView.getGrade());
+                break;
+            case R.id.verify_ll:
+                mContext.startVerifyIdentity(mMeInfoView.getVerifyState());
                 break;
             case R.id.grade_rl:
                 ParseUser currentUser = ParseUser.getCurrentUser();

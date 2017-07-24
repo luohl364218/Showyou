@@ -290,7 +290,7 @@ public class ProjectNewActivity extends BaseActivity{
             imgUrl=Constants.URL_DEFAULT_PROJECT_BG;
         }
      Project project = new Project(
-                currentProject.getId(),
+                currentProject.getUserTypeId(),
                 currentUser,
                 projectName,
                 startTime,

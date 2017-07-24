@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:background="@drawable/jmui_dialog_default_style"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/degree_choose_dialog_title"
+        style="@style/jmui_dialog_msg_alert_txt_style"
+        android:textColor="@color/colorPrimary"
+        android:clickable="false"
+        android:text="@string/choose_degree_hint"
+        android:gravity="center"
+        android:background="@drawable/jmui_dialog_top_btn_bg"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cbc9ca" />
+
+    <Button
+        android:id="@+id/degree_choose_undergraduate_btn"
+        style="@style/jmui_dialog_msg_alert_txt_style"
+        android:text="@string/undergraduate"
+        android:gravity="center"
+        android:background="@drawable/jmui_list_item_bg"
+        />
+
+    <View
+        android:id="@+id/jmui_forward_split_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cbc9ca" />
+
+    <Button
+        android:id="@+id/degree_choose_postgraduate_btn"
+        android:text="@string/postgraduate"
+        android:gravity="center"
+        style="@style/jmui_dialog_msg_alert_txt_style"
+        android:background="@drawable/jmui_list_item_bg"
+        />
+
+    <View
+        android:id="@+id/jmui_delete_split_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cbc9ca" />
+
+
+    <Button
+        android:id="@+id/degree_choose_doctor_btn"
+        style="@style/jmui_dialog_msg_alert_txt_style"
+        android:gravity="center"
+        android:background="@drawable/jmui_dialog_bottom_btn_bg"
+        android:text="@string/doctor"/>
+
+</LinearLayout>

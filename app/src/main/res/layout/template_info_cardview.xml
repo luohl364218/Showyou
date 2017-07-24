@@ -55,6 +55,8 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:text="罗海林"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textStyle="normal"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15sp"/>

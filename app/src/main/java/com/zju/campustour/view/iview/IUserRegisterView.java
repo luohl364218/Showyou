@@ -6,8 +6,8 @@ package com.zju.campustour.view.iview;
 
 public interface IUserRegisterView extends IUserView {
 
-    void userSignedUpSuccessfully(String userName, String password);
+    void onUserSignedUpSuccessfully(String userName, String password);
 
-    void userSignUpDidNotSucceed(Exception e);
+    void onUserSignUpDidNotSucceed(Exception e);
 
 }

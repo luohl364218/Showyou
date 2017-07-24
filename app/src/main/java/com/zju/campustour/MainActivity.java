@@ -79,6 +79,7 @@ import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.presenter.protocal.event.UserTypeChangeEvent;
 import com.zju.campustour.view.activity.FixProfileActivity;
+import com.zju.campustour.view.activity.IdentityConfirmActivity;
 import com.zju.campustour.view.activity.MeInfoActivity;
 import com.zju.campustour.view.activity.ReloginActivity;
 import com.zju.campustour.view.activity.SettingActivity;
@@ -96,6 +97,7 @@ import com.zju.campustour.view.adapter.FragmentAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
 import com.zju.campustour.view.fragment.MessageFragment;
 import com.zju.campustour.view.fragment.SearchFragment;
+import com.zju.campustour.view.widget.ActivityCollector;
 import com.zju.campustour.view.widget.GifSizeFilter;
 import com.zju.campustour.view.widget.viewpager.SuperViewPager;
 
@@ -238,11 +240,6 @@ public class MainActivity extends BaseMainActivity
 
     @Override
     protected void onDestroy() {
-        currentLoginUser = ParseUser.getCurrentUser();
-        if (currentLoginUser != null){
-            currentLoginUser.put("online",false);
-            currentLoginUser.saveEventually();
-        }
 
         unregisterReceiver(mNetworkChangeReceiver);
         EventBus.getDefault().unregister(this);
@@ -531,7 +528,10 @@ public class MainActivity extends BaseMainActivity
                         showToast("同学你是普通用户，没有权限创建活动哦");
                     }
                 }
-
+                break;
+            case R.id.test_enter:
+                startActivity(new Intent(this, IdentityConfirmActivity.class));
+                break;
 
         }
 
@@ -956,7 +956,7 @@ public class MainActivity extends BaseMainActivity
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if (new Date().getTime() - lastPressTime < 2000)
-                this.finish();
+                ActivityCollector.finishAll();
             else{
                 lastPressTime = new Date().getTime();
                 showToast("再按一次返回键退出");

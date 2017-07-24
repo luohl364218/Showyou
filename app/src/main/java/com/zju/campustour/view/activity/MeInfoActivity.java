@@ -22,6 +22,7 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.presenter.chatting.controller.MeInfoController;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
+import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
 import com.zju.campustour.view.chatting.MeInfoView;
 import com.zju.campustour.view.widget.AreaSelectDialog;
 import com.zju.campustour.view.widget.CollegeSelectDialog;
@@ -317,6 +318,10 @@ public class MeInfoActivity extends BaseActivity {
         intent.putExtra("grade",grade);
         intent.setClass(this, ModifySchoolActivity.class);
         startActivityForResult(intent, MODIFY_SCHOOL_REQUEST_CODE);
+    }
+
+    public void startVerifyIdentity(boolean isVerified){
+        startActivity(new Intent(this,VerifyIdentityActivity.class));
     }
 
 

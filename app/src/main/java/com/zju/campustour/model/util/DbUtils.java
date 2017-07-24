@@ -17,7 +17,6 @@ import com.parse.ParseUser;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.data.MajorModel;
 import com.zju.campustour.model.database.models.Comment;
-import com.zju.campustour.model.database.models.Major;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
 import com.zju.campustour.model.database.models.User;
@@ -221,5 +220,24 @@ public class DbUtils {
                 isUpdate,updateAt,
                 imgUrl,interests);
     }
+
+    public static String getSchoolTypeByGradeId(int gradeIndex){
+
+        //1. 大学生+
+        if (gradeIndex > Constants.GRADE_HIGH_SCHOOL){
+            return Constants.User_collegeSchool;
+        }
+        else if (gradeIndex > Constants.GRADE_JUNIOR_HIGH_SCHOOL){
+            return Constants.User_highSchool;
+        }
+        else if (gradeIndex > Constants.GRADE_PRIMARY_SCHOOL){
+            return Constants.User_juniorHighSchool;
+        }
+        else {
+            return Constants.User_primarySchool;
+        }
+
+    }
+
 
 }

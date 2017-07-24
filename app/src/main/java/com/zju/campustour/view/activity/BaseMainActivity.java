@@ -117,12 +117,18 @@ public class BaseMainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*如果当前已经有登录用户，那么令当前用户下线*/
+        ParseUser currentLoginUser = ParseUser.getCurrentUser();
+        if (currentLoginUser != null){
+            currentLoginUser.put("online",false);
+            currentLoginUser.saveEventually();
+        }
 
         JMessageClient.unRegisterEventReceiver(this);
         if (dialog != null){
             dialog.dismiss();
         }
-        ActivityCollector.finishAll();
+
     }
 
 

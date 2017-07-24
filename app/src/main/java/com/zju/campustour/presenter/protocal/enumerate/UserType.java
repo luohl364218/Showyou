@@ -11,11 +11,11 @@ public enum UserType {
     PROVIDER("专业用户",1);
 
     private String name;
-    private int index;
+    private int userTypeId;
 
-    UserType(String mName, int mIndex) {
+    UserType(String mName, int mUserTypeId) {
         name = mName;
-        index = mIndex;
+        userTypeId = mUserTypeId;
     }
 
     public String getName() {
@@ -26,12 +26,12 @@ public enum UserType {
         name = mName;
     }
 
-    public int getIndex() {
-        return index;
+    public int getUserTypeId() {
+        return userTypeId;
     }
 
-    public void setIndex(int mIndex) {
-        index = mIndex;
+    public void setUserTypeId(int mUserTypeId) {
+        userTypeId = mUserTypeId;
     }
 
     public int getValue(){

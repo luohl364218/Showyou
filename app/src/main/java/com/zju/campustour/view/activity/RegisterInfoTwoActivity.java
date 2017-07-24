@@ -35,7 +35,7 @@ import butterknife.OnClick;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
-
+@Deprecated
 public class RegisterInfoTwoActivity extends BaseActivity {
 
     private int gradeIndex;
@@ -410,10 +410,10 @@ public class RegisterInfoTwoActivity extends BaseActivity {
 
             if (isMajorUser){
                 //存储专业用户信息
-                currentUser.put("userType", UserType.PROVIDER.getValue());
+                currentUser.put("userType", UserType.PROVIDER.getUserTypeId());
             }
             else {
-                currentUser.put("userType", UserType.USER.getValue());
+                currentUser.put("userType", UserType.USER.getUserTypeId());
                 //存储普通用户信息
             }
             currentUser.put("school",school);
@@ -422,17 +422,17 @@ public class RegisterInfoTwoActivity extends BaseActivity {
             currentUser.put("categoryId", majorId);
         }
         else if (gradeIndex > Constants.GRADE_JUNIOR_HIGH_SCHOOL){
-            currentUser.put("userType", UserType.USER.getValue());
+            currentUser.put("userType", UserType.USER.getUserTypeId());
             //存储普通用户信息
             currentUser.put("highSchool",school);
         }
         else if (gradeIndex > Constants.GRADE_PRIMARY_SCHOOL){
-            currentUser.put("userType", UserType.USER.getValue());
+            currentUser.put("userType", UserType.USER.getUserTypeId());
             //存储普通用户信息
             currentUser.put("juniorHighSchool",school);
         }
         else {
-            currentUser.put("userType", UserType.USER.getValue());
+            currentUser.put("userType", UserType.USER.getUserTypeId());
             //存储普通用户信息
             currentUser.put("primarySchool",school);
         }

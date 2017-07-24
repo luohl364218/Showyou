@@ -1,20 +1,21 @@
 package com.zju.campustour.view.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,15 +27,23 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.filter.Filter;
+import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
+import com.zju.campustour.model.chatting.utils.DialogCreator;
+import com.zju.campustour.model.chatting.utils.HandleResponseCode;
+import com.zju.campustour.model.chatting.utils.IdHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.SharePreferenceManager;
-import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.presenter.listener.MyTextWatch;
+import com.zju.campustour.presenter.protocal.enumerate.DegreeType;
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
+import com.zju.campustour.presenter.protocal.enumerate.SexType;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
+import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
+import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
 import com.zju.campustour.view.widget.ClearEditText;
 import com.zju.campustour.view.widget.GifSizeFilter;
-import com.zju.campustour.view.widget.GradeSelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -62,9 +71,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.zju.campustour.model.common.Constants.User_isVerified;
-@Deprecated
-public class RegisterInfoOneActivity extends BaseActivity{
+public class RegisterGraduateStudentActivity extends BaseActivity{
 
     @BindView(R.id.register_info_one_toolbar)
     Toolbar mToolbar;
@@ -75,209 +82,103 @@ public class RegisterInfoOneActivity extends BaseActivity{
     @BindView(R.id.real_name)
     ClearEditText realName;
 
-    @BindView(R.id.user_grade)
-    TextView userGrade;
+    @BindView(R.id.user_degree)
+    RelativeLayout userDegree;
 
-    @BindView(R.id.user_email_addr)
-    ClearEditText userEmail;
+    @BindView(R.id.graduate_degree)
+    TextView graduteDegree;
 
-    @BindView(R.id.user_sex_type)
-    RadioGroup userSexType;
+    @BindView(R.id.user_company)
+    RelativeLayout userCompany;
 
-    @BindView(R.id.user_short_desc)
-    ClearEditText userShortDesc;
+    @BindView(R.id.user_school)
+    ClearEditText userSchool;
 
-    @BindView(R.id.user_grade_select)
-    RelativeLayout userGradeSelect;
+    @BindView(R.id.user_company_name)
+    ClearEditText userCompanyName;
 
-    @BindView(R.id.btn_one_next)
+    @BindView(R.id.btn_finish)
     Button btnNext;
 
-    @BindView(R.id.user_info_update_title_1)
-    TextView title;
-
-    private boolean isRealNameNotNull = false;
-    private boolean isUserShortDesc = false;
-    private Context mContext = this;
-    private boolean isImgSet = false;
-    private static final int REQUEST_CODE_CHOOSE = 23;
-    //注册以后要将当前用户自动登录
-    //private UserInfoOpPresenterImpl userLoginImpl;
-    //拿到用户的年级层次
-    private int gradeId;
-
-    //当前用户
-    String userName;
-    String password;
-    String phoneNum;
     ParseUser currentUser;
+    private Context mContext = this;
+    private boolean isRealNameNotNull = false;
+    private boolean isImgSet = false;
+    private boolean isSchoolNameNotNull = false;
+    private static final int REQUEST_CODE_CHOOSE = 23;
+    private int gradeId = -1;
 
-    //是否是编辑模式
-    private boolean isEditMode = false;
+    /*学位选择Dialog*/
+    private Dialog mDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_info_one);
+        setContentView(R.layout.activity_register_graduate_student);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        Intent mIntent = getIntent();
-        userName = mIntent.getStringExtra("userName");
-        password = mIntent.getStringExtra("password");
-        phoneNum = mIntent.getStringExtra("phone");
-        isEditMode = mIntent.getBooleanExtra("isEditMode",false);
         currentUser = ParseUser.getCurrentUser();
         if (currentUser == null)
             return;
-        initOriginalView();
 
         initView();
     }
 
-    @Deprecated
-    private void initOriginalView() {
-        try{
-            /*该方法在版本1.2以后已经废弃*/
-            if (currentUser != null && isEditMode){
-                title.setText("信息修改 1/2");
-                realName.setText(currentUser.getString("realname"));
-                isImgSet = true;
-                isRealNameNotNull = true;
-                userEmail.setText(currentUser.getString("emailAddr"));
-                userGrade.setText(currentUser.getString("grade"));
-                userSexType.check(currentUser.getInt("sex") == 0 ? R.id.select_male : R.id.select_female);
-                userShortDesc.setText(currentUser.getString("shortDescription"));
-                isUserShortDesc = true;
-                gradeId = currentUser.getInt("gradeId");
-                btnNext.setEnabled(true);
-            }
-            else {
-                userSexType.check(R.id.select_male);
-            }
 
-        }catch (Exception e){
-        }
-    }
-
-    private void initView(){
+    private void initView() {
 
         //让按钮随着输入内容有效而使能
         realName.addTextChangedListener(new MyTextWatch() {
             @Override
             public void afterTextChanged(Editable s) {
                 isRealNameNotNull = !TextUtils.isEmpty(s.toString());
-                btnNext.setEnabled((isRealNameNotNull && isUserShortDesc));
+                btnNext.setEnabled(isRealNameNotNull && isSchoolNameNotNull);
             }
         });
 
-        userShortDesc.addTextChangedListener(new MyTextWatch() {
+        userSchool.addTextChangedListener(new MyTextWatch() {
             @Override
             public void afterTextChanged(Editable s) {
-                isUserShortDesc = !TextUtils.isEmpty(s.toString());
-                btnNext.setEnabled((isRealNameNotNull && isUserShortDesc));
+                isSchoolNameNotNull = !TextUtils.isEmpty(s.toString());
+                btnNext.setEnabled(isRealNameNotNull && isSchoolNameNotNull);
             }
         });
 
-        userGradeSelect.setOnClickListener(new View.OnClickListener() {
+        /*用户学位选择*/
+        userDegree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                GradeSelectDialog.Builder mBuilder = new GradeSelectDialog.Builder(mContext);
-                mBuilder.setPositiveButtonListener(new GradeSelectDialog.Builder.OnGradeSelectClickListener() {
+                mDialog = DialogCreator.createDegreeChooseDialog(mContext, new View.OnClickListener() {
+                    @SuppressLint("NewApi")
                     @Override
-                    public void onClick(DialogInterface dialog, String grade, int gradeIndex) {
-                        dialog.dismiss();
-                        userGrade.setText(grade);
-                        gradeId = gradeIndex ;
+                    public void onClick(View v) {
+                        if (v.getId() == IdHelper.getViewID(mContext, "degree_choose_undergraduate_btn")) {
+                            gradeId = DegreeType.UNDERGRADUATE_STUDENT.getTypeId();
+                            graduteDegree.setText(DegreeType.UNDERGRADUATE_STUDENT.getTypeName());
+                            mDialog.dismiss();
+                        } else if (v.getId() == IdHelper.getViewID(mContext, "degree_choose_postgraduate_btn")) {
+                            gradeId = DegreeType.POSTGRADUATE_STUDENT.getTypeId();
+                            graduteDegree.setText(DegreeType.POSTGRADUATE_STUDENT.getTypeName());
+                            mDialog.dismiss();
+                        } else {
+                            gradeId = DegreeType.DOCTOR_STUDENT.getTypeId();
+                            graduteDegree.setText(DegreeType.DOCTOR_STUDENT.getTypeName());
+                            mDialog.dismiss();
+                        }
                     }
                 });
-                GradeSelectDialog dialog =  mBuilder.create();
-                dialog.setCancelable(false);
-                dialog.show();
-
+                mDialog.show();
+                mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
             }
         });
+
     }
-
-
-    @OnClick(R.id.btn_one_next)
-    protected void updateUserInfo(){
-        if (!isImgSet) {
-            showToast("请选择头像");
-            return;
-        }
-
-        String userRealName = realName.getText().toString().trim();
-        if (TextUtils.isEmpty(userRealName)) {
-            showToast("请输入真实姓名");
-            return;
-        }
-
-
-        String grade = userGrade.getText().toString().trim();
-        if ("点击选择".equals(grade)){
-            showToast("请选择你的学历");
-            return;
-        }
-
-        String email = userEmail.getText().toString().trim();
-
-        int userSex = userSexType.getCheckedRadioButtonId() == R.id.select_male ? 0:1;
-
-        String shortDesc = userShortDesc.getText().toString().trim();
-        if (TextUtils.isEmpty(shortDesc)) {
-            showToast("请用一句话完成自我介绍");
-            return;
-        }
-
-        currentUser.put("realname",userRealName);
-        currentUser.put("phoneNum",phoneNum);
-        currentUser.put("emailAddr",email);
-        currentUser.put("grade",grade);
-        currentUser.put("sex",userSex);
-        currentUser.put(User_isVerified,false);
-        currentUser.put("shortDescription",shortDesc);
-        currentUser.put("gradeId",gradeId);
-
-        //上传极光 用户性别 个性签名
-        try {
-            UserInfo myUserInfo = JMessageClient.getMyInfo();
-            myUserInfo.setGender(userSex == 1 ? UserInfo.Gender.female : UserInfo.Gender.male);
-            JMessageClient.updateMyInfo(UserInfo.Field.gender, myUserInfo, new BasicCallback() {
-                @Override
-                public void gotResult(final int status, final String desc) {
-                    if (status != 0) {
-                        HandleResponseCode.onHandle(mContext, status, false);
-                    }
-                }
-            });
-
-            myUserInfo.setSignature(shortDesc);
-            JMessageClient.updateMyInfo(UserInfo.Field.signature, myUserInfo, new BasicCallback() {
-                @Override
-                public void gotResult(final int status, final String desc) {
-                    if (status != 0) {
-                        HandleResponseCode.onHandle(mContext, status, false);
-                    }
-                }
-            });
-        }catch (Exception e){
-
-        }
-
-        currentUser.saveEventually();
-        Intent mIntent = new Intent(this, RegisterInfoTwoActivity.class);
-        mIntent.putExtra("gradeId",gradeId);
-        mIntent.putExtra("isEditMode",isEditMode);
-        startActivity(mIntent);
-    }
-
 
     @OnClick(R.id.regist_user_img)
     public void chooseUserImg(){
-             /*Intent mIntent = new Intent(this, RegisterInfoOneActivity.class);
-                    mIntent.putExtra("isEditMode",true);
-                    startActivity(mIntent);*/
+
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(new Observer<Boolean>() {
@@ -289,7 +190,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
                     @Override
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
-                            Matisse.from(RegisterInfoOneActivity.this)
+                            Matisse.from(RegisterGraduateStudentActivity.this)
                                     .choose(MimeType.ofAll(), false)
                                     .countable(true)
                                     .maxSelectable(1)
@@ -318,7 +219,6 @@ public class RegisterInfoOneActivity extends BaseActivity{
 
     }
 
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
@@ -352,14 +252,13 @@ public class RegisterInfoOneActivity extends BaseActivity{
             default:
         }
 
-
     }
 
     private void startCrop(String url) {
         Uri sourceUri = Uri.fromFile(new File(url));
         //裁剪后保存到文件中
         Date mDate = new Date();
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(),mDate.getTime()+"_showyou.jpeg"));
+        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), mDate.getTime()+"_showyou.jpeg"));
         UCrop.of(sourceUri, destinationUri).withAspectRatio(1, 1).withMaxResultSize(800, 800).start(this);
     }
 
@@ -376,7 +275,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
         JMessageClient.updateUserAvatar(f,null);
         builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
         Date mDate = new Date();
-        String uriSuffix = currentUser.getObjectId()+suffix+mDate.getTime();
+        String uriSuffix = currentUser.getObjectId()+mDate.getTime()+suffix;
         final MultipartBody requestBody = builder.addFormDataPart("name",uriSuffix).build();
         //构建请求
         final Request request = new Request.Builder()
@@ -411,6 +310,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
                     runOnUiThread(new Thread(new Runnable() {
                         @Override
                         public void run() {
+
                             showToast("报告同学，照片上传成功");
                             String imgUri = "http://119.23.248.205:8080/pictures/" + uriSuffix;
                             EventBus.getDefault().post(new UserPictureUploadDone(imgUri, localPath));
@@ -423,13 +323,12 @@ public class RegisterInfoOneActivity extends BaseActivity{
 
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onPictureUploadDoneEvent(UserPictureUploadDone event) {
         currentUser = ParseUser.getCurrentUser();
         if (event != null && currentUser != null){
             try{
-                SharePreferenceManager.putString(this,Constants.DB_USERIMG,event.getLocalImgUrl());
+                SharePreferenceManager.putString(this, Constants.DB_USERIMG,event.getLocalImgUrl());
                 currentUser.put("imgUrl",event.getCloudImgUrl());
                 currentUser.saveEventually();
                 Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
@@ -447,4 +346,91 @@ public class RegisterInfoOneActivity extends BaseActivity{
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    @OnClick(R.id.btn_finish)
+    protected void updateUserInfo() {
+        if (!isImgSet) {
+            showToast("您好，请为自己选择专属头像吧~");
+            return;
+        }
+
+        String userRealName = realName.getText().toString().trim();
+
+        String schoolName = userSchool.getText().toString().trim();
+
+        if (!TextUtils.isEmpty(schoolName)){
+            currentUser.put(Constants.User_collegeSchool,schoolName);
+        }
+        else{
+            showToast("请输入学校名称");
+            return;
+        }
+
+        currentUser.put("realname",userRealName);
+        currentUser.put("sex", SexType.MALE.getSexTypeId());
+        currentUser.put(Constants.User_userType, UserType.USER.getUserTypeId());
+        currentUser.put(Constants.User_identityType, IdentityType.GRADUATE_STUDENT.getIdentityId());
+        currentUser.put(Constants.User_isVerified, false);
+        String degree = "";
+        if (gradeId > 0) {
+            currentUser.put(Constants.User_grade, gradeId);
+            degree = graduteDegree.getText().toString().trim();
+        }
+        currentUser.put("shortDescription","我是一名" +schoolName + degree + "毕业生");
+
+        String companyName = userCompanyName.getText().toString().trim();
+        String companyDesc = "";
+        if (!TextUtils.isEmpty(companyName)){
+            companyDesc = ",现就职于" + companyName;
+        }
+
+        currentUser.put("description","我是一名" + schoolName + degree +"毕业生" + companyDesc);
+        //上传极光 用户性别 个性签名
+        try {
+            UserInfo myUserInfo = JMessageClient.getMyInfo();
+            myUserInfo.setGender(UserInfo.Gender.male);
+            JMessageClient.updateMyInfo(UserInfo.Field.gender, myUserInfo, new BasicCallback() {
+                @Override
+                public void gotResult(final int status, final String desc) {
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+
+            myUserInfo.setNickname("校游毕业大学生 "+userRealName);
+            JMessageClient.updateMyInfo(UserInfo.Field.nickname, myUserInfo, new BasicCallback() {
+                @Override
+                public void gotResult(final int status, final String desc) {
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+
+            myUserInfo.setSignature("我是一名" +schoolName + degree +"毕业生");
+            JMessageClient.updateMyInfo(UserInfo.Field.signature, myUserInfo, new BasicCallback() {
+                @Override
+                public void gotResult(final int status, final String desc) {
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+        }catch (Exception e){
+
+        }
+
+        currentUser.saveEventually();
+
+        EventBus.getDefault().post(new EditUserInfoDone(true));
+        Intent mIntent = new Intent(this, MainActivity.class);
+
+        showToast("完成注册，欢迎加入校游");
+        startActivity(mIntent);
+        finish();
+
+    }
+
+
 }

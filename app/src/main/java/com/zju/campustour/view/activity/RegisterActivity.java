@@ -189,12 +189,12 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
     }
 
     @Override
-    public void userSignedUpSuccessfully(String userName, String password) {
+    public void onUserSignedUpSuccessfully(String userName, String password) {
         //todo 注册成功后通知左侧滑动栏头像加载默认头像
         EventBus.getDefault().post(new LoginDoneEvent(true));
         ParseUser currentUser = ParseUser.getCurrentUser();
         SharePreferenceManager.putString(this,DB_USERNAME,currentUser.getUsername());
-        Intent mIntent = new Intent(this, RegisterInfoOneActivity.class);
+        Intent mIntent = new Intent(this, IdentityConfirmActivity.class);
         mIntent.putExtra("userName",userName);
         mIntent.putExtra("password",password);
         mIntent.putExtra("phone",registerPhone);
@@ -206,7 +206,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
     }
 
     @Override
-    public void userSignUpDidNotSucceed(Exception e) {
+    public void onUserSignUpDidNotSucceed(Exception e) {
 
         //showToast("注册失败，该用户名已经存在");
         registerName.setText("");
@@ -386,8 +386,16 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if (new Date().getTime() - lastPressTime < 2000)
+            if (new Date().getTime() - lastPressTime < 2000) {
+                /*如果当前已经有登录用户，那么令当前用户下线*/
+                ParseUser currentLoginUser = ParseUser.getCurrentUser();
+                if (currentLoginUser != null){
+                    currentLoginUser.put("online",false);
+                    currentLoginUser.saveEventually();
+                }
                 this.finish();
+            }
+
             else{
                 lastPressTime = new Date().getTime();
                 showToast("再按一次返回键退出");

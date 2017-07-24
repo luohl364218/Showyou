@@ -139,7 +139,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
 
         holder.studentGradeView.setText(mItemInfo.getGrade());
         holder.studentTypeView.setText(mItemInfo.getUserType().getName());
-        if (mItemInfo.getUserType().getIndex() == 1)
+        if (mItemInfo.getUserType().getUserTypeId() == 1)
             holder.studentTypeImgView.setImageResource(R.drawable.icon_major_user);
         else
             holder.studentTypeImgView.setImageResource(R.drawable.icon_common_user);

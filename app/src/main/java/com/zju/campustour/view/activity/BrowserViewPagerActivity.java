@@ -388,7 +388,7 @@ public class BrowserViewPagerActivity extends BaseActivity {
 //        if (mOffset > 0) {
 //            for (Message msg : msgList) {
 //                if (msg.getContentType().equals(ContentType.image)) {
-//                    mMsgIdList.add(0, msg.getId());
+//                    mMsgIdList.add(0, msg.getUserTypeId());
 //                    ic = (ImageContent) msg.getContent();
 //                    if (!TextUtils.isEmpty(ic.getLocalPath())) {
 //                        mPathList.add(0, ic.getLocalPath());

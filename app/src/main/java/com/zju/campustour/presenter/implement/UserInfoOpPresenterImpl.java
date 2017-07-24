@@ -107,7 +107,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                                                         @Override
                                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                                             mDialog.dismissWithAnimation();
-                                                            mUserRegisterView.userSignedUpSuccessfully(userName,password);
+                                                            mUserRegisterView.onUserSignedUpSuccessfully(userName,password);
                                                         }
                                                     });
                                             mDialog.setCancelable(false);
@@ -157,7 +157,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                                                 });
                                             }
                                         });
-                                mUserRegisterView.userSignUpDidNotSucceed(new Exception(desc));
+                                mUserRegisterView.onUserSignUpDidNotSucceed(new Exception(desc));
                             }
                         }
                     });
@@ -175,7 +175,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     mDialog.dismissWithAnimation();
-                                    mUserRegisterView.userSignUpDidNotSucceed(e);
+                                    mUserRegisterView.onUserSignUpDidNotSucceed(e);
                                 }
                             });
                 }
