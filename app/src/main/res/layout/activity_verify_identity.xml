@@ -16,7 +16,8 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
-        <android.support.design.widget.AppBarLayout
+        <include layout="@layout/menu_title_bar"/>
+       <!-- <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -39,7 +40,7 @@
                     android:textSize="20sp"/>
             </android.support.v7.widget.Toolbar>
 
-        </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.AppBarLayout>-->
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/project_info_scrollView"

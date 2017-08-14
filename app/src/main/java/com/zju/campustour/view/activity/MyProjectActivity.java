@@ -21,10 +21,15 @@ import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
+import com.zju.campustour.presenter.protocal.event.ProjectDeleteEvent;
 import com.zju.campustour.view.iview.ISearchProjectInfoView;
 import com.zju.campustour.view.adapter.ProjectInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -70,6 +75,7 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_project);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         currentLoginUser = ParseUser.getCurrentUser();
         Intent mIntent = getIntent();
         currentUserType = UserType.values()[mIntent.getIntExtra("userType",0)];
@@ -345,4 +351,16 @@ public class MyProjectActivity extends BaseActivity implements ISearchProjectInf
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onReceiveProjectDeleteEvent(ProjectDeleteEvent projectDeleteEvent){
+        if (projectDeleteEvent.isDelete())
+            refreshServiceItemInfoData();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

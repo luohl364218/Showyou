@@ -14,31 +14,42 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true">
 
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/register_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:title=""
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:layout_scrollFlags="scroll|enterAlways|snap">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:text="校游注册"/>
-            </android.support.v7.widget.Toolbar>
+        <RelativeLayout
+                        android:id="@+id/menu_title_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="@color/colorPrimary"
+                        android:orientation="vertical" >
 
-        </android.support.design.widget.AppBarLayout>
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="校游注册"
+                android:textColor="#FFFFFF"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
+                android:textSize="20sp"/>
 
+
+            <TextView
+                android:id="@+id/login_btn"
+                android:layout_width="@dimen/title_bar_height"
+                android:text="登录"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/jmui_back_btn_bg"
+                />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="国家和地区"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
                     android:layout_alignParentLeft="true"
                     />
@@ -73,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="中国"
-                    android:textColor="@color/re_login_btn_def_color"
+                    android:textColor="@color/yellow"
                     android:textSize="16sp"
                     android:layout_alignParentRight="true"
                     />
@@ -83,7 +94,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/alpha_10_black"/>
+                android:background="@color/alpha_10_white"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="+86"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:layout_marginRight="10dp"
 
@@ -119,15 +130,14 @@
                     android:padding="8dp"
                     android:background="@null"
                     android:cursorVisible="true"
-                    android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                     android:hint="@string/username_hint"
-                    android:textColorHint="@color/gray"
+                    android:textColorHint="@color/alpha_50_white"
                     android:singleLine="true"
                     android:inputType="phone"
                     android:maxLength="20"
                     android:digits="0123456789"
                     android:textSize="16sp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/white"/>
 
 
 
@@ -136,7 +146,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/alpha_10_black"/>
+                android:background="@color/alpha_10_white"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -153,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="密码"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:layout_marginRight="10dp"
 
@@ -171,14 +181,13 @@
                     android:padding="8dp"
                     android:background="@null"
                     android:cursorVisible="true"
-                    android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                     android:hint="6-16位字母/数字"
                     android:inputType="textPassword"
                     android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:maxLength="16"
                     android:maxLines="1"
-                    android:textColor="#444444"
-                    android:textColorHint="@color/main_font_color"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/alpha_50_white"
                     android:textSize="16sp" />
 
 
@@ -188,7 +197,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/alpha_10_black"/>
+                android:background="@color/alpha_10_white"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -206,7 +215,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="验证码"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:layout_marginRight="10dp"
 
@@ -225,14 +234,13 @@
                     android:padding="8dp"
                     android:background="@null"
                     android:cursorVisible="true"
-                    android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                     android:hint="请输入验证码"
                     android:inputType="number"
                     android:digits="0123456789"
                     android:maxLength="10"
                     android:maxLines="1"
-                    android:textColor="#444444"
-                    android:textColorHint="@color/main_font_color"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/alpha_50_white"
                     android:textSize="16sp" />
 
 
@@ -252,7 +260,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/alpha_10_black"/>
+                android:background="@color/alpha_10_white"/>
 
             <TextView
                 android:id="@+id/txtTip"
@@ -274,7 +282,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="20dp"
-                android:enabled="false"
                 style="@style/bigYellowButton"
                 android:text="下一步"
                 android:textColor="#ffffff"

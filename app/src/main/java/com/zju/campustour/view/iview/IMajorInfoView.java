@@ -10,9 +10,4 @@ import java.util.List;
 
 public interface IMajorInfoView {
 
-    void onAllMajorInfoGot(List<MajorModel> mMajorModelList);
-
-    void onUpdateMajorInfoGot(List<MajorModel> mMajorModelList);
-
-    void onGetMajorInfoError(Exception e);
 }

@@ -60,6 +60,9 @@ public class MeInfoController implements OnClickListener {
             case R.id.verify_ll:
                 mContext.startVerifyIdentity(mMeInfoView.getVerifyState());
                 break;
+            case R.id.identity_type_rl:
+                mContext.startModifyIdentityType();
+                break;
             case R.id.grade_rl:
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 int gradeId = currentUser.getInt("gradeId");

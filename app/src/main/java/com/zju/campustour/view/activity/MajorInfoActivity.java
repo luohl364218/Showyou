@@ -23,10 +23,11 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
 import com.zju.campustour.model.database.data.MajorModel;
-import com.zju.campustour.model.database.models.Major;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.presenter.implement.MajorInfoPresenterImpl;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
+import com.zju.campustour.view.iview.IMajorInfoInterestView;
 import com.zju.campustour.view.iview.ISearchUserInfoView;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
@@ -36,9 +37,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
-public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoView {
+public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoView ,IMajorInfoInterestView {
 
     //行家推荐列表
     UserInfoAdapter mItemInfoAdapter;
@@ -46,6 +48,9 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     UserInfoAdapter mItemInfoAdapter_1;
     //数据库操作相关
     MajorFIlesDao majorFIlesDao;
+
+    //点赞次数
+    int interestNum = 0;
 
     //点击事件传入的专业名称和majorGroup位置信息
     int selectedGroupID = 0;
@@ -59,6 +64,9 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     RecyclerView listViewLike;
     @BindView(R.id.activity_major_info_listview_recommend)
     RecyclerView listViewRecommend;
+
+    @BindView(R.id.activity_major_info_color0_imageview)
+    ImageView color0ImageView;
     @BindView(R.id.activity_major_info_color1_imageview)
     ImageView color1ImageView;
     @BindView(R.id.activity_major_info_color2_imageview)
@@ -79,10 +87,14 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
     @BindView(R.id.major_favor_tab)
     FloatingActionButton interestTab;
 
+    @BindView(R.id.major_interest_num)
+    TextView majorInterestNum;
+
     private String TAG = getClass().getSimpleName();
-    IUserInfoOpPresenter mUserInfoOpPresenter;
+    UserInfoOpPresenterImpl mUserInfoOpPresenter;
     private List<User> mTheSameMajorProviderUserItemInfos;
     private List<User> mSimilarMajorProviderUserItemInfos;
+    MajorInfoPresenterImpl mMajorInfoPresenter;
 
 
     @Override
@@ -95,8 +107,10 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
         if (null != extras) {
             getBundleExtras(extras);
         }
-        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,getBaseContext());
+        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,this);
         mUserInfoOpPresenter.queryMajorStudent(selectedMajorName,selectedGroupID);
+        mMajorInfoPresenter = new MajorInfoPresenterImpl(this,this);
+        mMajorInfoPresenter.getMajorInterest(selectedMajorName);
         initViewsAndEvents();
     }
 
@@ -137,6 +151,7 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
 
 
     void initMajorInfo() {
+        color0ImageView.setImageResource(MajorData.majorColorGroup[selectedGroupID]);
         color1ImageView.setImageResource(MajorData.majorColorGroup[selectedGroupID]);
         color2ImageView.setImageResource(MajorData.majorColorGroup[selectedGroupID]);
         color3ImageView.setImageResource(MajorData.majorColorGroup[selectedGroupID]);
@@ -273,5 +288,30 @@ public class MajorInfoActivity extends BaseActivity implements ISearchUserInfoVi
         listViewRecommend.setLayoutManager(layoutManager);
         listViewRecommend.setAdapter(mItemInfoAdapter);
         listViewRecommend.addItemDecoration(new DividerItemDecortion());
+    }
+
+    @OnClick(R.id.major_favor_tab)
+    public void onInterestTabClicked(){
+        ++interestNum;
+        majorInterestNum.setText(""+interestNum);
+        mMajorInfoPresenter.addMajorInterests(selectedMajorName);
+        interestTab.hide();
+        showToast("你点赞了"+selectedMajorName+"专业！");
+    }
+
+    @Override
+    public void onCurrentMajorGotSuccess(MajorModel major) {
+
+        if (major != null ){
+            interestNum = major.getInterests();
+            majorInterestNum.setText(""+interestNum);
+        }
+        else
+            majorInterestNum.setText("0");
+    }
+
+    @Override
+    public void onCurrentMajorGotError(Exception e) {
+        majorInterestNum.setText("0");
     }
 }

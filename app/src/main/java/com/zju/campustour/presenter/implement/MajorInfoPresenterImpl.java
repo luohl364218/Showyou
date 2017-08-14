@@ -12,6 +12,8 @@ import com.zju.campustour.model.database.data.MajorModel;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IMajorInfoPresenter;
+import com.zju.campustour.view.iview.IMajorInfoInterestView;
+import com.zju.campustour.view.iview.IMajorInfoUpdateView;
 import com.zju.campustour.view.iview.IMajorInfoView;
 
 import java.util.ArrayList;
@@ -48,6 +50,8 @@ public class MajorInfoPresenterImpl implements IMajorInfoPresenter {
 
         ParseQuery<ParseObject> mQuery = ParseQuery.getQuery(Constants.MajorInfo_tableName);
         mQuery.setLimit(300);
+        IMajorInfoUpdateView mIMajorInfoUpdateView = (IMajorInfoUpdateView) mIMajorInfoView;
+
         mQuery.findInBackground((mObjectList,mException)->{
             if (mException == null && mObjectList.size() > 0){
 
@@ -56,14 +60,14 @@ public class MajorInfoPresenterImpl implements IMajorInfoPresenter {
                     mMajorModelList.add(mMajorModel);
                 }
 
-                mIMajorInfoView.onAllMajorInfoGot(mMajorModelList);
+                mIMajorInfoUpdateView.onAllMajorInfoGot(mMajorModelList);
             }
             else if (mException !=null){
-                mIMajorInfoView.onGetMajorInfoError(mException);
+                mIMajorInfoUpdateView.onGetMajorInfoError(mException);
             }
             else {
                 //专业size为0，数据库数据被清空的时候
-                mIMajorInfoView.onAllMajorInfoGot(mMajorModelList);
+                mIMajorInfoUpdateView.onAllMajorInfoGot(mMajorModelList);
             }
 
         });
@@ -88,6 +92,7 @@ public class MajorInfoPresenterImpl implements IMajorInfoPresenter {
         mQuery.whereEqualTo(Constants.MajorInfo_isUpdate,true);
         //mQuery.whereGreaterThanOrEqualTo("updateAt",lastUpdateTime);
         mQuery.setLimit(300);
+        IMajorInfoUpdateView mIMajorInfoUpdateView = (IMajorInfoUpdateView) mIMajorInfoView;
         mQuery.findInBackground((mObjectList,mException)-> {
             if (mException == null && mObjectList.size() > 0) {
 
@@ -99,14 +104,59 @@ public class MajorInfoPresenterImpl implements IMajorInfoPresenter {
                     }
                 }
 
-                mIMajorInfoView.onUpdateMajorInfoGot(mMajorModelList);
+                mIMajorInfoUpdateView.onUpdateMajorInfoGot(mMajorModelList);
             }
             else if (mException !=null){
-                mIMajorInfoView.onGetMajorInfoError(mException);
+                mIMajorInfoUpdateView.onGetMajorInfoError(mException);
             }
             else {
                 //专业size为0，数据库数据被清空的时候
-                mIMajorInfoView.onUpdateMajorInfoGot(mMajorModelList);
+                mIMajorInfoUpdateView.onUpdateMajorInfoGot(mMajorModelList);
+            }
+
+        });
+    }
+
+    @Override
+    public void getMajorInterest(String majorName) {
+        if (!NetworkUtil.isNetworkAvailable(mContext) || majorName == null)
+            return;
+
+        ParseQuery<ParseObject> mQuery = ParseQuery.getQuery(Constants.MajorInfo_tableName);
+        mQuery.whereEqualTo(Constants.MajorInfo_name, majorName);
+
+        IMajorInfoInterestView mIMajorInfoInterestView = (IMajorInfoInterestView) mIMajorInfoView;
+        mQuery.findInBackground((mObjectList,mException)->{
+            if (mException == null && mObjectList.size() > 0){
+
+                ParseObject major = mObjectList.get(0);
+                MajorModel mMajorModel = DbUtils.getMajorInfo(major);
+
+                mIMajorInfoInterestView.onCurrentMajorGotSuccess(mMajorModel);
+            }
+            else {
+                mIMajorInfoInterestView.onCurrentMajorGotError(mException);
+            }
+
+        });
+
+    }
+
+    @Override
+    public void addMajorInterests(String majorName) {
+        if (!NetworkUtil.isNetworkAvailable(mContext) || majorName == null)
+            return;
+
+        ParseQuery<ParseObject> mQuery = ParseQuery.getQuery(Constants.MajorInfo_tableName);
+        mQuery.whereEqualTo(Constants.MajorInfo_name, majorName);
+
+        IMajorInfoInterestView mIMajorInfoInterestView = (IMajorInfoInterestView) mIMajorInfoView;
+        mQuery.findInBackground((mObjectList,mException)->{
+            if (mException == null && mObjectList.size() > 0){
+
+                ParseObject major = mObjectList.get(0);
+                major.increment(Constants.MajorInfo_interests);
+                major.saveInBackground();
             }
 
         });

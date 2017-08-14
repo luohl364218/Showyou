@@ -24,4 +24,6 @@ public interface IProjectInfoOpPresenter {
 
     public void queryProjectSaleInfoWithId(String projectId);
 
+    public void deleteProjectWithId(String projectId);
+
 }

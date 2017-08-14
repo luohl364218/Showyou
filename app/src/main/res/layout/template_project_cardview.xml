@@ -16,39 +16,56 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/cardview_project_id"
+            <ImageView
+            android:id="@+id/online_activity_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            />
+            android:layout_gravity="right|top"
+            android:src="@mipmap/activity_online"
+                android:visibility="visible"/>
+            <ImageView
+                android:id="@+id/offline_activity_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:src="@mipmap/activity_offline"
+                android:visibility="gone"/>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/cardview_project_user_img"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:scaleType="centerCrop"
-                fresco:failureImage="@mipmap/nav_boy_user"
-                fresco:failureImageScaleType="centerInside"
-                fresco:roundAsCircle="true"
-                fresco:roundedCornerRadius="1dp"/>
-
+            <TextView
+                android:id="@+id/cardview_project_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="6"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/cardview_project_user_img"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:scaleType="centerCrop"
+                    fresco:failureImage="@mipmap/nav_boy_user"
+                    fresco:failureImageScaleType="centerInside"
+                    fresco:roundAsCircle="true"
+                    fresco:roundedCornerRadius="1dp" />
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="6"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/cardview_project_title"
@@ -57,67 +74,66 @@
                         android:layout_gravity="center_vertical"
                         android:ellipsize="end"
                         android:gravity="left"
-                        android:textStyle="normal"
                         android:maxLines="1"
                         android:text="一句话业务描述"
                         android:textColor="@color/alpha_70_black"
                         android:textSize="18sp"
-                        />
+                        android:textStyle="normal" />
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/icon_time" />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center_vertical"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/icon_time"/>
+                        <TextView
+                            android:id="@+id/cardview_project_start_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="2017-5-10"
+                            android:textColor="@color/alpha_40_black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
 
-                    <TextView
-                        android:id="@+id/cardview_project_start_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textStyle="normal"
-                        android:text="2017-5-10"
-                        android:textColor="@color/alpha_40_black"
-                        android:textSize="15sp"
-                        />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/icon_person_num" />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_gravity="center_vertical"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/icon_person_num"/>
+                        <TextView
+                            android:id="@+id/cardview_project_accept_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:text="上限10人"
+                            android:textColor="@color/alpha_40_black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
 
-                    <TextView
-                        android:id="@+id/cardview_project_accept_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:text="上限10人"
-                        android:textStyle="normal"
-                        android:textColor="@color/alpha_40_black"
-                        android:textSize="15sp"/>
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
-
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/project_cardview_body"

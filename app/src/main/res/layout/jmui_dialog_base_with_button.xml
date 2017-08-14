@@ -41,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/jmui_resend_commit"
-            android:textColor="#28282a"
+            android:textColor="@color/colorPrimary"
             android:background="@drawable/jmui_dialog_bottom_right_btn"
             />
 

@@ -332,6 +332,11 @@ public class ProjectNewActivity extends BaseActivity{
                         currentProject.setTips(projectHint);
                         object.put("startTime",startTime);
                         currentProject.setStartTime(startTime);
+
+                        //默认线下活动
+                        object.put(Constants.Project_IsOffline,false);
+                        currentProject.setOffline(false);
+
                         if (isImgSet) {
                             object.put("imgUrl", imgUrl);
                             currentProject.setImgUrl(imgUrl);
@@ -407,6 +412,8 @@ public class ProjectNewActivity extends BaseActivity{
             project.put("bookedNum",0);
             project.put("identified",false);
             project.put("official",false);
+            project.put(Constants.Project_IsDelete,false);
+            project.put(Constants.Project_IsOffline,false);
             if (!isImgSet){
                 project.put("imgUrl", Constants.URL_DEFAULT_PROJECT_BG);
             }

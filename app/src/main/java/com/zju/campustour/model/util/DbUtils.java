@@ -3,6 +3,7 @@ package com.zju.campustour.model.util;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -20,9 +21,11 @@ import com.zju.campustour.model.database.models.Comment;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.database.models.VerifyInfo;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
+import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
 
 import java.util.Date;
 
@@ -77,11 +80,12 @@ public class DbUtils {
             school =  "未填写";
 
         String collegeTag = user.getString("collegeTag");
+        boolean isVerified = user.getBoolean(Constants.User_isVerified);
 
         return new User(user_id,userName, realName, password, sex,
                 school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
                 userType, user_description, shortDescription,categoryId,province,city,
-                district,gradeId,collegeTag);
+                district,gradeId,collegeTag,isVerified);
     }
 
     @NonNull
@@ -126,11 +130,12 @@ public class DbUtils {
             school =  "未填写";
 
         String collegeTag = user.getString("collegeTag");
+        boolean isVerified = user.getBoolean(Constants.User_isVerified);
 
         return new User(user_id,userName, realName, password, sex,
                 school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
                 userType, user_description, shortDescription,categoryId,province,city,
-                district,gradeId,collegeTag);
+                district,gradeId,collegeTag,isVerified);
     }
 
     public static void setImg(SimpleDraweeView mImg, String url, int width, int heigth)
@@ -170,9 +175,11 @@ public class DbUtils {
         String tips = project.getString("tips");
         if (TextUtils.isEmpty(tips))
             tips = "暂无相关提示";
+        boolean isOffline = project.getBoolean("isOffline");
+
 
         return new Project(id, provider, title, startTime,
-                imgUrl, price,salePrice, description, acceptNum, projectState, collectorNum,booekdNum,tips);
+                imgUrl, price,salePrice, description, acceptNum, projectState, collectorNum,booekdNum,tips,isOffline);
     }
 
     @NonNull
@@ -236,6 +243,34 @@ public class DbUtils {
         else {
             return Constants.User_primarySchool;
         }
+
+    }
+
+
+    public static VerifyInfo getVerifyInfo(ParseObject object){
+        try {
+            String objectId = object.getObjectId();
+            String submitUserId = object.getString(Constants.UserIdVerifyInfo_UserId);
+            String submitImgUrl = object.getString(Constants.UserIdVerifyInfo_ImgUrl);
+            String submitDescription = object.getString(Constants.UserIdVerifyInfo_Description);
+            VerifyStateType submitVerifyStateType = VerifyStateType
+                    .values()[object.getInt(Constants.UserIdVerifyInfo_VerifyStateType)];
+            Date submitTime = object.getDate(Constants.UserIdVerifyInfo_SubmitTime);
+            Date verifiedTime = object.getDate(Constants.UserIdVerifyInfo_VerifiedTime);
+            String replyComment = object.getString(Constants.UserIdVerifyInfo_ReplyComment);
+
+            return new VerifyInfo(objectId,submitUserId,
+                    submitImgUrl,
+                    submitDescription,
+                    submitVerifyStateType,
+                    submitTime,
+                    verifiedTime,
+                    replyComment);
+        }
+        catch (Exception e){
+            return null;
+        }
+
 
     }
 

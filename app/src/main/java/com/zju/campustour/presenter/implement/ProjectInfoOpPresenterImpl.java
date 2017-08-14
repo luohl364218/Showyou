@@ -17,6 +17,7 @@ import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IProjectInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
+import com.zju.campustour.view.iview.IProjectInfoOperateView;
 import com.zju.campustour.view.iview.IProjectView;
 import com.zju.campustour.view.iview.ISearchProjectInfoView;
 
@@ -59,6 +60,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
                 .setSkip(startIndex)
                 .setLimit(count)
                 .whereEqualTo("userId",userId)
+                .whereEqualTo(Constants.Project_IsDelete, false)
                 .include("providerV2")
                 .selectKeys(Constants.projectDefaultKeys);
         mProjects = new ArrayList<>();
@@ -96,7 +98,10 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         List<String> projectIdList = new ArrayList<>();
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
-        query.whereEqualTo("userId",userId).whereEqualTo("userProjectState",type.getIndex()).selectKeys(asList("projectId"));
+        query.whereEqualTo("userId",userId)
+                .whereEqualTo("userProjectState",type.getIndex())
+                .whereEqualTo(Constants.Project_IsDelete, false)
+                .selectKeys(asList("projectId"));
         mProjects = new ArrayList<>();
         ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -164,6 +169,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").whereNotEqualTo("projectState",3)
+                .whereEqualTo(Constants.Project_IsDelete, false)
                 .setSkip(start).setLimit(count).include("providerV2").selectKeys(Constants.projectDefaultKeys);
 
         if (isLatest)
@@ -199,7 +205,9 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         mProjects = new ArrayList<>();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").selectKeys(Constants.projectDefaultKeys);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project")
+                .whereEqualTo(Constants.Project_IsDelete, false)
+                .selectKeys(Constants.projectDefaultKeys);
         ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
         query.getInBackground(projectId, new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {
@@ -235,6 +243,30 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
             }
         });
 
+    }
+
+    @Override
+    public void deleteProjectWithId(String projectId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
+        IProjectInfoOperateView projectInfoOperateView = (IProjectInfoOperateView)mProjectInfoView;
+        query.getInBackground(projectId, new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    object.put(Constants.Project_IsDelete,true);
+                    object.saveEventually(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            projectInfoOperateView.onDeleteProjectSuccess();
+                        }
+                    });
+
+                } else {
+                   projectInfoOperateView.onDeleteProjectFailed(e);
+                }
+            }
+        });
     }
 
 

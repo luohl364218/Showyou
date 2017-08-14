@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
@@ -34,11 +35,15 @@ import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.HomePageImgLoader;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
+import com.zju.campustour.presenter.protocal.event.ProjectDeleteEvent;
 import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
+import com.zju.campustour.view.activity.ProjectNewActivity;
 import com.zju.campustour.view.iview.IHomepageImgLoadView;
 import com.zju.campustour.view.iview.ISearchProjectInfoView;
 import com.zju.campustour.view.activity.InfoWebActivity;
@@ -71,6 +76,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private SliderLayout mSliderShow;
     private ImageButton userBtn;
     private ImageButton scanBtn;
+    private ImageButton addBtn;
     //首页科目分类按钮
     private LinearLayout renwenBtn;
     private LinearLayout gongxueBtn;
@@ -105,6 +111,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private boolean isLatest = false;
     private boolean isHotest = false;
 
+
+
+    private ParseUser currentUser;
+
+
     private String TAG = "HomeFragment";
     public HomeFragment() {
     }
@@ -112,6 +123,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentUser = ParseUser.getCurrentUser();
     }
 
     @Nullable
@@ -147,6 +159,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
         userBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_user_icon);
         scanBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_right_btn);
+        addBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_add_btn);
 
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +171,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
         scanBtn.setOnClickListener(this);
+
+
+        addBtn.setOnClickListener(this);
+
+
 
 
         //mMaterialRefreshLayout = (PullToRefreshScrollView) mRootView.findViewById(R.id.home_refresh_view);
@@ -253,6 +271,25 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         super.onStart();
         if (mSliderShow!=null){
             mSliderShow.startAutoCycle();
+        }
+        showActivityBtn();
+    }
+
+    private void showActivityBtn() {
+        if(UserType.values()[currentUser.getInt(Constants.User_userType)]
+                == UserType.PROVIDER){
+            addBtn.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)scanBtn.getLayoutParams();
+            params.addRule(RelativeLayout.LEFT_OF, R.id.fragment_home_add_btn);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+            scanBtn.setLayoutParams(params);
+        }
+        else{
+            addBtn.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)scanBtn.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.LEFT_OF, 0);
+            scanBtn.setLayoutParams(params);
         }
     }
 
@@ -395,7 +432,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         int selectedPosition = event.getPosition();
         if (selectedPosition >= 0 && mProjectList != null){
             ParseQuery<ParseObject> query_project = ParseQuery.getQuery("Project").include("providerV2")
-                    .whereEqualTo("objectId",mProjectList.get(selectedPosition).getId());
+                    .whereEqualTo("objectId",mProjectList.get(selectedPosition).getId())
+                    .whereEqualTo(Constants.Project_IsDelete, false);
             query_project.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
@@ -420,6 +458,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             }
 
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+    public void onReceiveProjectDeleteEvent(ProjectDeleteEvent projectDeleteEvent){
+        if (projectDeleteEvent.isDelete())
+            refreshProjectItemInfoData();
+
     }
 
     @Override
@@ -481,6 +526,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.fragment_home_right_btn:
                 //点击二维码扫描
                 EventBus.getDefault().post(new ToolbarItemClickEvent(R.id.fragment_home_right_btn));
+                break;
+
+            case R.id.fragment_home_add_btn:
+                Intent mIntent_2 = new Intent(getContext(), ProjectNewActivity.class);
+                mIntent_2.putExtra("isEditMode", false);
+                startActivity(mIntent_2);
+
 
             default:
                 break;

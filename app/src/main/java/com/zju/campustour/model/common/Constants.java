@@ -129,7 +129,8 @@ public class Constants {
             "bookedNum",
            "projectState",
            "collectorNum",
-            "tips");
+            "tips",
+            "isOffline");
 
     public final static List<String> projectSaleKeys = asList(
             "refundable",
@@ -228,5 +229,23 @@ public class Constants {
     public static String AccessKeyId = "LTAIQeF79xVMLn7c";
     public static String AccessKeySecret = "Iwz0Cnh3fonteUN8QCPG3nCDC6RE7J";
     public static String BucketName = "campustour";
+
+    //UserIdVerifyInfo表
+    public static String UserIdVerifyInfo_TableName = "UserIdVerifyInfo";
+    public static String UserIdVerifyInfo_User = "user";
+    public static String UserIdVerifyInfo_UserId = "userId";
+    public static String UserIdVerifyInfo_ImgUrl = "imgUrl";
+    public static String UserIdVerifyInfo_Description = "description";
+    public static String UserIdVerifyInfo_VerifyStateType = "verifyStateType";
+    public static String UserIdVerifyInfo_SubmitTime = "submitTime";
+    public static String UserIdVerifyInfo_VerifiedTime = "verifiedTime";
+    public static String UserIdVerifyInfo_ReplyComment = "replyComment";
+    public static String UserIdVerifyInfo_ManagerId = "managerId";
+    public static String UserIdVerifyInfo_IdentityType = "identityType";
+
+
+    //project表
+    public static String Project_IsDelete = "isDelete";
+    public static String Project_IsOffline = "isOffline";
 
 }

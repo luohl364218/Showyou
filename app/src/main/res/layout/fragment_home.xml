@@ -50,13 +50,28 @@
 
             </LinearLayout>
 
+
             <ImageButton
                 android:id="@+id/fragment_home_right_btn"
                 android:layout_width="@dimen/title_bar_height"
                 android:layout_height="match_parent"
+
                 android:layout_alignParentRight="true"
                 android:background="@drawable/jmui_back_btn_bg"
-                android:src="@mipmap/icon_scan_white" />
+                android:src="@mipmap/icon_scan_white"
+                />
+
+            <ImageButton
+                android:id="@+id/fragment_home_add_btn"
+                android:layout_width="@dimen/title_bar_height"
+                android:layout_height="match_parent"
+                android:background="@drawable/jmui_back_btn_bg"
+                android:src="@mipmap/home_activity_btn"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                />
+
+
 
         </RelativeLayout>
 
@@ -89,7 +104,7 @@
                     <com.daimajia.slider.library.SliderLayout
                         android:id="@+id/slider"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"/>
+                        android:layout_height="200dp" />
 
                     <ImageView
                         android:layout_width="match_parent"

@@ -52,6 +52,9 @@ public class User implements Serializable {
     private int    gradeId;
     private String collegeTag;
 
+
+    private boolean isVerified;
+
   
     public User(){
 
@@ -61,7 +64,7 @@ public class User implements Serializable {
                 SexType mSex, String mSchool, String mMajor, String mGrade,
                 int mFansNum, boolean mOnline, String mImgUrl, String mPhoneNum,
                 String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription, int mCategoryId,
-                String mProvince,String mCity, String mDistrict, int mGradeId, String mCollegeTag) {
+                String mProvince,String mCity, String mDistrict, int mGradeId, String mCollegeTag, boolean mIsVerified) {
         id = mId;
         userName = mUserName;
         realName = mRealName;
@@ -85,6 +88,7 @@ public class User implements Serializable {
         district = mDistrict;
         gradeId = mGradeId;
         collegeTag = mCollegeTag;
+        isVerified = mIsVerified;
     }
 
     public String getDescription() {
@@ -266,6 +270,15 @@ public class User implements Serializable {
     }
 
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+
     public void update(User mUser){
 
         if (this == mUser)return;
@@ -304,5 +317,7 @@ public class User implements Serializable {
         if (getShortDescription() != null? !getShortDescription().equals(mUser.getShortDescription()) : mUser.getShortDescription() != null){
             setShortDescription(mUser.getShortDescription());
         }
+
+        setVerified(mUser.isVerified());
     }
 }

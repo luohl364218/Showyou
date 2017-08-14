@@ -34,9 +34,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="发布活动"
+                    android:text="发布线上活动"
                     android:textColor="@color/white"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
@@ -54,13 +54,48 @@
                 android:orientation="vertical"
                 android:weightSum="1">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="5dp">
+
+                    <ImageView
+                        android:id="@+id/project_isOffline_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/activity_warning" />
+
+                    <TextView
+                        android:id="@+id/project_isOffline_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@id/project_isOffline_iv"
+                        android:background="@null"
+                        android:text="为保障用户安全，现只开放线上活动发布功能"
+                        android:gravity="center|left"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/alpha_70_black"
+                        android:textSize="14sp">
+
+
+                    </TextView>
+
+
+                </RelativeLayout>
+
                 <ImageView
                     android:id="@+id/publish_background_img"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/project_default"/>
+                    android:src="@drawable/project_default"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -68,14 +103,15 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
                     android:gravity="center_horizontal"
-                    android:text="点击选择活动说明图片"/>
+                    android:text="点击选择活动说明图片" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    >
 
                     <ImageView
                         android:id="@+id/iv_project_name"
@@ -93,13 +129,13 @@
                         android:layout_toRightOf="@id/iv_project_name"
                         android:background="@null"
                         android:cursorVisible="true"
-                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                         android:hint="请输入活动名称"
-                        android:textColorHint="@color/main_font_color"
-                        android:maxLines="1"
                         android:inputType="text"
-                        android:textSize="16sp"
-                        android:textColor="@color/black" >
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/main_font_color"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:textSize="16sp">
 
                         <requestFocus />
                     </com.zju.campustour.view.widget.ClearEditText>
@@ -108,7 +144,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.2dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/alpha_20_black"  />
+                        android:background="@color/alpha_20_black" />
 
                 </RelativeLayout>
 
@@ -117,7 +153,8 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
-                    android:layout_marginTop="5dp" >
+                    android:layout_marginTop="5dp"
+                    >
 
                     <ImageView
                         android:id="@+id/iv_project_num"
@@ -135,14 +172,14 @@
                         android:layout_toRightOf="@id/iv_project_num"
                         android:background="@null"
                         android:cursorVisible="true"
-                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                         android:hint="请输入活动人数"
-                        android:textColorHint="@color/main_font_color"
                         android:inputType="number"
                         android:maxLength="4"
                         android:maxLines="1"
-                        android:textSize="16sp"
-                        android:textColor="@color/black" >
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/main_font_color"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:textSize="16sp">
 
 
                     </com.zju.campustour.view.widget.ClearEditText>
@@ -151,7 +188,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.2dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/alpha_20_black"  />
+                        android:background="@color/alpha_20_black" />
 
                 </RelativeLayout>
 
@@ -161,7 +198,8 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
-                    android:layout_marginTop="5dp" >
+                    android:layout_marginTop="5dp"
+                    >
 
                     <ImageView
                         android:id="@+id/iv_project_original_price"
@@ -179,14 +217,14 @@
                         android:layout_toRightOf="@id/iv_project_original_price"
                         android:background="@null"
                         android:cursorVisible="true"
-                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                         android:hint="请输入活动原价"
-                        android:textColorHint="@color/main_font_color"
                         android:inputType="number"
                         android:maxLength="5"
                         android:maxLines="1"
-                        android:textSize="16sp"
-                        android:textColor="@color/black" >
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/main_font_color"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:textSize="16sp">
 
                     </com.zju.campustour.view.widget.ClearEditText>
 
@@ -194,7 +232,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.2dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/alpha_20_black"  />
+                        android:background="@color/alpha_20_black" />
 
                 </RelativeLayout>
 
@@ -204,7 +242,8 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
-                    android:layout_marginTop="5dp" >
+                    android:layout_marginTop="5dp"
+                    >
 
                     <ImageView
                         android:id="@+id/iv_project_real_price"
@@ -222,14 +261,14 @@
                         android:layout_toRightOf="@id/iv_project_real_price"
                         android:background="@null"
                         android:cursorVisible="true"
-                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                         android:hint="请输入活动现价"
-                        android:textColorHint="@color/main_font_color"
                         android:inputType="number"
                         android:maxLength="5"
                         android:maxLines="1"
-                        android:textSize="16sp"
-                        android:textColor="@color/black" >
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/main_font_color"
+                        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
+                        android:textSize="16sp">
 
 
                     </com.zju.campustour.view.widget.ClearEditText>
@@ -238,16 +277,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.2dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/alpha_20_black"  />
+                        android:background="@color/alpha_20_black" />
 
                 </RelativeLayout>
+
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
-                    android:layout_marginTop="5dp" >
+                    android:layout_marginTop="5dp"
+                    >
 
                     <ImageView
                         android:id="@+id/iv_project_desc"
@@ -261,11 +303,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/iv_project_desc"
                         android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@id/iv_project_desc"
                         android:text="活动描述"
                         android:textColor="@color/main_font_color"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                 </RelativeLayout>
 
@@ -279,7 +321,8 @@
                     android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="15dp">
+                    android:paddingTop="15dp"
+                    >
 
                     <EditText
                         android:id="@+id/project_desc"
@@ -287,17 +330,17 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:hint="如：活动地点/活动特色/活动流程/活动收获"
                         android:enabled="true"
                         android:gravity="top"
+                        android:hint="如：活动地点/活动特色/活动流程/活动收获"
                         android:inputType="textMultiLine"
-                        android:minLines="3"
                         android:maxLines="10"
+                        android:minLines="3"
                         android:scrollbars="vertical"
                         android:textColor="#444444"
                         android:textColorHint="@color/main_font_color"
-                        android:textSize="16sp"/>
-                    
+                        android:textSize="16sp" />
+
                 </LinearLayout>
 
                 <RelativeLayout
@@ -305,7 +348,8 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
-                    android:layout_marginTop="5dp" >
+                    android:layout_marginTop="5dp"
+                    >
 
                     <ImageView
                         android:id="@+id/iv_project_hint"
@@ -319,11 +363,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/iv_project_hint"
                         android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@id/iv_project_hint"
                         android:text="活动提示"
                         android:textColor="@color/main_font_color"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                 </RelativeLayout>
 
@@ -337,7 +381,8 @@
                     android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="15dp">
+                    android:paddingTop="15dp"
+                    >
 
                     <EditText
                         android:id="@+id/project_tips"
@@ -345,17 +390,17 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:hint="如：活动面向对象的年级/活动可能出现的问题/活动物资准备"
                         android:enabled="true"
                         android:gravity="top"
+                        android:hint="如：活动面向对象的年级/活动可能出现的问题/活动物资准备"
                         android:inputType="textMultiLine"
-                        android:minLines="3"
                         android:maxLines="10"
+                        android:minLines="3"
                         android:scrollbars="vertical"
                         android:textColor="#444444"
                         android:textColorHint="@color/main_font_color"
-                        android:textSize="16sp"/>
-                    
+                        android:textSize="16sp" />
+
                 </LinearLayout>
 
                 <RelativeLayout
@@ -363,7 +408,7 @@
                     android:layout_height="30dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
-                    android:layout_marginTop="5dp" >
+                    android:layout_marginTop="5dp">
 
                     <ImageView
                         android:id="@+id/iv_project_time"
@@ -377,21 +422,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/iv_project_time"
                         android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@id/iv_project_time"
                         android:text="活动时间"
                         android:textColor="@color/main_font_color"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                 </RelativeLayout>
-                
+
 
                 <CalendarView
                     android:id="@+id/project_start_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minDate = "2017/01/01"
-                    />
+                    android:layout_margin="10dp"
+                    android:minDate="2017/01/01" />
 
 
                 <Button
@@ -399,16 +444,14 @@
                     style="@style/bigYellowButton"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
                     android:enabled="false"
                     android:text="完成"
                     android:textColor="#ffffff"
-                    android:textSize="16sp">
-                </Button>
-
+                    android:textSize="16sp"/>
 
 
             </LinearLayout>

@@ -11,18 +11,23 @@
     app:contentPadding="10dp"
     app:cardCornerRadius="6dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/cardview_user_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/user_is_verified"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="right|top"
+            android:src="@mipmap/is_verified"
+            android:visibility="gone"/>
 
 
         <LinearLayout
@@ -46,7 +51,7 @@
                     fresco:failureImage="@mipmap/nav_boy_user"
                     fresco:failureImageScaleType="centerInside"
                     fresco:roundAsCircle="true"
-                    fresco:roundedCornerRadius="1dp"/>
+                    fresco:roundedCornerRadius="1dp" />
 
                 <TextView
                     android:id="@+id/cardview_user_name"
@@ -54,12 +59,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
-                    android:text="罗海林"
-                    android:maxLines="1"
                     android:ellipsize="end"
-                    android:textStyle="normal"
+                    android:maxLines="1"
+                    android:text="罗海林"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
 
             </LinearLayout>
 
@@ -75,12 +80,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:textStyle="normal"
                     android:gravity="left"
                     android:singleLine="true"
                     android:text="一句话业务描述"
                     android:textSize="16sp"
-                    />
+                    android:textStyle="normal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -107,7 +111,7 @@
                                 android:layout_marginBottom="10dp"
                                 android:layout_marginTop="10dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/icon_college"/>
+                                android:src="@drawable/icon_college" />
 
                             <TextView
                                 android:id="@+id/cardview_user_college"
@@ -117,13 +121,12 @@
                                 android:layout_marginBottom="10dp"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginTop="10dp"
-                                android:textStyle="normal"
                                 android:ellipsize="end"
                                 android:singleLine="true"
                                 android:text="浙江大学"
                                 android:textColor="@color/alpha_30_black"
                                 android:textSize="15sp"
-                                />
+                                android:textStyle="normal" />
 
 
                         </LinearLayout>
@@ -138,7 +141,7 @@
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/icon_grade"/>
+                                android:src="@drawable/icon_grade" />
 
                             <TextView
                                 android:id="@+id/cardview_user_grade"
@@ -147,10 +150,9 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
                                 android:text="大三"
-                                android:textStyle="normal"
                                 android:textColor="@color/alpha_30_black"
-                                android:textSize="15sp"/>
-
+                                android:textSize="15sp"
+                                android:textStyle="normal" />
 
 
                         </LinearLayout>
@@ -158,11 +160,10 @@
                     </LinearLayout>
 
 
-
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -175,28 +176,27 @@
                                 android:id="@+id/cardview_user_major_icon"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_marginBottom="10dp"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginLeft="10dp"
                                 android:layout_gravity="center_vertical"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/icon_major"/>
+                                android:src="@drawable/icon_major" />
 
                             <TextView
                                 android:id="@+id/cardview_user_major"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:layout_marginTop="10dp"
-                                android:textStyle="normal"
-                                android:layout_marginLeft="5dp"
                                 android:layout_gravity="center_vertical"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="10dp"
                                 android:ellipsize="end"
                                 android:singleLine="true"
                                 android:text="电子信息技术及仪器"
                                 android:textColor="@color/alpha_30_black"
                                 android:textSize="15sp"
-                                />
+                                android:textStyle="normal" />
 
                         </LinearLayout>
 
@@ -213,7 +213,7 @@
                                 android:layout_height="20dp"
                                 android:layout_marginLeft="10dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/icon_common_user"/>
+                                android:src="@drawable/icon_common_user" />
 
                             <TextView
                                 android:id="@+id/cardview_user_type_txt"
@@ -222,9 +222,9 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
                                 android:text="普通用户"
-                                android:textStyle="normal"
                                 android:textColor="@color/alpha_30_black"
-                                android:textSize="15sp"/>
+                                android:textSize="15sp"
+                                android:textStyle="normal" />
 
 
                         </LinearLayout>
@@ -238,6 +238,6 @@
         </LinearLayout>
 
 
-    </LinearLayout>
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>

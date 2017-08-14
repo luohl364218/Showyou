@@ -1,5 +1,6 @@
 package com.zju.campustour.view.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,9 +11,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,12 +25,15 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
+import com.zju.campustour.model.chatting.utils.DialogCreator;
+import com.zju.campustour.model.chatting.utils.IdHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Comment;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.ProjectSaleInfo;
 import com.zju.campustour.model.database.models.ProjectUserMap;
 import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
 import com.zju.campustour.presenter.implement.ProjectCommentImpl;
 import com.zju.campustour.presenter.implement.ProjectInfoOpPresenterImpl;
 import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
@@ -35,9 +41,11 @@ import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 import com.zju.campustour.presenter.protocal.event.CommentSuccessEvent;
+import com.zju.campustour.presenter.protocal.event.ProjectDeleteEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
 import com.zju.campustour.view.iview.IProjectCollectorView;
 import com.zju.campustour.view.iview.IProjectCommentView;
+import com.zju.campustour.view.iview.IProjectInfoOperateView;
 import com.zju.campustour.view.iview.ISearchProjectInfoView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,6 +65,7 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
+import static com.zju.campustour.model.chatting.utils.DialogCreator.createLogoutDialog;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_MAN_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_PROJECT_IMG;
 import static com.zju.campustour.model.common.Constants.URL_DEFAULT_WOMAN_IMG;
@@ -67,7 +76,7 @@ import static com.zju.campustour.presenter.protocal.enumerate.ProjectStateType.P
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.BOOK_SUCCESS;
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.FINISHED;
 
-public class ProjectActivity extends BaseActivity implements ISearchProjectInfoView, IProjectCollectorView, View.OnClickListener,IProjectCommentView {
+public class ProjectActivity extends BaseActivity implements IProjectInfoOperateView,ISearchProjectInfoView, IProjectCollectorView, View.OnClickListener,IProjectCommentView {
 
     @BindView(R.id.activity_project_toolbar)
     Toolbar mToolbar;
@@ -164,6 +173,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     private ParseUser currentLoginUser;
     private UserProjectStateType userBookedState;
     private Context mContext;
+    private Dialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -678,18 +688,102 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
             }
             return true;
         }
+        //点击分享
         else if (id == R.id.project_share_icon){
             showShare();
             return true;
         }
+        //点击编辑
         else if (id == R.id.project_edit_icon){
-            showToast("准备编辑");
-            Intent mIntent = new Intent(this, ProjectNewActivity.class);
-            mIntent.putExtra("isEditMode",true);
-            mIntent.putExtra("project",currentProject);
-            startActivity(mIntent,true);
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (view.getId()) {
+                        case R.id.jmui_cancel_btn:
+                            mDialog.cancel();
+                            View.OnClickListener listener = new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    switch (view.getId()) {
+                                        case R.id.jmui_cancel_btn:
+                                            mDialog.cancel();
+                                            break;
+                                        case R.id.jmui_commit_btn:
+                                            mProjectInfoOpPresenter.deleteProjectWithId(projectId);
+                                            mDialog.cancel();
+                                            break;
+                                    }
+                                }
+                            };
+
+                            mDialog = createDeleteDialog(mContext, listener);
+                            mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+                            mDialog.show();
+
+                            break;
+                        case R.id.jmui_commit_btn:
+
+                            showToast("准备编辑");
+                            Intent mIntent = new Intent(ProjectActivity.this, ProjectNewActivity.class);
+                            mIntent.putExtra("isEditMode",true);
+                            mIntent.putExtra("project",currentProject);
+                            startActivity(mIntent,true);
+
+
+                            mDialog.cancel();
+                            break;
+                    }
+                }
+            };
+
+            mDialog = createDeleteOrEditDialog(mContext, listener);
+            mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+            mDialog.show();
+
+
+
+
+
         }
         return true;
+    }
+
+
+    public Dialog createDeleteDialog(Context context, View.OnClickListener listener){
+        Dialog dialog = new Dialog(context, IdHelper.getStyle(context, "jmui_default_dialog_style"));
+        View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context,
+                "jmui_dialog_base_with_button"), null);
+        dialog.setContentView(view);
+        TextView title = (TextView) view.findViewById(IdHelper.getViewID(context, "jmui_title"));
+        title.setText(IdHelper.getString(context, "delete_comfirm"));
+        final Button cancel = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_cancel_btn"));
+        final Button commit = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_commit_btn"));
+        cancel.setOnClickListener(listener);
+        cancel.setTextColor(getResources().getColor(R.color.colorPrimary));
+        commit.setOnClickListener(listener);
+        commit.setText(IdHelper.getString(context, "jmui_confirm"));
+        commit.setTextColor(getResources().getColor(R.color.black));
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
+    }
+
+    public Dialog createDeleteOrEditDialog(Context context, View.OnClickListener listener){
+        Dialog dialog = new Dialog(context, IdHelper.getStyle(context, "jmui_default_dialog_style"));
+        View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context,
+                "jmui_dialog_base_with_button"), null);
+        dialog.setContentView(view);
+        TextView title = (TextView) view.findViewById(IdHelper.getViewID(context, "jmui_title"));
+        title.setText(IdHelper.getString(context, "choose_deleteOrEdit"));
+        final Button cancel = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_cancel_btn"));
+        final Button commit = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_commit_btn"));
+        cancel.setOnClickListener(listener);
+        cancel.setText(IdHelper.getString(context,"delete"));
+        commit.setOnClickListener(listener);
+        commit.setText(IdHelper.getString(context, "edit"));
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
     }
 
     private void showShare() {
@@ -730,6 +824,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
     @Override
     public void onGetProjectInfoDone(List<? extends Object> mProjects) {
 
+
         if (mProjects.size() != 0){
             currentProjectSaleInfo = (ProjectSaleInfo) mProjects.get(0);
             if (currentProjectSaleInfo.isRefundable()){
@@ -737,7 +832,7 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
                 refundable.setVisibility(View.VISIBLE);
             }
 
-            if(currentProjectSaleInfo.isIdentified()){
+            if(currentLoginUser.getBoolean(Constants.User_isVerified) ){
                 projectFlag.setVisibility(View.VISIBLE);
                 identified.setVisibility(View.VISIBLE);
             }
@@ -892,5 +987,17 @@ public class ProjectActivity extends BaseActivity implements ISearchProjectInfoV
         }
 
 
+    }
+
+    @Override
+    public void onDeleteProjectSuccess() {
+        showToast("删除成功");
+        EventBus.getDefault().post(new ProjectDeleteEvent(true));
+        finish();
+    }
+
+    @Override
+    public void onDeleteProjectFailed(Exception e) {
+        showToast("删除失败，请稍后再试");
     }
 }

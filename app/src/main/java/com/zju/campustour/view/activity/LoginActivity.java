@@ -35,8 +35,6 @@ import static com.zju.campustour.model.common.Constants.DB_USERNAME;
 
 public class LoginActivity extends BaseActivity implements IUserLoginView {
 
-    @BindView(R.id.login_toolbar)
-    Toolbar mToolbar;
 
     @BindView(R.id.login_user_name)
     ClearEditText userName;
@@ -66,8 +64,6 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        mToolbar.setTitle("");
-        setSupportActionBar(mToolbar);
         userLoginImpl = new UserInfoOpPresenterImpl(this,this);
 
         initView();
@@ -83,7 +79,7 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
         }
 
 
-        //让按钮随着输入内容有效而使能
+     /*   //让按钮随着输入内容有效而使能
         userName.addTextChangedListener(new MyTextWatch() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -98,7 +94,7 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
                 isPwdNotNull = !TextUtils.isEmpty(s.toString());
                 loginBtn.setEnabled((isUsernameNotNull && isPwdNotNull));
             }
-        });
+        });*/
 
     }
 
@@ -144,27 +140,12 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
         startActivity(mIntent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.login, menu);
-        return true;
+    @OnClick(R.id.register_btn)
+    public void onRegisterBtnClick(){
+        startActivity(new Intent(this,RegisterActivity.class));
+        finish();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.toolbar_register:
-                Intent mIntent = new Intent(this,RegisterActivity.class);
-                startActivity(mIntent);
-                finish();
-                break;
-
-            default:
-                break;
-        }
-        return true;
-    }
 
     @Override
     public void loginSuccessful() {

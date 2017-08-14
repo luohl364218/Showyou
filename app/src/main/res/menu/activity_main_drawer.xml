@@ -32,10 +32,10 @@
                 android:icon="@mipmap/icon_build_project"
                 android:title="发布活动"/>
 
-            <item
+<!--            <item
                 android:id="@+id/test_enter"
                 android:icon="@mipmap/icon_build_project"
-                android:title="测试入口"/>
+                android:title="测试入口"/>-->
 
 
         </menu>

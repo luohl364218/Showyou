@@ -30,6 +30,7 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
     private GuideViewPagerAdapter mPagerAdapter;
     private List<View> mViews;
     private Button mStartBtn;
+    private Button mRegisterBtn;
 
     // 引导页图片资源
     private static final int[] pics = { R.layout.guid_view1,
@@ -57,8 +58,11 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
 
             if (i == pics.length - 1) {
                 mStartBtn = (Button) view.findViewById(R.id.btn_login);
-                mStartBtn.setTag("enter");
+                mStartBtn.setTag("login");
                 mStartBtn.setOnClickListener(this);
+                mRegisterBtn = (Button) view.findViewById(R.id.btn_register);
+                mRegisterBtn.setTag("register");
+                mRegisterBtn.setOnClickListener(this);
             }
 
             mViews.add(view);
@@ -144,15 +148,27 @@ public class WelcomeGuideActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if ("enter".equals(v.getTag())) {
-
+        if ("login".equals(v.getTag())) {
             enterLoginActivity();
             return;
         }
+        else if ("register".equals(v.getTag())){
+            enterRegisterActivity();
+            return;
+        }
+
 
         int position = (Integer) v.getTag();
         setCurView(position);
         setCurDot(position);
+    }
+
+    private void enterRegisterActivity() {
+        Intent intent = new Intent(WelcomeGuideActivity.this,
+                RegisterActivity.class);
+        startActivity(intent);
+        SharePreferenceManager.putBoolean(WelcomeGuideActivity.this, Constants.First_Open, true);
+        finish();
     }
 
 

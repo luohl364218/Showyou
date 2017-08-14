@@ -112,6 +112,37 @@
                 android:background="@color/me_split_line_color"/>
 
             <LinearLayout
+                android:id="@+id/identity_type_rl"
+                style="@style/MeItemStyle">
+
+                <ImageView
+                    android:id="@+id/identity_type_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/id_type_icon"/>
+
+                <TextView
+                    style="@style/info_left_txt_style"
+                    android:text="@string/identity_type"/>
+
+                <TextView
+                    android:id="@+id/identity_type_tv"
+                    style="@style/MeInfoItemContent"
+                    android:textColor="#808080" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@mipmap/arrow"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/me_split_line_color"/>
+
+            <LinearLayout
                 android:id="@+id/type_rl"
                 style="@style/MeItemStyle">
 

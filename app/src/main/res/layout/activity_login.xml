@@ -13,31 +13,57 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true">
 
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/login_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:layout_scrollFlags="scroll|enterAlways|snap">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/jmui_jpush_blue"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
                 <TextView
+                    android:id="@+id/fragment_home_title_one"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:maxWidth="190dp"
+                    android:singleLine="true"
+                    android:text="@string/login_text"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:text="@string/login_text"/>
-            </android.support.v7.widget.Toolbar>
+                    android:textSize="20sp" />
 
-        </android.support.design.widget.AppBarLayout>
+                <TextView
+                    android:id="@+id/fragment_home_title_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
 
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/register_btn"
+                android:layout_width="@dimen/title_bar_height"
+                android:text="注册"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/jmui_back_btn_bg"
+                />
+
+
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -62,26 +88,25 @@
                 android:layout_toRightOf="@id/iv_username"
                 android:background="@null"
                 android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                 android:hint="@string/username_hint"
-                android:textColorHint="@color/main_font_color"
+                android:textColorHint="@color/white"
                 android:singleLine="true"
                 android:inputType="phone"
                 android:maxLength="11"
                 android:digits="0123456789"
                 android:textSize="18sp"
-                android:textColor="@color/black" >
+                android:textColor="@color/white" >
 
                 <requestFocus />
             </com.zju.campustour.view.widget.ClearEditText>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.2dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/colorPrimary"  />
         </RelativeLayout>
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/alpha_10_white"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -106,21 +131,20 @@
                 android:layout_toRightOf="@id/iv_password"
                 android:background="@null"
                 android:hint="@string/pwd_hint"
-                android:textColorHint="@color/main_font_color"
+                android:textColorHint="@color/white"
                 android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                 android:inputType="textPassword"
                 android:singleLine="true"
                 android:textSize="18sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/white"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.2dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/colorPrimary" />
         </RelativeLayout>
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/alpha_10_white"/>
 
         <Button
             android:id="@+id/btn_login"
@@ -131,7 +155,6 @@
             android:layout_marginTop="25dp"
             style="@style/bigYellowButton"
             android:text="登 录"
-            android:enabled="false"
             />
 
         <RelativeLayout
@@ -146,7 +169,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:text="忘记密码？"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
 
                 />
         </RelativeLayout>
@@ -163,9 +186,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="30dp"
                 android:background="@null"
-                android:drawableTop="@mipmap/login_regist"
+                android:drawableTop="@mipmap/login_regist_yellow"
                 android:text="@string/register"
-                android:textColor="@color/gray" />
+                android:textColor="@color/white" />
         </RelativeLayout>
 
     </LinearLayout>

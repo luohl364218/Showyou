@@ -9,20 +9,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.zju.campustour.R;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
+import com.zju.campustour.model.chatting.utils.IdHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.presenter.chatting.controller.MeInfoController;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
-import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
 import com.zju.campustour.view.chatting.MeInfoView;
 import com.zju.campustour.view.widget.AreaSelectDialog;
 import com.zju.campustour.view.widget.CollegeSelectDialog;
@@ -45,6 +46,7 @@ public class MeInfoActivity extends BaseActivity {
     private final static int MODIFY_INTRODUCE_REQUEST_CODE = 6;
     private String mModifiedName;
     private Context mContext;
+    private Dialog mDialog;
 
 
     @Override
@@ -75,6 +77,7 @@ public class MeInfoActivity extends BaseActivity {
         View view = inflater.inflate(R.layout.dialog_set_type, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         RelativeLayout manRl = (RelativeLayout) view.findViewById(R.id.man_rl);
         RelativeLayout womanRl = (RelativeLayout) view.findViewById(R.id.woman_rl);
@@ -142,6 +145,7 @@ public class MeInfoActivity extends BaseActivity {
         View view = inflater.inflate(R.layout.dialog_set_sex, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         RelativeLayout manRl = (RelativeLayout) view.findViewById(R.id.man_rl);
         RelativeLayout womanRl = (RelativeLayout) view.findViewById(R.id.woman_rl);
@@ -217,6 +221,23 @@ public class MeInfoActivity extends BaseActivity {
         };
         manRl.setOnClickListener(listener);
         womanRl.setOnClickListener(listener);
+    }
+
+    public Dialog createConfirmDialog(Context context, View.OnClickListener listener){
+        Dialog dialog = new Dialog(context, IdHelper.getStyle(context, "jmui_default_dialog_style"));
+        View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context,
+                "jmui_dialog_base_with_button"), null);
+        dialog.setContentView(view);
+        TextView title = (TextView) view.findViewById(IdHelper.getViewID(context, "jmui_title"));
+        title.setText(IdHelper.getString(context, "identity_confirm"));
+        final Button cancel = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_cancel_btn"));
+        final Button commit = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_commit_btn"));
+        cancel.setOnClickListener(listener);
+        commit.setOnClickListener(listener);
+        commit.setText(IdHelper.getString(context, "jmui_confirm"));
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
     }
 
 
@@ -321,9 +342,38 @@ public class MeInfoActivity extends BaseActivity {
     }
 
     public void startVerifyIdentity(boolean isVerified){
-        startActivity(new Intent(this,VerifyIdentityActivity.class));
+        Intent intent = new Intent(this,VerifyStatusActivity.class);
+        intent.putExtra("isVerified",isVerified);
+
+        startActivity(intent);
     }
 
+
+
+    public void startModifyIdentityType(){
+        //弹出一个确认框
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.jmui_cancel_btn:
+                        mDialog.cancel();
+                        break;
+                    case R.id.jmui_commit_btn:
+
+                        startActivity(new Intent(MeInfoActivity.this,IdentityConfirmActivity.class));
+
+                        mDialog.cancel();
+                        break;
+                }
+            }
+        };
+        mDialog = createConfirmDialog(mContext, listener);
+        mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        mDialog.show();
+
+        //
+    }
 
     public void startModifyEmailActivity(String email) {
 

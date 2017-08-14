@@ -47,6 +47,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView studentIdView;
+        ImageView studentIsVerified;
         SimpleDraweeView studentImgView;
         TextView studentNameView;
         TextView shortDescriptionView;
@@ -61,6 +62,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
             super(itemView);
 
             studentIdView = (TextView) itemView.findViewById(R.id.cardview_user_id);
+            studentIsVerified = (ImageView) itemView.findViewById(R.id.user_is_verified);
             studentImgView = (SimpleDraweeView) itemView.findViewById(R.id.cardview_user_image);
             studentNameView = (TextView) itemView.findViewById(R.id.cardview_user_name);
             shortDescriptionView = (TextView) itemView.findViewById(R.id.cardview_describe);
@@ -108,6 +110,12 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         DbUtils.setImg(holder.studentImgView,url,150,150);
 
         holder.studentNameView.setText(mItemInfo.getRealName());
+
+        //如果用户已经认证，显示已认证标志
+        if (mItemInfo.isVerified())
+            holder.studentIsVerified.setVisibility(View.VISIBLE);
+        else
+            holder.studentIsVerified.setVisibility(View.GONE);
 
         if (isManager && isBooked){
             String phoneNum = mItemInfo.getPhoneNum();

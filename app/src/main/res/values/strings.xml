@@ -29,7 +29,7 @@
     <string name="splash_version">V %1$s</string>
     <string name="login_username_hint">手机号</string>
     <string name="password">密码</string>
-    <string name="login_text">用户登录</string>
+    <string name="login_text">校游登录</string>
     <string name="welcome_text">欢迎来到校游</string>
     <string name="project_comment">活动评价</string>
     <string name="my_project_text">我的活动</string>
@@ -337,6 +337,12 @@
     <string name="begin_time">开始时间</string>
     <string name="end_time">结束时间</string>
     <string name="jmui_logout_confirm">确定退出登录？</string>
+    <string name="identity_confirm">确定修改身份类型？</string>
+    <string name="choose_deleteOrEdit">请选择您要进行的操作</string>
+    <string name="delete_comfirm">确定删除？</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+
 
     <string name="about">关于</string>
     <string name="demo_version_name">demo版本号:%s</string>
@@ -493,4 +499,6 @@
     <string name="school_student_choose_sex">请选择您的性别</string>
     <string name="college_student_reg">在校大学生用户</string>
     <string name="look_around_user">游客用户</string>
+    <string name="identity_type">身份类型</string>
+    <string name="verify_status">身份认证状态</string>
 </resources>

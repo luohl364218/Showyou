@@ -1,21 +1,26 @@
 package com.zju.campustour.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.models.Project;
 import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.DbUtils;
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -34,6 +39,7 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
     private onProjectProviderClickListener mProviderClickListener;
     private int state = Constants.FULL_VIEW;
     private Context mContext;
+
 
     public ProjectInfoAdapter(List<Project> mProjectItemInfos, int mState, Context context) {
         this.mProjectItemInfos = mProjectItemInfos;
@@ -56,9 +62,13 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
         TextView projectEnrollNumView;
         LinearLayout projectCardViewBody;
         LinearLayout projectCardViewTail;
+        ImageView projectOfflineIv;
+        ImageView projectOnlineIv;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+
 
             providerImgView = (SimpleDraweeView) itemView.findViewById(R.id.cardview_project_user_img);
             projectTitleView = (TextView) itemView.findViewById(R.id.cardview_project_title);
@@ -71,6 +81,8 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
             projectEnrollNumView = (TextView) itemView.findViewById(R.id.cardview_project_join);
             projectCardViewBody = (LinearLayout) itemView.findViewById(R.id.project_cardview_body);
             projectCardViewTail = (LinearLayout) itemView.findViewById(R.id.project_cardview_tail);
+            projectOfflineIv = (ImageView) itemView.findViewById(R.id.offline_activity_iv);
+            projectOnlineIv = (ImageView) itemView.findViewById(R.id.online_activity_iv);
             if (state == Constants.PART_VIEW){
                 providerImgView.setVisibility(View.GONE);
                 projectCardViewTail.setVisibility(View.GONE);
@@ -79,6 +91,8 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
                 projectImgView.setVisibility(View.GONE);
                 projectCardViewTail.setVisibility(View.GONE);
             }
+
+
 
 
             projectCardViewBody.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +121,7 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
 
     @Override
     public ProjectInfoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         View mView = mInflater.inflate(R.layout.template_project_cardview, parent, false);
         return new ViewHolder(mView);
@@ -139,6 +154,17 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
             Uri mUri = Uri.parse(url_1);
             holder.projectImgView.setImageURI(mUri);
         }
+
+
+        if(!mItemInfo.isOffline()){
+            holder.projectOfflineIv.setVisibility(View.GONE);
+            holder.projectOnlineIv.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.projectOnlineIv.setVisibility(View.GONE);
+            holder.projectOfflineIv.setVisibility(View.VISIBLE);
+        }
+
 
         holder.projectFavoritesNumView.setText(mItemInfo.getCollectorNum()+"人收藏");
         holder.projectPriceView.setText(mItemInfo.getPrice()+"元/人");

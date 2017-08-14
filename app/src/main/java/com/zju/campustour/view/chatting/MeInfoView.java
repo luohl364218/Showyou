@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
+import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
 import com.zju.campustour.presenter.protocal.event.UserTypeChangeEvent;
 
@@ -35,6 +37,7 @@ public class MeInfoView extends LinearLayout {
     private TextView mGenderTv;
     private ImageView mGenderIv;
     private TextView mVerifiedTv;
+    private TextView mIdentityTypeTv;
     private TextView mRegionTv;
     private TextView mSignatureTv;
     private TextView mTypeTv;
@@ -54,6 +57,7 @@ public class MeInfoView extends LinearLayout {
     private LinearLayout mTypeLayout;
     private LinearLayout mSchoolLayout;
     private LinearLayout mVerifyIdLayout;
+    private LinearLayout mIdentityTypeLayout;
     private LinearLayout mGradeLayout;
     private LinearLayout mMajorLayout;
     private LinearLayout mEmailLayout;
@@ -79,6 +83,10 @@ public class MeInfoView extends LinearLayout {
         mVerifiedTv.setText(mVerified);
     }
 
+    public void setIdentityTypeTv(String mIdentityType){
+        mIdentityTypeTv.setText(mIdentityType);
+    }
+
     public void setEmail(String email){
         mEmailTv.setText(email);
     }
@@ -102,12 +110,14 @@ public class MeInfoView extends LinearLayout {
     }
 
     public void setType(boolean isCommon) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        int i = currentUser.getInt(Constants.User_userType);
         if (isCommon) {
-            mTypeTv.setText(mContext.getString(R.string.common_user));
+            mTypeTv.setText(UserType.values()[i].getName());
             mTypeIv.setImageResource(R.mipmap.type_common);
             EventBus.getDefault().post(new UserTypeChangeEvent(true));
         } else {
-            mTypeTv.setText(mContext.getString(R.string.major_user));
+            mTypeTv.setText(UserType.values()[i].getName());
             mTypeIv.setImageResource(R.mipmap.type_major);
             EventBus.getDefault().post(new UserTypeChangeEvent(false));
         }
@@ -143,6 +153,7 @@ public class MeInfoView extends LinearLayout {
         mTypeLayout = (LinearLayout) findViewById(R.id.type_rl);
         mSchoolLayout = (LinearLayout) findViewById(R.id.school_rl);
         mVerifyIdLayout = (LinearLayout) findViewById(R.id.verify_ll);
+        mIdentityTypeLayout = (LinearLayout) findViewById(R.id.identity_type_rl);
         mGradeLayout = (LinearLayout) findViewById(R.id.grade_rl);
         mEmailLayout = (LinearLayout) findViewById(R.id.email_rl);
         mDescLayout = (LinearLayout) findViewById(R.id.desc_rl);
@@ -163,6 +174,7 @@ public class MeInfoView extends LinearLayout {
         mGenderTv = (TextView) findViewById(R.id.gender_tv);
         mGenderIv = (ImageView) findViewById(R.id.sex_icon);
         mVerifiedTv = (TextView) findViewById(R.id.verify_tv);
+        mIdentityTypeTv = (TextView) findViewById(R.id.identity_type_tv) ;
         mSignatureTv = (TextView) findViewById(R.id.signature_tv);
         mTitle.setText(mContext.getString(R.string.detail_info));
         mMenuBtn.setVisibility(View.GONE);
@@ -194,6 +206,11 @@ public class MeInfoView extends LinearLayout {
             //身份认证状态
             isVerified = currentUser.getBoolean(Constants.User_isVerified);
             mVerifiedTv.setText(isVerified?"已认证":"未认证");
+
+            //身份类型显示
+            int i = currentUser.getInt(Constants.User_identityType);
+            mIdentityTypeTv.setText(IdentityType.values()[i].getIdentityName());
+
 
             if (currentUser.getInt("userType") == 0){
                 mTypeTv.setText("普通用户");
@@ -260,6 +277,7 @@ public class MeInfoView extends LinearLayout {
         mTypeLayout.setOnClickListener(onClickListener);
         mSchoolLayout.setOnClickListener(onClickListener);
         mVerifyIdLayout.setOnClickListener(onClickListener);
+        mIdentityTypeLayout.setOnClickListener(onClickListener);
         mGradeLayout.setOnClickListener(onClickListener);
         mEmailLayout.setOnClickListener(onClickListener);
         mDescLayout.setOnClickListener(onClickListener);
@@ -274,6 +292,7 @@ public class MeInfoView extends LinearLayout {
     public boolean getVerifyState(){
         return isVerified;
     }
+
 
     public int getGrade(){
         return gradeId;

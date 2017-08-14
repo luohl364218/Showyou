@@ -50,9 +50,6 @@ import static com.zju.campustour.model.common.Constants.DB_USERNAME;
 
 public class RegisterActivity extends BaseActivity implements IUserRegisterView {
 
-    @BindView(R.id.register_toolbar)
-    Toolbar mToolbar;
-
     @BindView(R.id.register_name)
     ClearEditText registerName;
 
@@ -122,7 +119,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
     }
 
     private void initView(){
-
+/*
         //让按钮随着输入内容有效而使能
         registerName.addTextChangedListener(new MyTextWatch() {
             @Override
@@ -148,7 +145,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
                 registerBtn.setEnabled((isRegisterNameNull && isPwdNull && isPwdConfirmNull));
 
             }
-        });
+        });*/
 
         mContext = this;
 
@@ -162,7 +159,9 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
         String phone = registerName.getText().toString().trim().replaceAll("\\s*", "");
         String code = countryCode.getText().toString().trim();
 
-        checkPhoneNum(phone,code);
+        if (!checkPhoneNum(phone,code)){
+            return;
+        }
 
         String pwd = registerPwd.getText().toString().trim();
         if (TextUtils.isEmpty(pwd)) {
@@ -188,6 +187,12 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
 
     }
 
+    @OnClick(R.id.login_btn)
+    public void onLoginBtnClick(){
+        startActivity(new Intent(this,LoginActivity.class));
+        finish();
+    }
+
     @Override
     public void onUserSignedUpSuccessfully(String userName, String password) {
         //todo 注册成功后通知左侧滑动栏头像加载默认头像
@@ -211,7 +216,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
         //showToast("注册失败，该用户名已经存在");
         registerName.setText("");
         registerPwd.setText("");
-        registerBtn.setEnabled(false);
+
     }
 
 

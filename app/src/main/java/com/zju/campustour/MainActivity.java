@@ -85,6 +85,7 @@ import com.zju.campustour.view.activity.ReloginActivity;
 import com.zju.campustour.view.activity.SettingActivity;
 import com.zju.campustour.view.fragment.ChatFragment;
 import com.zju.campustour.view.fragment.ContactsFragment;
+import com.zju.campustour.view.iview.IMajorInfoUpdateView;
 import com.zju.campustour.view.iview.IMajorInfoView;
 import com.zju.campustour.view.iview.IUserFocusView;
 import com.zju.campustour.view.activity.BaseMainActivity;
@@ -133,7 +134,7 @@ import okhttp3.Response;
 
 
 public class MainActivity extends BaseMainActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView ,IMajorInfoView{
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView ,IMajorInfoUpdateView{
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -529,9 +530,9 @@ public class MainActivity extends BaseMainActivity
                     }
                 }
                 break;
-            case R.id.test_enter:
+            /*case R.id.test_enter:
                 startActivity(new Intent(this, IdentityConfirmActivity.class));
-                break;
+                break;*/
 
         }
 

@@ -56,13 +56,17 @@ public class Project implements Serializable {
 
     private int bookedNum;
 
+
+
+    private boolean isOffline;
+
     public Project() {
     }
 
     public Project(String mId, User mProvider, String mTitle,
                    Date mStartTime, String mImgUrl, long mPrice, long mSalePrice,
                    String mDescription, int mAcceptNum,
-                   ProjectStateType mProjectState, int mCollectorNum, int mBookedNum, String mTips) {
+                   ProjectStateType mProjectState, int mCollectorNum, int mBookedNum, String mTips,boolean mIsOffline) {
         id = mId;
         provider = mProvider;
         title = mTitle;
@@ -76,6 +80,8 @@ public class Project implements Serializable {
         collectorNum = mCollectorNum;
         bookedNum = mBookedNum;
         tips = mTips;
+        isOffline = mIsOffline;
+
     }
 
     public String getId() {
@@ -158,6 +164,14 @@ public class Project implements Serializable {
 
     public void setCollectorNum(int mCollectorNum) {
         collectorNum = mCollectorNum;
+    }
+
+    public boolean isOffline() {
+        return isOffline;
+    }
+
+    public void setOffline(boolean offline) {
+        isOffline = offline;
     }
 
 
