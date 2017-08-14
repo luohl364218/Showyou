@@ -248,4 +248,16 @@ public class Constants {
     public static String Project_IsDelete = "isDelete";
     public static String Project_IsOffline = "isOffline";
 
+
+    //ShowMe 状态表
+    public static String StatusInfo_TableName = "StatusInfo";
+    public static String StatusInfo_ImgUrl = "imgUrl";
+    public static String StatusInfo_Content = "content";
+    public static String StatusInfo_User = "user";
+    public static String StatusInfo_UserId = "userId";
+    public static String StatusInfo_FavorCount = "favorCount";
+    public static String StatusInfo_CommentCount = "commentCount";
+    public static String StatusInfo_IsDeleted = "deleted";
+
+
 }

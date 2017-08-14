@@ -3,6 +3,7 @@ package com.zju.campustour.view.widget.viewpager;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 /**
  * Created by HeyLink on 2017/4/5.
@@ -21,7 +22,19 @@ public class SuperViewPager extends ViewPager {
         helper=new ViewPageHelper(this);
     }
 
- /*   @Override
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        //禁止页面滑动
+        return false;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        //禁止页面滑动
+        return false;
+    }
+
+    /*   @Override
     public void setCurrentItem(int item) {
         setCurrentItem(item,false);
     }

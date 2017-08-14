@@ -409,6 +409,7 @@ public class MainActivity extends BaseMainActivity
         //让viewPager缓存一定的页面，不要销毁
         mViewPager.setOffscreenPageLimit(3);
 
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

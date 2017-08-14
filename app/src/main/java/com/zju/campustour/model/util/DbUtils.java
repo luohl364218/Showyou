@@ -3,7 +3,6 @@ package com.zju.campustour.model.util;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -15,6 +14,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.zju.campustour.model.bean.StatusInfoModel;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.data.MajorModel;
 import com.zju.campustour.model.database.models.Comment;
@@ -272,6 +272,34 @@ public class DbUtils {
         }
 
 
+    }
+
+    public static StatusInfoModel getStatusInfo(ParseObject object){
+        try{
+            String objectId = object.getObjectId();
+            String imgUrl = object.getString(Constants.StatusInfo_ImgUrl);
+            String content = object.getString(Constants.StatusInfo_Content);
+            String userId = object.getString(Constants.StatusInfo_UserId);
+            User provider;
+            ParseObject providerObject = object.getParseObject(Constants.StatusInfo_User);
+            if (providerObject != null)
+                provider = getUser(providerObject);
+            else
+                return null;
+
+            Date createdTime = object.getCreatedAt();
+            int favourCount = object.getInt(Constants.StatusInfo_FavorCount);
+            int commentCount = object.getInt(Constants.StatusInfo_CommentCount);
+            boolean isDeleted = object.getBoolean(Constants.StatusInfo_IsDeleted);
+
+            return new StatusInfoModel(objectId,
+                    imgUrl,content,userId,provider,
+                    createdTime,favourCount,commentCount,isDeleted);
+
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
 
