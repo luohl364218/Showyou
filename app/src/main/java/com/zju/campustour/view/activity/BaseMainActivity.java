@@ -121,7 +121,7 @@ public class BaseMainActivity extends AppCompatActivity {
         ParseUser currentLoginUser = ParseUser.getCurrentUser();
         if (currentLoginUser != null){
             currentLoginUser.put("online",false);
-            currentLoginUser.saveEventually();
+            currentLoginUser.saveInBackground();
         }
 
         JMessageClient.unRegisterEventReceiver(this);

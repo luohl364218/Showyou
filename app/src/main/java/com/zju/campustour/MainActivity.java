@@ -343,7 +343,7 @@ public class MainActivity extends BaseMainActivity
             userName.setText(currentLoginUser.getUsername());
             userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
             currentLoginUser.put("online",true);
-            currentLoginUser.saveEventually();
+            currentLoginUser.saveInBackground();
 
         }
 
@@ -496,7 +496,7 @@ public class MainActivity extends BaseMainActivity
                                     break;
                                 case R.id.jmui_commit_btn:
                                     currentLoginUser.put("online",false);
-                                    currentLoginUser.saveEventually();
+                                    currentLoginUser.saveInBackground();
 
                                     Logout();
                                     cancelNotification();
@@ -691,7 +691,7 @@ public class MainActivity extends BaseMainActivity
         if (event != null && currentLoginUser != null){
             try{
                 currentLoginUser.put("imgUrl",event.getCloudImgUrl());
-                currentLoginUser.saveEventually();
+                currentLoginUser.saveInBackground();
                 Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
                 userImg.setImageURI(mUri);
                 SharePreferenceManager.putString(this,Constants.DB_USERIMG,event.getLocalImgUrl());
@@ -818,7 +818,7 @@ public class MainActivity extends BaseMainActivity
     @Override
     public void onGetFansNumDone(int fansNum) {
         currentLoginUser.put("fansNum",fansNum);
-        currentLoginUser.saveEventually();
+        currentLoginUser.saveInBackground();
     }
 
     @Override

@@ -52,7 +52,7 @@ public class ProjectCommentImpl implements IProjectCommentPresenter {
         mComments.put("content",comment.getCommentContent());
         mComments.put("commentTime",comment.getCommentTime());
 
-        mComments.saveEventually(new SaveCallback() {
+        mComments.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null){

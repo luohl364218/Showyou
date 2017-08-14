@@ -80,7 +80,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
         collector.put("projectId", projectId);
         collector.put("userId",userId);
         collector.put("userProjectState", type.getIndex());
-        collector.saveEventually(new SaveCallback() {
+        collector.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null){
@@ -105,7 +105,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
                     if (e == null && objects.size() != 0){
                         for (ParseObject mObject:objects){
                             mObject.increment("collectorNum");
-                            mObject.saveEventually();
+                            mObject.saveInBackground();
                         }
                     }
                 }
@@ -123,7 +123,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
                     if (e == null && objects.size() != 0){
                         for (ParseObject mObject:objects){
                             mObject.increment("bookedNum");
-                            mObject.saveEventually();
+                            mObject.saveInBackground();
                         }
                     }
                 }
@@ -176,7 +176,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
                     if (e == null && objects.size() != 0){
                         for (ParseObject mObject:objects){
                             mObject.increment("collectorNum",-1);
-                            mObject.saveEventually();
+                            mObject.saveInBackground();
                         }
 
                     }
@@ -195,7 +195,7 @@ public class ProjectUserMapOpPresenterImpl implements IProjectUserMapOpPresenter
                     if (e == null && objects.size() != 0){
                         for (ParseObject mObject:objects){
                             mObject.increment("bookedNum",-1);
-                            mObject.saveEventually();
+                            mObject.saveInBackground();
                         }
 
                     }

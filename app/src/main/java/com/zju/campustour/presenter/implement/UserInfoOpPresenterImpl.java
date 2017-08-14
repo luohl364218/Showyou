@@ -239,7 +239,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
                                 Log.i("Login","极光登陆成功");
                                 //设置用户的登录标志为true
                                 user.put("online",true);
-                                user.saveEventually();
+                                user.saveInBackground();
                                 mIUserLoginView.loginSuccessful();
 
                             } else {
@@ -506,7 +506,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
                                 //设置用户的登录标志为true
                                 user.put("online",true);
-                                user.saveEventually();
+                                user.saveInBackground();
                                 mIUserLoginView.loginSuccessful();
 
                             }

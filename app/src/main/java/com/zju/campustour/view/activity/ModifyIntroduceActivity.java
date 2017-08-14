@@ -63,7 +63,7 @@ public class ModifyIntroduceActivity extends BaseActivity {
                     ParseUser currentUser = ParseUser.getCurrentUser();
                     currentUser.put("description",description);
 
-                    currentUser.saveEventually(new SaveCallback() {
+                    currentUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             dialog.dismiss();

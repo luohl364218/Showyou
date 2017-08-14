@@ -53,7 +53,7 @@ public class UserVerifyInfoImpl implements IUserVerifyInfoPresenter {
         object.put(Constants.UserIdVerifyInfo_SubmitTime,verifyInfo.getSubmitTime());
         IUserVerifyInfoView userVerifyInfoView = (IUserVerifyInfoView) mUserView;
 
-        object.saveEventually(new SaveCallback() {
+        object.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null){
@@ -118,7 +118,7 @@ public class UserVerifyInfoImpl implements IUserVerifyInfoPresenter {
                     object.put(Constants.UserIdVerifyInfo_VerifyStateType,verifyInfo.getSubmitVerifyStateType().getVerifyId());
                     object.put(Constants.UserIdVerifyInfo_SubmitTime,verifyInfo.getSubmitTime());
                     object.put(Constants.User_identityType,verifyInfo.getIdentityType().getIdentityId());
-                    object.saveEventually(new SaveCallback() {
+                    object.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null){

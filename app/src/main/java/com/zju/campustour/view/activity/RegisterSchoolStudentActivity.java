@@ -432,7 +432,7 @@ public class RegisterSchoolStudentActivity extends BaseActivity {
             try{
                 SharePreferenceManager.putString(this, Constants.DB_USERIMG,event.getLocalImgUrl());
                 currentUser.put("imgUrl",event.getCloudImgUrl());
-                currentUser.saveEventually();
+                currentUser.saveInBackground();
                 Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
                 isImgSet = true;
                 Glide.with(this).load(mUri).into(userImg);
@@ -538,7 +538,7 @@ public class RegisterSchoolStudentActivity extends BaseActivity {
 
         }
 
-        currentUser.saveEventually();
+        currentUser.saveInBackground();
 
         EventBus.getDefault().post(new EditUserInfoDone(true));
         Intent mIntent = new Intent(this, MainActivity.class);

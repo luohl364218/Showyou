@@ -124,7 +124,7 @@ public class VerifyStatusActivity extends BaseActivity implements IUserVerifyInf
             verifyBtn.setVisibility(View.GONE);
             verifyDoneTv.getResources().getColor(R.color.green);
             currentUser.put(Constants.User_isVerified,true);
-            currentUser.saveEventually();
+            currentUser.saveInBackground();
         }
 
     }
@@ -197,7 +197,7 @@ public class VerifyStatusActivity extends BaseActivity implements IUserVerifyInf
                 verifyBtn.setVisibility(View.GONE);
                 verifyDoneTv.getResources().getColor(R.color.green);
                 currentUser.put(Constants.User_isVerified,true);
-                currentUser.saveEventually();
+                currentUser.saveInBackground();
                 break;
 
             case VERIFY_ING:

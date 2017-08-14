@@ -82,7 +82,7 @@ public class ModifySchoolActivity extends BaseActivity {
                         currentUser.put("primarySchool",school);
                     }
 
-                    currentUser.saveEventually(new SaveCallback() {
+                    currentUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {

@@ -341,7 +341,7 @@ public class ProjectNewActivity extends BaseActivity{
                             object.put("imgUrl", imgUrl);
                             currentProject.setImgUrl(imgUrl);
                         }
-                        object.saveEventually(new SaveCallback() {
+                        object.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
                                 if (e == null){
@@ -420,7 +420,7 @@ public class ProjectNewActivity extends BaseActivity{
             else
                 project.put("imgUrl",imgUrl);
 
-            project.saveEventually(new SaveCallback() {
+            project.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null){

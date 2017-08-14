@@ -151,7 +151,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
                 if (e == null) {
 
                     project.put("projectState", state.getValue());
-                    project.saveEventually(new SaveCallback() {
+                    project.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null)
@@ -255,7 +255,7 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
                     object.put(Constants.Project_IsDelete,true);
-                    object.saveEventually(new SaveCallback() {
+                    object.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             projectInfoOperateView.onDeleteProjectSuccess();

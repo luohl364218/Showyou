@@ -265,7 +265,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
 
         }
 
-        currentUser.saveEventually();
+        currentUser.saveInBackground();
         Intent mIntent = new Intent(this, RegisterInfoTwoActivity.class);
         mIntent.putExtra("gradeId",gradeId);
         mIntent.putExtra("isEditMode",isEditMode);
@@ -431,7 +431,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
             try{
                 SharePreferenceManager.putString(this,Constants.DB_USERIMG,event.getLocalImgUrl());
                 currentUser.put("imgUrl",event.getCloudImgUrl());
-                currentUser.saveEventually();
+                currentUser.saveInBackground();
                 Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
                 isImgSet = true;
                 Glide.with(this).load(mUri).into(userImg);

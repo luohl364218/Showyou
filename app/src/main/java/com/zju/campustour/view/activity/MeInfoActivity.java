@@ -101,7 +101,7 @@ public class MeInfoActivity extends BaseActivity {
                         if (type != UserType.USER) {
                             ParseUser currentUser = ParseUser.getCurrentUser();
                             currentUser.put("userType",UserType.USER.getValue());
-                            currentUser.saveEventually(new SaveCallback() {
+                            currentUser.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e == null){
@@ -118,7 +118,7 @@ public class MeInfoActivity extends BaseActivity {
                         if (type != UserType.PROVIDER) {
                             ParseUser currentUser = ParseUser.getCurrentUser();
                             currentUser.put("userType",UserType.PROVIDER.getValue());
-                            currentUser.saveEventually(new SaveCallback() {
+                            currentUser.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e == null){
@@ -178,11 +178,11 @@ public class MeInfoActivity extends BaseActivity {
 
                                         ParseUser currentUser = ParseUser.getCurrentUser();
                                         currentUser.put("sex", SexType.MALE.getValue());
-                                        currentUser.saveEventually();
+                                        currentUser.saveInBackground();
                                     } else {
                                         ParseUser currentUser = ParseUser.getCurrentUser();
                                         currentUser.put("sex", SexType.FEMALE.getValue());
-                                        currentUser.saveEventually();
+                                        currentUser.saveInBackground();
                                         HandleResponseCode.onHandle(MeInfoActivity.this, status, false);
                                     }
                                 }
@@ -203,12 +203,12 @@ public class MeInfoActivity extends BaseActivity {
                                         showToast(MeInfoActivity.this.getString(R.string.modify_success_toast));
                                         ParseUser currentUser = ParseUser.getCurrentUser();
                                         currentUser.put("sex", SexType.FEMALE.getValue());
-                                        currentUser.saveEventually();
+                                        currentUser.saveInBackground();
                                     } else {
                                         HandleResponseCode.onHandle(MeInfoActivity.this, status, false);
                                         ParseUser currentUser = ParseUser.getCurrentUser();
                                         currentUser.put("sex", SexType.MALE.getValue());
-                                        currentUser.saveEventually();
+                                        currentUser.saveInBackground();
                                     }
                                 }
                             });
@@ -252,7 +252,7 @@ public class MeInfoActivity extends BaseActivity {
                 if (gradeIndex != mGradeId){
                     ParseUser user = ParseUser.getCurrentUser();
                     user.put("gradeId",gradeIndex);
-                    user.saveEventually(new SaveCallback() {
+                    user.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null){
@@ -280,7 +280,7 @@ public class MeInfoActivity extends BaseActivity {
                 currentUser.put("province",currentProvince);
                 currentUser.put("city",currentCity);
                 currentUser.put("district",currentDistrict);
-                currentUser.saveEventually();
+                currentUser.saveInBackground();
 
                 final ProgressDialog mProgressDialog = new ProgressDialog(mContext);
                 mProgressDialog.setMessage(mContext.getString(R.string.modifying_hint));
@@ -318,7 +318,7 @@ public class MeInfoActivity extends BaseActivity {
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 currentUser.put("major",currentMajor);
                 currentUser.put("categoryId", Integer.valueOf(currentTag));
-                currentUser.saveEventually(new SaveCallback() {
+                currentUser.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null){

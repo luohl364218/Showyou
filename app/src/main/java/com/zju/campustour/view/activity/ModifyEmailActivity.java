@@ -59,7 +59,7 @@ public class ModifyEmailActivity extends BaseActivity {
                     dialog.show();
                     ParseUser currentUser = ParseUser.getCurrentUser();
                     currentUser.put("emailAddr",email);
-                    currentUser.saveEventually(new SaveCallback() {
+                    currentUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {

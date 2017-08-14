@@ -347,7 +347,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
         ParseUser currentLoginUser = ParseUser.getCurrentUser();
         if (currentLoginUser != null){
             currentLoginUser.put("online",false);
-            currentLoginUser.saveEventually();
+            currentLoginUser.saveInBackground();
         }
 
         userRegisteImpl.registerUser(registerPhone,registerPassword);
@@ -396,7 +396,7 @@ public class RegisterActivity extends BaseActivity implements IUserRegisterView 
                 ParseUser currentLoginUser = ParseUser.getCurrentUser();
                 if (currentLoginUser != null){
                     currentLoginUser.put("online",false);
-                    currentLoginUser.saveEventually();
+                    currentLoginUser.saveInBackground();
                 }
                 this.finish();
             }

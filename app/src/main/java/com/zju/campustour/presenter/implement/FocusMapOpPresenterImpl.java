@@ -47,7 +47,7 @@ public class FocusMapOpPresenterImpl implements IFocusMapOpPresenter {
         fans.put("providerId", providerId);
         fans.put("fansId",fansId);
         fans.put("focusState", type.getStateId());
-        fans.saveEventually(new SaveCallback() {
+        fans.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null){

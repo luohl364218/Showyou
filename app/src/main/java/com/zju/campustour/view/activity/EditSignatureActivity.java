@@ -132,7 +132,7 @@ public class EditSignatureActivity extends BaseActivity implements View.OnClickL
                             showToast(mContext.getString(R.string.modify_success_toast));
                             ParseUser currentUser = ParseUser.getCurrentUser();
                             currentUser.put("shortDescription",signature);
-                            currentUser.saveEventually();
+                            currentUser.saveInBackground();
                             Intent intent = new Intent();
                             intent.putExtra("signature", signature);
                             setResult(1, intent);

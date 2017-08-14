@@ -438,7 +438,7 @@ public class RegisterInfoTwoActivity extends BaseActivity {
         }
 
 
-        currentUser.saveEventually();
+        currentUser.saveInBackground();
         //上传用户的昵称和地区
         try {
             UserInfo myUserInfo = JMessageClient.getMyInfo();
