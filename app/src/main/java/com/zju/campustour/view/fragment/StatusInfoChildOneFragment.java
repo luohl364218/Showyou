@@ -188,7 +188,7 @@ public class StatusInfoChildOneFragment extends BaseFragment implements IStatusI
 
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setAdapter(mUserStatusAdapter);
-                mRecyclerView.addItemDecoration(new DividerItemDecortion());
+                //mRecyclerView.addItemDecoration(new DividerItemDecortion());
 
                 break;
 

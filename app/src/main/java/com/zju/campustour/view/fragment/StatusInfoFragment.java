@@ -1,5 +1,6 @@
 package com.zju.campustour.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.zju.campustour.R;
+import com.zju.campustour.view.activity.StatusNewActivity;
 import com.zju.campustour.view.adapter.FragmentViewPagerAdapter;
 
 /**
@@ -46,6 +48,13 @@ public class StatusInfoFragment extends BaseFragment {
         editBtn = (ImageButton) mRootView.findViewById(R.id.edit_btn);
         tablayout = (TabLayout) mRootView.findViewById(R.id.tab_layout);
         viewPager = (ViewPager) mRootView.findViewById(R.id.view_pager);
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), StatusNewActivity.class));
+            }
+        });
 
         setTabs();
     }

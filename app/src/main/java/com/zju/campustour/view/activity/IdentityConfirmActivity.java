@@ -8,14 +8,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.baidu.location.BDLocation;
+import com.parse.ParseUser;
 import com.zju.campustour.R;
+import com.zju.campustour.model.chatting.utils.HandleResponseCode;
+import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.presenter.implement.LocationProvider;
 import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
+import com.zju.campustour.view.iview.ILocationConsumerView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 
-public class IdentityConfirmActivity extends BaseActivity implements View.OnClickListener {
+public class IdentityConfirmActivity extends BaseActivity implements View.OnClickListener,ILocationConsumerView {
 
     @BindView(R.id.id_college_student)
     Button collegeStudentBtn;
@@ -38,6 +49,9 @@ public class IdentityConfirmActivity extends BaseActivity implements View.OnClic
     boolean isGraduateStudent = false;
     boolean isSchoolTeacher = false;
     boolean isStudentParent = false;
+    ParseUser currentUser;
+    private LocationProvider mLocationProvider;
+    Context mContext;
 
 
     @Override
@@ -45,6 +59,14 @@ public class IdentityConfirmActivity extends BaseActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identity_confirm);
         ButterKnife.bind(this);
+        currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null){
+            showToast("当前用户不存在");
+            return;
+        }
+        mContext = this;
+        mLocationProvider = new LocationProvider(this,this);
+        mLocationProvider.requestUserLocation();
         initViews();
     }
 
@@ -149,5 +171,47 @@ public class IdentityConfirmActivity extends BaseActivity implements View.OnClic
         else {
             showToast("出错啦");
         }
+    }
+
+    @Override
+    public void onLocationInfoGotSuccess(BDLocation mLocation) {
+        if (mLocation == null)
+            return;
+
+        try {
+            currentUser.put(Constants.User_country, mLocation.getCountry());
+            currentUser.put(Constants.User_province, mLocation.getProvince());
+            currentUser.put(Constants.User_city, mLocation.getCity());
+            currentUser.put(Constants.User_district, mLocation.getDistrict());
+            currentUser.put(Constants.User_street,mLocation.getStreet());
+
+            UserInfo myUserInfo = JMessageClient.getMyInfo();
+            myUserInfo.setRegion(mLocation.getProvince()+mLocation.getCity()+mLocation.getDistrict());
+            JMessageClient.updateMyInfo(UserInfo.Field.region, myUserInfo, new BasicCallback() {
+                @Override
+                public void gotResult(final int status, final String desc) {
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+        }catch (Exception e){
+
+        }finally {
+            currentUser.saveInBackground();
+        }
+
+    }
+
+
+    @Override
+    public void onLocationRequestRefused() {
+        showToast("地理位置请求被拒绝，请手动开启");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocationProvider.onClose();
     }
 }

@@ -213,9 +213,11 @@ public class Constants {
     public static String User_userType = "userType";
     public static String User_identityType = "identityType";
     public static String User_fansNum = "fansNum";
+    public static String User_country = "country";
     public static String User_province = "province";
     public static String User_city = "city";
     public static String User_district = "district";
+    public static String User_street = "street";
     public static String User_grade = "gradeId";
     public static String User_isVerified = "isVerified";
     public static String User_collegeSchool = "school";
