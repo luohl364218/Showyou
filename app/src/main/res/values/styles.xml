@@ -218,6 +218,24 @@
     </style>
 
 
+    <style name="fragmentTabLayout" parent="Widget.Design.TabLayout">
+        <!--<item name="tabMaxWidth">@dimen/tab_max_width</item>-->
+        <item name="tabIndicatorColor">#016D94</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">@color/white</item>
+        <item name="tabTextAppearance">@style/fragmentTabTextAppearance</item>
+        <item name="tabSelectedTextColor">#016D94</item>
+    </style>
+
+    <style name="fragmentTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/darkgrey</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+
 
     <!--以下是聊天界面样式-->
     <style name="noTitle" parent="android:Theme.NoTitleBar">

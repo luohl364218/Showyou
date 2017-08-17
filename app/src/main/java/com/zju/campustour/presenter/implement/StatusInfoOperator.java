@@ -55,7 +55,10 @@ public class StatusInfoOperator implements IStatusInfoPresenter {
             return;
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.StatusInfo_TableName);
-        query.setSkip(start).setLimit(count).orderByDescending(Constants.StatusInfo_FavorCount);
+        query.setSkip(start)
+                .setLimit(count)
+                .orderByDescending(Constants.StatusInfo_FavorCount)
+                .include(Constants.StatusInfo_User);
 
         List<StatusInfoModel> mStatusInfoModelList = new ArrayList<>();
 

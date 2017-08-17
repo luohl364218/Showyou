@@ -36,7 +36,7 @@
             android:layout_marginTop="45dp"
             android:layout_toLeftOf="@+id/jmui_avatar_iv"
             android:background="@null"
-            android:hint="输入昵称并设置头像"
+            android:hint="请输入昵称"
             android:textColor="@color/login_txt_hint_color"
             android:textColorHint="@color/gray"
             android:textCursorDrawable="@drawable/jmui_text_cursor_bg"

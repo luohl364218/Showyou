@@ -85,6 +85,7 @@ import com.zju.campustour.view.activity.ReloginActivity;
 import com.zju.campustour.view.activity.SettingActivity;
 import com.zju.campustour.view.fragment.ChatFragment;
 import com.zju.campustour.view.fragment.ContactsFragment;
+import com.zju.campustour.view.fragment.StatusInfoFragment;
 import com.zju.campustour.view.iview.IMajorInfoUpdateView;
 import com.zju.campustour.view.iview.IMajorInfoView;
 import com.zju.campustour.view.iview.IUserFocusView;
@@ -188,6 +189,7 @@ public class MainActivity extends BaseMainActivity
     private MessageFragment mMessageFragment;
     private ChatFragment mChatFragment;
     private ContactsFragment mContactsFragment;
+    private StatusInfoFragment mStatusInfoFragment;
 
     private ParseUser currentLoginUser;
     private Dialog mDialog;
@@ -399,12 +401,16 @@ public class MainActivity extends BaseMainActivity
         mMessageFragment = new MessageFragment();
         mChatFragment = new ChatFragment();
         mContactsFragment = new ContactsFragment();
+        mStatusInfoFragment = new StatusInfoFragment();
 
         fragmentList.add(mHomeFragment);
         fragmentList.add(mSearchFragment);
-        fragmentList.add(mMessageFragment);
+        fragmentList.add(mStatusInfoFragment);
+        //fragmentList.add(mMessageFragment);
         fragmentList.add(mChatFragment);
         fragmentList.add(mContactsFragment);
+
+
 
         //让viewPager缓存一定的页面，不要销毁
         mViewPager.setOffscreenPageLimit(3);
