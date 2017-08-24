@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -143,7 +144,7 @@ public class StatusNewActivity extends BaseActivity implements ILocationConsumer
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                showExitConfirmDialog();
             }
         });
 
@@ -616,5 +617,54 @@ public class StatusNewActivity extends BaseActivity implements ILocationConsumer
     @Override
     public void onLabelInfoGotFailed(Exception e) {
 
+    }
+
+
+    private void showExitConfirmDialog() {
+
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.jmui_dialog_base_with_button, null);
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        TextView title = (TextView) view.findViewById(R.id.jmui_title);
+        Button confirmBtn = (Button) view.findViewById(R.id.jmui_commit_btn);
+        Button cancelBtn = (Button) view.findViewById(R.id.jmui_cancel_btn);
+
+        title.setText("你的动态还未发布，确定不发么？");
+        confirmBtn.setText("不发了");
+        cancelBtn.setText("再想想");
+        View.OnClickListener listener = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+
+                    case R.id.jmui_commit_btn:
+
+                        dialog.dismiss();
+                        finish();
+
+                        break;
+
+                    case R.id.jmui_cancel_btn:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        confirmBtn.setOnClickListener(listener);
+        cancelBtn.setOnClickListener(listener);
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            showExitConfirmDialog();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

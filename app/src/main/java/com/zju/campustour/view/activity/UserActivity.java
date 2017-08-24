@@ -122,6 +122,7 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
     private ParseUser currentLoginUser;
     private UserType currentUserType;
     private int position;
+    private int mFansNum = 0;
     private boolean isMyselfPage = false;
     private boolean isFans;
     private FocusMapOpPresenterImpl mFocusMapOpPresenter;
@@ -393,18 +394,17 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
                 showToast("取消关注");
                 mFocusMapOpPresenter.delete(currentUserId,currentLoginUser.getObjectId(), FocusStateType.FOCUS);
                 item.setIcon(R.mipmap.icon_user_focus_default);
-                int fansNum = defaultUser.getFansNum() - 1;
-                defaultUser.setFansNum(fansNum);
-                focusNum.setText(fansNum+"人关注");
+                mFansNum--;
+                if (mFansNum >= 0)
+                    focusNum.setText(mFansNum+"人关注");
                 isFans = false;
             }
             else {
                 showToast("关注成功");
                 mFocusMapOpPresenter.put(currentUserId,currentLoginUser.getObjectId(), FocusStateType.FOCUS);
                 item.setIcon(R.mipmap.icon_user_focus_select);
-                int fansNum = defaultUser.getFansNum() + 1;
-                defaultUser.setFansNum(fansNum);
-                focusNum.setText(fansNum+"人关注");
+                mFansNum++;
+                focusNum.setText(mFansNum+"人关注");
                 isFans = true;
             }
             return true;
@@ -479,7 +479,7 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
 
     @Override
     public void onGetFansNumDone(int fansNum) {
-
+        mFansNum = fansNum;
         focusNum.setText(fansNum+"人关注");
 
     }

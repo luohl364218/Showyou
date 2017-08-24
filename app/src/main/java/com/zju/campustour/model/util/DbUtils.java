@@ -45,17 +45,17 @@ public class DbUtils {
     @NonNull
     public static User getUser(ParseObject user) {
         String user_id = user.getObjectId();
-        String userName = user.getString("username");
-        String realName = user.getString("realname");
+        String userName = user.getString(Constants.User_userName);
+        String realName = user.getString(Constants.User_realName);
         String password = "";
-        SexType sex = SexType.values()[user.getInt("sex")];
+        SexType sex = SexType.values()[user.getInt(Constants.User_sex)];
 
-        String major = user.getString("major");
-        int fansNum = user.getInt("fansNum");
-        boolean online = user.getBoolean("online");
-        String user_imgUrl = user.getString("imgUrl");
-        String phoneNum = user.getString("phoneNum");
-        String emailAddr = user.getString("emailAddr");
+        String major = user.getString(Constants.User_major);
+        int fansNum = user.getInt(Constants.User_fansNum);
+        boolean online = user.getBoolean(Constants.User_online);
+        String user_imgUrl = user.getString(Constants.User_imgUrl);
+        String phoneNum = user.getString(Constants.User_phoneNum);
+        String emailAddr = user.getString(Constants.User_emailAddr);
         UserType userType = UserType.values()[user.getInt("userType")];
         String user_description = user.getString("description");
         String shortDescription = user.getString("shortDescription");

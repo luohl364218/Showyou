@@ -213,7 +213,14 @@ public class Constants {
     public static String MajorInfo_interests = "interests";
 
     //User表
+    public static String User_userName = "username";
+    public static String User_realName = "realname";
+    public static String User_sex = "sex";
     public static String User_userType = "userType";
+    public static String User_online = "online";
+    public static String User_imgUrl = "imgUrl";
+    public static String User_phoneNum = "phoneNum";
+    public static String User_emailAddr = "emailAddr";
     public static String User_identityType = "identityType";
     public static String User_fansNum = "fansNum";
     public static String User_country = "country";

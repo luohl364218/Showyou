@@ -108,7 +108,7 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
         if (currentUser == null)
             finish();
 
-
+        mImageUploader = new ImageUploader(this,this);
         initOriginalView();
         initView();
 
