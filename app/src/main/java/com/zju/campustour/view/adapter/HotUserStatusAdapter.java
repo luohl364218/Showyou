@@ -46,6 +46,7 @@ public class HotUserStatusAdapter extends RecyclerView.Adapter<HotUserStatusAdap
             //新服务器上的图片
             imgUrl += "!lgheader";
             Uri mUri = Uri.parse(imgUrl);
+            holder.statusImg.setVisibility(View.VISIBLE);
             holder.statusImg.setImageURI(mUri);
         }
         else {

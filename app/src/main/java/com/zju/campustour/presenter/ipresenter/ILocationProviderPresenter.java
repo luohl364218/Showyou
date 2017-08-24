@@ -8,5 +8,7 @@ public interface ILocationProviderPresenter {
 
     void requestUserLocation();
 
+    void searchNearbyLocation();
+
     void onClose();
 }

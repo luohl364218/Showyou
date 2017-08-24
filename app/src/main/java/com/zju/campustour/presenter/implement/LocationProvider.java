@@ -54,6 +54,7 @@ public class LocationProvider implements ILocationProviderPresenter {
                             option.setIsNeedAddress(true);
                             option.setIsNeedLocationDescribe(true);
                             option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+
                             mLocationClient.setLocOption(option);
 
                             mLocationClient.start();
@@ -73,6 +74,11 @@ public class LocationProvider implements ILocationProviderPresenter {
 
                     }
                 });
+    }
+
+    @Override
+    public void searchNearbyLocation() {
+
     }
 
     @Override
