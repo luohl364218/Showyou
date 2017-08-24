@@ -1,7 +1,7 @@
 package com.zju.campustour.presenter.handler;
 
-import com.zju.campustour.model.database.data.MajorClass;
-import com.zju.campustour.model.database.data.MajorModel;
+import com.zju.campustour.model.bean.MajorClass;
+import com.zju.campustour.model.bean.MajorModel;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

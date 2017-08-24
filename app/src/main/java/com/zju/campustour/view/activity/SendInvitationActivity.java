@@ -2,7 +2,6 @@ package com.zju.campustour.view.activity;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,15 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zju.campustour.R;
 import com.zju.campustour.model.chatting.entity.FriendInvitation;
 import com.zju.campustour.model.chatting.utils.DialogCreator;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.FriendRecommendEntry;
-import com.zju.campustour.model.database.models.UserEntry;
+import com.zju.campustour.model.bean.FriendRecommendEntry;
+import com.zju.campustour.model.bean.UserEntry;
 
 import cn.jpush.im.android.api.ContactManager;
 import cn.jpush.im.android.api.JMessageClient;

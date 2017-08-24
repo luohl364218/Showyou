@@ -1,7 +1,7 @@
 package com.zju.campustour.view.iview;
 
 import com.parse.ParseException;
-import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.bean.User;
 
 import java.util.List;
 

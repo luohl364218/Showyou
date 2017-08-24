@@ -9,8 +9,8 @@ import android.view.View;
 
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.FriendEntry;
-import com.zju.campustour.model.database.models.UserEntry;
+import com.zju.campustour.model.bean.FriendEntry;
+import com.zju.campustour.model.bean.UserEntry;
 import com.zju.campustour.presenter.chatting.tools.PinyinComparator;
 import com.zju.campustour.view.activity.SelectFriendActivity;
 import com.zju.campustour.view.application.CampusTourApplication;

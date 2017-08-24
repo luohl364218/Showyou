@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.VerifyInfo;
+import com.zju.campustour.model.bean.VerifyInfo;
 import com.zju.campustour.presenter.implement.UserVerifyInfoImpl;
 import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;

@@ -1,4 +1,4 @@
-package com.zju.campustour.model.database.models;
+package com.zju.campustour.model.bean;
 
 /**
  * Created by Administrator on 2016/7/9.

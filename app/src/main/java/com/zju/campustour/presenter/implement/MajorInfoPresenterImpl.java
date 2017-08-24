@@ -8,7 +8,7 @@ import android.os.Build;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.data.MajorModel;
+import com.zju.campustour.model.bean.MajorModel;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IMajorInfoPresenter;
@@ -19,7 +19,6 @@ import com.zju.campustour.view.iview.IMajorInfoView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
 

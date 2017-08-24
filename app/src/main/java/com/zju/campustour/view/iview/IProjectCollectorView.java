@@ -1,6 +1,6 @@
 package com.zju.campustour.view.iview;
 
-import com.zju.campustour.model.database.models.ProjectUserMap;
+import com.zju.campustour.model.bean.ProjectUserMap;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 
 import java.util.List;

@@ -10,7 +10,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.VerifyInfo;
+import com.zju.campustour.model.bean.VerifyInfo;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IUserVerifyInfoPresenter;

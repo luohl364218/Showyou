@@ -9,21 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
@@ -32,42 +26,41 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yalantis.ucrop.UCrop;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.filter.Filter;
-import com.zju.campustour.model.chatting.utils.BitmapLoader;
 import com.zju.campustour.model.chatting.utils.DialogCreator;
 import com.zju.campustour.model.chatting.utils.FileHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.database.dao.MajorFIlesDao;
 import com.zju.campustour.model.database.data.MajorData;
-import com.zju.campustour.model.database.data.MajorModel;
+import com.zju.campustour.model.bean.MajorModel;
 import com.zju.campustour.model.database.data.SchoolData;
-import com.zju.campustour.model.database.models.User;
-import com.zju.campustour.model.database.models.UserFocusMap;
+import com.zju.campustour.model.bean.User;
+import com.zju.campustour.model.bean.UserFocusMap;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.model.util.SharePreferenceManager;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
+import com.zju.campustour.presenter.implement.ImageUploader;
 import com.zju.campustour.presenter.implement.MajorInfoPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IMajorInfoPresenter;
+import com.zju.campustour.presenter.protocal.enumerate.UploadImgType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.LoginDoneEvent;
@@ -79,28 +72,25 @@ import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.presenter.protocal.event.UserTypeChangeEvent;
 import com.zju.campustour.view.activity.FixProfileActivity;
-import com.zju.campustour.view.activity.IdentityConfirmActivity;
 import com.zju.campustour.view.activity.MeInfoActivity;
 import com.zju.campustour.view.activity.ReloginActivity;
 import com.zju.campustour.view.activity.SettingActivity;
 import com.zju.campustour.view.fragment.ChatFragment;
 import com.zju.campustour.view.fragment.ContactsFragment;
 import com.zju.campustour.view.fragment.StatusInfoFragment;
+import com.zju.campustour.view.iview.IImageUploadView;
 import com.zju.campustour.view.iview.IMajorInfoUpdateView;
-import com.zju.campustour.view.iview.IMajorInfoView;
 import com.zju.campustour.view.iview.IUserFocusView;
 import com.zju.campustour.view.activity.BaseMainActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MyProjectActivity;
 import com.zju.campustour.view.activity.MySchoolmateActivity;
 import com.zju.campustour.view.activity.ProjectNewActivity;
-import com.zju.campustour.view.activity.RegisterInfoOneActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
 import com.zju.campustour.view.fragment.MessageFragment;
 import com.zju.campustour.view.fragment.SearchFragment;
 import com.zju.campustour.view.widget.ActivityCollector;
-import com.zju.campustour.view.widget.GifSizeFilter;
 import com.zju.campustour.view.widget.viewpager.SuperViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -108,14 +98,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -123,19 +111,12 @@ import cn.jiguang.api.JCoreInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import okhttp3.Call;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 
 public class MainActivity extends BaseMainActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, IUserFocusView ,IMajorInfoUpdateView{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener, IUserFocusView ,
+        IMajorInfoUpdateView,IImageUploadView {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -166,7 +147,6 @@ public class MainActivity extends BaseMainActivity
     //定义二维码扫描请求
     private int REQUEST_CODE = 1;
     private int CAMERA_REQUEST_CODE = 2;
-    private static final int REQUEST_CODE_CHOOSE = 23;
 
     //专业列表相关信息
     public static List<String> groupList = new ArrayList<>();
@@ -194,6 +174,7 @@ public class MainActivity extends BaseMainActivity
     private ParseUser currentLoginUser;
     private Dialog mDialog;
     private int unreadMsg = 0;
+    private ImageUploader mImageUploader;
 
     private String TAG = "mainActivity";
 
@@ -214,7 +195,8 @@ public class MainActivity extends BaseMainActivity
         //huanxin
       /*  //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener(this));*/
-
+      //准备好负责图片上传的工具
+        mImageUploader = new ImageUploader(this,this);
 
 
     }
@@ -592,52 +574,6 @@ public class MainActivity extends BaseMainActivity
         manager.cancelAll();
     }
 
-
-    public void editUserImg(){
-         /*Intent mIntent = new Intent(this, RegisterInfoOneActivity.class);
-                    mIntent.putExtra("isEditMode",true);
-                    startActivity(mIntent);*/
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            Matisse.from(MainActivity.this)
-                                    .choose(MimeType.ofAll(), false)
-                                    .countable(true)
-                                    .maxSelectable(1)
-                                    .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
-                                    .gridExpectedSize(
-                                            getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
-                                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                                    .thumbnailScale(0.85f)
-                                    .imageEngine(new GlideEngine())
-                                    .forResult(REQUEST_CODE_CHOOSE);
-                        } else {
-                            showToast("权限请求被拒绝");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -696,15 +632,8 @@ public class MainActivity extends BaseMainActivity
     public void onPictureUploadDoneEvent(UserPictureUploadDone event) {
         currentLoginUser = ParseUser.getCurrentUser();
         if (event != null && currentLoginUser != null){
-            try{
-                currentLoginUser.put("imgUrl",event.getCloudImgUrl());
-                currentLoginUser.saveInBackground();
                 Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
                 userImg.setImageURI(mUri);
-                SharePreferenceManager.putString(this,Constants.DB_USERIMG,event.getLocalImgUrl());
-            }catch (Exception e){
-
-            }
 
         }
     }
@@ -978,9 +907,106 @@ public class MainActivity extends BaseMainActivity
 
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+                else {
+                    showToast("相机被禁用，二维码扫描失败");
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void editUserImg(){
+        showImgSelectDialog();
+    }
+
+    private void showImgSelectDialog() {
+
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_img_select, null);
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        RelativeLayout albumBtn = (RelativeLayout) view.findViewById(R.id.album_btn);
+        RelativeLayout cameraBtn = (RelativeLayout) view.findViewById(R.id.camera_btn);
+
+        View.OnClickListener listener = new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                switch (v.getId()){
+
+                    case R.id.album_btn:
+
+                        mImageUploader.chooseUserImg(UploadImgType.IMG_AVATAR);
+                        dialog.dismiss();
+
+                        break;
+
+                    case R.id.camera_btn:
+                        mImageUploader.takePhoto(UploadImgType.IMG_AVATAR);
+                        dialog.dismiss();
+                        break;
+
+                }
+            }
+        };
+
+
+        albumBtn.setOnClickListener(listener);
+        cameraBtn.setOnClickListener(listener);
+    }
+
+    @Override
+    public void imagePermissionRefused() {
+        showToast("照片获取请求被拒绝，请手动开启");
+    }
+
+    @Override
+    public void imageUploadSuccess(String imgUrl, Uri localPath) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Glide.with(getApplicationContext()).load(localPath).into(userImg);
+            }
+        });
+
+
+    }
+
+    @Override
+    public void imageUploadFailed(Exception e) {
+        showToast("图片上传失败");
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (requestCode){
+        switch (requestCode) {
+            case Constants.REQUEST_CODE_CHOOSE:
+                if (data == null)
+                    break;
+                mImageUploader.startCrop(data);
+                break;
+            case UCrop.REQUEST_CROP:
+                if (data == null)
+                    break;
+                mImageUploader.imageUpLoad(data);
+                break;
+            case Constants.REQUEST_CODE_TAKE_PHOTO:
+                mImageUploader.startCrop();
+                break;
 
             case 1:
                 /**
@@ -1000,150 +1026,9 @@ public class MainActivity extends BaseMainActivity
                     }
                 }
                 break;
-
-            case REQUEST_CODE_CHOOSE:
-                if (data == null)
-                    break;
-                List<Uri> mUriList = Matisse.obtainResult(data);
-                Uri mUri = mUriList.get(0);
-
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                Cursor cursor = getContentResolver().query(mUri,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                final String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-                startCrop(picturePath);
-                break;
-            case UCrop.REQUEST_CROP:
-                if (data == null)
-                    break;
-                Uri croppedFileUri = UCrop.getOutput(data);
-
-                if (croppedFileUri != null) {
-                    imageUpLoad(croppedFileUri.getPath());
-                }
-
-                break;
             default:
-
         }
 
 
-    }
-
-
-    private void startCrop(String url) {
-        Uri sourceUri = Uri.fromFile(new File(url));
-        //裁剪后保存到文件中
-        Date mDate = new Date();
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), mDate.getTime()+"_showyou.jpeg"));
-        UCrop.of(sourceUri, destinationUri).withAspectRatio(1, 1).withMaxResultSize(800, 800).start(this);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case 2:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
-                }
-                else {
-                    showToast("相机被禁用，二维码扫描失败");
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void imageUpLoad(String localPath) {
-
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/jpeg");
-        OkHttpClient client = new OkHttpClient();
-        String suffix = localPath.substring(localPath.lastIndexOf("."));
-
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
-        File f = new File(localPath);
-        //上传极光聊天头像
-        JMessageClient.updateUserAvatar(f,null);
-        builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
-        Date mDate = new Date();
-        String uriSuffix = currentLoginUser.getObjectId()+suffix + mDate.getTime();
-
-        final MultipartBody requestBody = builder.addFormDataPart("name",uriSuffix).build();
-        //构建请求
-        final Request request = new Request.Builder()
-                .url("http://119.23.248.205:8080")//地址
-                .post(requestBody)//添加请求体
-                .build();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast("同学，不好意思，照片上传失败啦");
-                    }
-                }));
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                if (response.code() == 500){
-                    runOnUiThread(new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showToast("同学，照片太大，上传失败啦");
-                        }
-                    }));
-                }
-                else {
-                    runOnUiThread(new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showToast("报告同学，照片上传成功");
-                            String imgUri = "http://119.23.248.205:8080/pictures/" + uriSuffix;
-                            EventBus.getDefault().post(new UserPictureUploadDone(imgUri,localPath));
-                        }
-                    }));
-                }
-
-            }
-        });
-
-    }
-
-    //这个方法作为预留方法，以后再完善
-    public void showPhoto(final String path) {
-        if (path == null)
-            return;
-        Log.i("MeView", "updated path:  " + path);
-        final Bitmap bitmap = BitmapLoader.getBitmapFromFile(path, mWidth, mHeight);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (bitmap != null) {
-                    try {
-                        Bitmap bmp = BitmapLoader.doBlur(bitmap, false);
-                        if (mAvatarIv != null && bmp != null) {
-                            mAvatarIv.setImageBitmap(bitmap);
-                            mAvatarIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        }
-                    }catch (Exception e){
-
-                    }
-                }
-            }
-        });
-        thread.start();
     }
 }

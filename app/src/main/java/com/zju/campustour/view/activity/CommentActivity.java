@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.zju.campustour.R;
-import com.zju.campustour.model.database.models.Comment;
-import com.zju.campustour.model.database.models.Project;
+import com.zju.campustour.model.bean.Comment;
+import com.zju.campustour.model.bean.Project;
 import com.zju.campustour.presenter.implement.ProjectCommentImpl;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.event.CommentSuccessEvent;

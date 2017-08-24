@@ -1,7 +1,7 @@
 package com.zju.campustour.presenter.handler;
 
-import com.zju.campustour.model.database.data.ProvinceWithCollegeModel;
-import com.zju.campustour.model.database.data.SchoolModel;
+import com.zju.campustour.model.bean.ProvinceWithCollegeModel;
+import com.zju.campustour.model.bean.SchoolModel;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

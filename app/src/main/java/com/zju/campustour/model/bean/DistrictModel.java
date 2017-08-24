@@ -1,4 +1,4 @@
-package com.zju.campustour.model.area;
+package com.zju.campustour.model.bean;
 
 public class DistrictModel {
 	private String name;

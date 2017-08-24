@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.data.MajorModel;
+import com.zju.campustour.model.bean.MajorModel;
 
 import java.util.List;
 

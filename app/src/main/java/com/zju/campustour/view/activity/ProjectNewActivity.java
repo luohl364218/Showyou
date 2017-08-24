@@ -1,22 +1,23 @@
 package com.zju.campustour.view.activity;
 
-import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,41 +27,26 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yalantis.ucrop.UCrop;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.filter.Filter;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.Project;
+import com.zju.campustour.model.bean.Project;
+import com.zju.campustour.presenter.implement.ImageUploader;
 import com.zju.campustour.presenter.listener.MyTextWatch;
+import com.zju.campustour.presenter.protocal.enumerate.UploadImgType;
+import com.zju.campustour.view.iview.IImageUploadView;
 import com.zju.campustour.view.widget.ClearEditText;
-import com.zju.campustour.view.widget.GifSizeFilter;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import okhttp3.Call;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
-public class ProjectNewActivity extends BaseActivity{
+public class ProjectNewActivity extends BaseActivity implements IImageUploadView {
 
     @BindView(R.id.publish_project_toolbar)
     Toolbar mToolbar;
@@ -92,7 +78,6 @@ public class ProjectNewActivity extends BaseActivity{
     private boolean isEditMode = false;
     ParseUser currentUser;
     Project currentProject;
-    private static final int REQUEST_CODE_CHOOSE = 23;
 
     boolean isTitleNotNull = false;
     boolean isACNumNotNull = false;
@@ -105,6 +90,8 @@ public class ProjectNewActivity extends BaseActivity{
 
     String imgUrl = "";
     Date startTime;
+
+    private ImageUploader mImageUploader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -454,79 +441,93 @@ public class ProjectNewActivity extends BaseActivity{
 
     @OnClick(R.id.publish_background_img)
     public void chooseUserImg(){
-             /*Intent mIntent = new Intent(this, RegisterInfoOneActivity.class);
-                    mIntent.putExtra("isEditMode",true);
-                    startActivity(mIntent);*/
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        showImgSelectDialog();
 
-                    }
+    }
 
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            Matisse.from(ProjectNewActivity.this)
-                                    .choose(MimeType.ofAll(), false)
-                                    .countable(true)
-                                    .maxSelectable(1)
-                                    .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
-                                    .gridExpectedSize(
-                                            getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
-                                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                                    .thumbnailScale(0.85f)
-                                    .imageEngine(new GlideEngine())
-                                    .forResult(REQUEST_CODE_CHOOSE);
-                        } else {
-                            showToast("权限请求被拒绝");
-                        }
-                    }
+    private void showImgSelectDialog() {
 
-                    @Override
-                    public void onError(Throwable e) {
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_img_select, null);
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        RelativeLayout albumBtn = (RelativeLayout) view.findViewById(R.id.album_btn);
+        RelativeLayout cameraBtn = (RelativeLayout) view.findViewById(R.id.camera_btn);
 
-                    }
+        View.OnClickListener listener = new View.OnClickListener(){
 
-                    @Override
-                    public void onComplete() {
+            @Override
+            public void onClick(View v) {
 
-                    }
-                });
+                switch (v.getId()){
 
+                    case R.id.album_btn:
+
+                        mImageUploader.chooseUserImg(UploadImgType.IMG_PROJECT);
+                        dialog.dismiss();
+
+                        break;
+
+                    case R.id.camera_btn:
+                        mImageUploader.takePhoto(UploadImgType.IMG_PROJECT);
+                        dialog.dismiss();
+                        break;
+
+                    case R.id.cancel_btn:
+                        dialog.dismiss();
+                        break;
+
+                }
+            }
+        };
+
+
+        albumBtn.setOnClickListener(listener);
+        cameraBtn.setOnClickListener(listener);
+    }
+
+    @Override
+    public void imagePermissionRefused() {
+        showToast("照片获取请求被拒绝，请手动开启");
+    }
+
+    @Override
+    public void imageUploadSuccess(String imgUrl, Uri localPath) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Glide.with(getApplicationContext()).load(localPath).into(backgroundPic);
+            }
+        });
+
+
+    }
+
+    @Override
+    public void imageUploadFailed(Exception e) {
+        showToast("图片上传失败");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
-            case REQUEST_CODE_CHOOSE:
+            case Constants.REQUEST_CODE_CHOOSE:
                 if (data == null)
                     break;
-                List<Uri> mUriList = Matisse.obtainResult(data);
-                Uri mUri = mUriList.get(0);
-
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                Cursor cursor = getContentResolver().query(mUri,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                final String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-                startCrop(picturePath);
+                mImageUploader.startCrop(data);
                 break;
             case UCrop.REQUEST_CROP:
                 if (data == null)
                     break;
-                Uri croppedFileUri = UCrop.getOutput(data);
-
-                if (croppedFileUri != null) {
-                    imageUpLoad(croppedFileUri.getPath());
-                }
-
+                mImageUploader.imageUpLoad(data);
+                break;
+            case Constants.REQUEST_CODE_TAKE_PHOTO:
+                mImageUploader.startCrop();
                 break;
             default:
         }
@@ -534,74 +535,6 @@ public class ProjectNewActivity extends BaseActivity{
 
     }
 
-    private void startCrop(String url) {
-        Uri sourceUri = Uri.fromFile(new File(url));
-        //裁剪后保存到文件中
-        Date now = new Date();
-
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), now.getTime() + "_SampleCropImage.jpeg"));
-        UCrop.of(sourceUri, destinationUri).withAspectRatio(4, 3).withMaxResultSize(800, 600).start(this);
-    }
-
-    public void imageUpLoad(String localPath) {
-
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/jpeg");
-        OkHttpClient client = new OkHttpClient();
-        String suffix = localPath.substring(localPath.lastIndexOf("."));
-
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
-        File f = new File(localPath);
-        builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
-        Date mDate = new Date();
-        String uriSuffix = currentUser.getObjectId()+suffix+mDate.getTime();
-        final MultipartBody requestBody = builder.addFormDataPart("name",uriSuffix).build();
-        //构建请求
-        final Request request = new Request.Builder()
-                .url("http://119.23.248.205:8080")//地址
-                .post(requestBody)//添加请求体
-                .build();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast("同学，不好意思，照片上传失败啦");
-                    }
-                }));
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                if (response.code() == 500){
-                    runOnUiThread(new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showToast("同学，照片太大，上传失败啦");
-                        }
-                    }));
-                }
-                else {
-                    runOnUiThread(new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showToast("报告同学，照片上传成功");
-                            String imgUriTemp = "http://119.23.248.205:8080/pictures/" + uriSuffix;
-                            isImgSet = true;
-                            imgUrl = imgUriTemp;
-                            Glide.with(mContext).load(localPath).into(backgroundPic);
-                        }
-                    }));
-                }
-
-            }
-        });
-
-    }
 
 
     @Override

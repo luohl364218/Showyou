@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.baidu.location.BDLocation;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
@@ -184,6 +185,9 @@ public class IdentityConfirmActivity extends BaseActivity implements View.OnClic
             currentUser.put(Constants.User_city, mLocation.getCity());
             currentUser.put(Constants.User_district, mLocation.getDistrict());
             currentUser.put(Constants.User_street,mLocation.getStreet());
+            //记录用户的地理位置
+            ParseGeoPoint point = new ParseGeoPoint(mLocation.getLatitude(), mLocation.getLongitude());
+            currentUser.put(Constants.User_position,point);
 
             UserInfo myUserInfo = JMessageClient.getMyInfo();
             myUserInfo.setRegion(mLocation.getProvince()+mLocation.getCity()+mLocation.getDistrict());

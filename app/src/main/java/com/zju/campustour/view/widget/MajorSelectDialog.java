@@ -17,8 +17,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.zju.campustour.R;
-import com.zju.campustour.model.database.data.MajorClass;
-import com.zju.campustour.model.database.data.MajorModel;
+import com.zju.campustour.model.bean.MajorClass;
+import com.zju.campustour.model.bean.MajorModel;
 import com.zju.campustour.presenter.handler.MajorXmlParserHandler;
 import com.zju.campustour.view.widget.wheelview.OnWheelChangedListener;
 import com.zju.campustour.view.widget.wheelview.WheelView;

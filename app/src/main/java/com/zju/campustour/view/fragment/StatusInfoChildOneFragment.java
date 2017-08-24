@@ -1,10 +1,8 @@
 package com.zju.campustour.view.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -19,14 +17,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.StatusInfoModel;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.User;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.StatusInfoOperator;
-import com.zju.campustour.view.activity.UserActivity;
 import com.zju.campustour.view.adapter.HotUserStatusAdapter;
-import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.iview.IStatusInfoView;
-import com.zju.campustour.view.widget.DividerItemDecortion;
 
 import java.util.List;
 
@@ -172,19 +166,19 @@ public class StatusInfoChildOneFragment extends BaseFragment implements IStatusI
                     }
                 });
 
-                /*GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2){
-                    @Override
-                    public boolean canScrollVertically() {
-                        return false;
-                    }
-                };*/
-                //使用瀑布流
-                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL){
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2){
                     @Override
                     public boolean canScrollVertically() {
                         return false;
                     }
                 };
+               /* //使用瀑布流
+                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL){
+                    @Override
+                    public boolean canScrollVertically() {
+                        return false;
+                    }
+                };*/
 
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setAdapter(mUserStatusAdapter);
@@ -217,5 +211,15 @@ public class StatusInfoChildOneFragment extends BaseFragment implements IStatusI
     @Override
     public void onStatusInfoGotError(Exception e) {
         showToast(getContext(),"获取用户状态出错，请稍后再试");
+    }
+
+    @Override
+    public void onStatusInfoCommitSuccess() {
+
+    }
+
+    @Override
+    public void onStatusInfoCommitError(Exception e) {
+
     }
 }

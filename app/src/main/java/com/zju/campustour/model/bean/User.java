@@ -1,4 +1,4 @@
-package com.zju.campustour.model.database.models;
+package com.zju.campustour.model.bean;
 
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;

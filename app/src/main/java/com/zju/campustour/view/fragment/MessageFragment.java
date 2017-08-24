@@ -18,7 +18,7 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.NewsModule;
+import com.zju.campustour.model.bean.NewsModule;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.NewsGetImpl;
 import com.zju.campustour.presenter.protocal.enumerate.NewsType;

@@ -6,7 +6,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.zju.campustour.model.database.models.HomepageSlideImg;
+import com.zju.campustour.model.bean.HomepageSlideImg;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IImgDownLoadPresenter;
 import com.zju.campustour.view.iview.IHomepageImgLoadView;

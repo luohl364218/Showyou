@@ -1,4 +1,4 @@
-package com.zju.campustour.model.database.data;
+package com.zju.campustour.model.bean;
 
 /**
  * Created by HeyLink on 2017/5/15.

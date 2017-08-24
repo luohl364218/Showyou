@@ -1,5 +1,6 @@
 package com.zju.campustour.view.adapter;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,7 +11,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
-import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.util.DbUtils;
 
 
@@ -105,9 +107,19 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         User mItemInfo = mProviderUserItemInfos.get(position);
         holder.studentIdView.setText(mItemInfo.getId());
         String url = mItemInfo.getImgUrl();
-        if (url == null)
-            url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
-        DbUtils.setImg(holder.studentImgView,url,150,150);
+        boolean isFromNewServer = url.startsWith(Constants.URL_PREFIX_ALIYUN);
+        //作过滤，如果是新服务器上的头像，则加载小图片
+        if (isFromNewServer) {
+            url += "!header";
+            Uri mUri = Uri.parse(url);
+            holder.studentImgView.setImageURI(mUri);
+        }
+        else {
+            //如果是旧服务器上的，保持原样
+            if (url == null)
+                url = "http://image.bitauto.com/dealer/news/100057188/145a7c3a-6230-482b-b050-77a40c1571fd.jpg";
+            DbUtils.setImg(holder.studentImgView,url,150,150);
+        }
 
         holder.studentNameView.setText(mItemInfo.getRealName());
 

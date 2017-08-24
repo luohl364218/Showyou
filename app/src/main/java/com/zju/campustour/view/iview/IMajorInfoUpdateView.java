@@ -1,6 +1,6 @@
 package com.zju.campustour.view.iview;
 
-import com.zju.campustour.model.database.data.MajorModel;
+import com.zju.campustour.model.bean.MajorModel;
 
 import java.util.List;
 

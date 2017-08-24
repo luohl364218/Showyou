@@ -1,6 +1,6 @@
 package com.zju.campustour.view.iview;
 
-import com.zju.campustour.model.database.models.NewsModule;
+import com.zju.campustour.model.bean.NewsModule;
 
 import java.util.List;
 

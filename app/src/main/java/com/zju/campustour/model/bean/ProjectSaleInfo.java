@@ -1,4 +1,6 @@
-package com.zju.campustour.model.database.models;
+package com.zju.campustour.model.bean;
+
+import com.zju.campustour.model.bean.Comment;
 
 import java.io.Serializable;
 

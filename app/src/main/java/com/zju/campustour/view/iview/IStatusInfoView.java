@@ -14,4 +14,9 @@ public interface IStatusInfoView {
 
     void onStatusInfoGotError(Exception e);
 
+    void onStatusInfoCommitSuccess();
+
+    void onStatusInfoCommitError(Exception e);
+
+
 }

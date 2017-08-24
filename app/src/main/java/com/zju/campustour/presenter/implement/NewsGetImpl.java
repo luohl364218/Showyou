@@ -6,7 +6,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.zju.campustour.model.database.models.NewsModule;
+import com.zju.campustour.model.bean.NewsModule;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.protocal.enumerate.NewsType;
 import com.zju.campustour.view.iview.INewsShowView;

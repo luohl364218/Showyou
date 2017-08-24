@@ -118,7 +118,7 @@ public class ImageUtils {
                 Log.d("PutObject", "UploadSuccess");
                 Log.d("ETag", result.getETag());
                 Log.d("RequestId", result.getRequestId());
-                result.getResponseHeader().get("");
+                //result.getResponseHeader().get("");
             }
             @Override
             public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {

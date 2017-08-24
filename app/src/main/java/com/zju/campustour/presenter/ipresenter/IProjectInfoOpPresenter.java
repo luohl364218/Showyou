@@ -1,6 +1,6 @@
 package com.zju.campustour.presenter.ipresenter;
 
-import com.zju.campustour.model.database.models.Project;
+import com.zju.campustour.model.bean.Project;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;
 

@@ -8,7 +8,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.parse.Parse;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
-import com.zju.campustour.model.database.models.UserEntry;
+import com.zju.campustour.model.bean.UserEntry;
 import com.zju.campustour.presenter.receiver.NotificationClickEventReceiver;
 
 import cn.jpush.android.api.JPushInterface;

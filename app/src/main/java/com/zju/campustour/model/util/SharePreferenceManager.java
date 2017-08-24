@@ -12,9 +12,14 @@ import java.util.Date;
 public class SharePreferenceManager {
     static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     static final SimpleDateFormat sdf_detail = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    static final SimpleDateFormat sdfSimple = new SimpleDateFormat("yyyyMMddHHmmss");
 
     public static String ConvertDateToString(Date mDate){
         return sdf.format(mDate);
+    }
+
+    public static String ConvertDateToSimpleString(Date mDate){
+        return sdfSimple.format(mDate);
     }
 
     public static String ConvertDateToDetailString(Date mDate){

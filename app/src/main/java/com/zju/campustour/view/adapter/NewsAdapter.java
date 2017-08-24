@@ -8,8 +8,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
-import com.zju.campustour.model.database.models.NewsModule;
-import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.bean.NewsModule;
 
 import java.util.List;
 

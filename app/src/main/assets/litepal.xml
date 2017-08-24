@@ -32,9 +32,9 @@
     	</list>
     -->
     <list>
-        <mapping class="com.zju.campustour.model.database.models.User"/>
-        <mapping class="com.zju.campustour.model.database.models.Project"/>
-        <mapping class="com.zju.campustour.model.database.models.ProjectUserMap"/>
+        <mapping class="com.zju.campustour.model.bean.User"/>
+        <mapping class="com.zju.campustour.model.bean.Project"/>
+        <mapping class="com.zju.campustour.model.bean.ProjectUserMap"/>
     </list>
 
     <!--

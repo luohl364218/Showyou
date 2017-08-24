@@ -24,7 +24,7 @@ import com.zju.campustour.model.chatting.utils.BitmapLoader;
 import com.zju.campustour.model.chatting.utils.DialogCreator;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.FriendRecommendEntry;
+import com.zju.campustour.model.bean.FriendRecommendEntry;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
 import com.zju.campustour.presenter.chatting.tools.ViewHolder;
 import com.zju.campustour.view.activity.FriendInfoActivity;

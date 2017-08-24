@@ -1,6 +1,6 @@
 package com.zju.campustour.presenter.ipresenter;
 
-import com.zju.campustour.model.database.models.VerifyInfo;
+import com.zju.campustour.model.bean.VerifyInfo;
 import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 
 /**

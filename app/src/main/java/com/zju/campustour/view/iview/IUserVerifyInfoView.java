@@ -1,6 +1,6 @@
 package com.zju.campustour.view.iview;
 
-import com.zju.campustour.model.database.models.VerifyInfo;
+import com.zju.campustour.model.bean.VerifyInfo;
 
 /**
  * Created by WuyuShan on 2017/7/25.

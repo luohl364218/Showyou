@@ -1,7 +1,6 @@
 package com.zju.campustour.view.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,14 +12,11 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import com.parse.ParseObject;
-import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.Project;
-import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.bean.Project;
+import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.util.DbUtils;
-import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

@@ -1,9 +1,8 @@
 package com.zju.campustour.presenter.implement;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.zju.campustour.model.database.models.UserEntry;
+import com.zju.campustour.model.bean.UserEntry;
 import com.zju.campustour.presenter.ipresenter.IMPresenter;
 
 import cn.jpush.im.android.api.JMessageClient;

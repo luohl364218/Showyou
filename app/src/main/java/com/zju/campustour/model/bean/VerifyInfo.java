@@ -1,5 +1,6 @@
-package com.zju.campustour.model.database.models;
+package com.zju.campustour.model.bean;
 
+import com.zju.campustour.model.bean.User;
 import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
 

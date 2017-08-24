@@ -16,7 +16,7 @@ import com.cjj.MaterialRefreshListener;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.User;
+import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.ProjectUserMapOpPresenterImpl;
 import com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType;

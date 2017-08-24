@@ -1,8 +1,8 @@
 package com.zju.campustour.presenter.handler;
 
-import com.zju.campustour.model.area.CityModel;
-import com.zju.campustour.model.area.DistrictModel;
-import com.zju.campustour.model.area.ProvinceModel;
+import com.zju.campustour.model.bean.CityModel;
+import com.zju.campustour.model.bean.DistrictModel;
+import com.zju.campustour.model.bean.ProvinceModel;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

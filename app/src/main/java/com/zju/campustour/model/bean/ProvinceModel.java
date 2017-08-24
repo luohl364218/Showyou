@@ -1,4 +1,6 @@
-package com.zju.campustour.model.area;
+package com.zju.campustour.model.bean;
+
+import com.zju.campustour.model.bean.CityModel;
 
 import java.util.List;
 

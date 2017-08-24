@@ -24,7 +24,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.zju.campustour.R;
 import com.zju.campustour.model.chatting.utils.BitmapLoader;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.FriendEntry;
+import com.zju.campustour.model.bean.FriendEntry;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
 import com.zju.campustour.view.activity.FriendInfoActivity;
 import com.zju.campustour.view.chatting.widget.CircleImageView;

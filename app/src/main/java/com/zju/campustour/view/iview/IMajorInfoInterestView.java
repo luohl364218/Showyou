@@ -1,6 +1,6 @@
 package com.zju.campustour.view.iview;
 
-import com.zju.campustour.model.database.data.MajorModel;
+import com.zju.campustour.model.bean.MajorModel;
 
 /**
  * Created by HeyLink on 2017/8/5.

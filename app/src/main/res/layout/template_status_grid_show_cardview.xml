@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     app:cardBackgroundColor="@color/white"
     app:contentPadding="10dp"
-    app:cardCornerRadius="6dp"
+    app:cardElevation="0px"
     >
 
     <LinearLayout
@@ -25,73 +25,83 @@
             fresco:failureImage="@mipmap/nav_boy_user"
             fresco:failureImageScaleType="centerInside"/>
 
-        <TextView
-            android:id="@+id/status_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textSize="12sp"
-            android:text="今天真的好开心"
-            android:textColor="@color/alpha_70_black"
-
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/user_img"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:scaleType="centerCrop"
-                fresco:roundAsCircle="true"
-                fresco:roundingBorderWidth="1dp"
-                fresco:failureImage="@mipmap/nav_boy_user"
-                fresco:failureImageScaleType="centerInside"/>
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/status_user_name"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:maxLines="1"
+                android:id="@+id/status_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:maxLines="2"
+                android:minLines="2"
                 android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:textSize="10sp"
-                android:textColor="@color/alpha_25_black"
+                android:textSize="12sp"
+                android:text="今天真的好开心"
+                android:textColor="@color/alpha_70_black"
+
                 />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:layout_marginTop="15dp">
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:src="@mipmap/icon_favour_num"/>
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/user_img"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:scaleType="centerCrop"
+                    fresco:roundAsCircle="true"
+                    fresco:roundingBorderWidth="1dp"
+                    fresco:failureImage="@mipmap/nav_boy_user"
+                    fresco:failureImageScaleType="centerInside"/>
 
                 <TextView
-                    android:id="@+id/favour_num"
+                    android:id="@+id/status_user_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="10sp"
+                    android:textColor="@color/alpha_25_black"
+                    />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="10sp"
-                    android:text="111"
-                    android:textColor="@color/alpha_25_black"
-                    android:layout_marginRight="5dp"
-                    android:maxLines="1"/>
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:src="@mipmap/icon_favour_num"/>
+
+                    <TextView
+                        android:id="@+id/favour_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:text="111"
+                        android:textColor="@color/alpha_25_black"
+                        android:layout_marginRight="5dp"
+                        android:maxLines="1"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
+
+
 
     </LinearLayout>
 

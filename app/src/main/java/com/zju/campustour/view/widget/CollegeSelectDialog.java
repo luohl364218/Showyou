@@ -17,8 +17,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.zju.campustour.R;
-import com.zju.campustour.model.database.data.ProvinceWithCollegeModel;
-import com.zju.campustour.model.database.data.SchoolModel;
+import com.zju.campustour.model.bean.ProvinceWithCollegeModel;
+import com.zju.campustour.model.bean.SchoolModel;
 import com.zju.campustour.presenter.handler.SchoolXmlParserHandler;
 import com.zju.campustour.view.widget.wheelview.OnWheelChangedListener;
 import com.zju.campustour.view.widget.wheelview.WheelView;

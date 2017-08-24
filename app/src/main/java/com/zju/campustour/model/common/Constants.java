@@ -69,6 +69,8 @@ public class Constants {
 
     public static final String URL_VERIFIED_ID_BG = "http://campustour.oss-cn-shenzhen.aliyuncs.com/verify_id_bg.jpg";
 
+    public static final String URL_PREFIX_ALIYUN = "http://campustour.oss-cn-shenzhen.aliyuncs.com/";
+
     public static final int[] imageUrls = {
             R.drawable.home1,
             R.drawable.home2,
@@ -147,6 +149,7 @@ public class Constants {
 
 
     /*下面为与聊天相关定义常量*/
+    public static final int REQUEST_CODE_CHOOSE = 32;
     public static final int REQUEST_CODE_TAKE_PHOTO = 4;
     public static final int REQUEST_CODE_SELECT_PICTURE = 6;
     public static final int RESULT_CODE_SELECT_PICTURE = 8;
@@ -218,6 +221,7 @@ public class Constants {
     public static String User_city = "city";
     public static String User_district = "district";
     public static String User_street = "street";
+    public static String User_position = "userPosition";
     public static String User_grade = "gradeId";
     public static String User_isVerified = "isVerified";
     public static String User_collegeSchool = "school";
@@ -251,7 +255,7 @@ public class Constants {
     public static String Project_IsOffline = "isOffline";
 
 
-    //ShowMe 状态表
+    //Status 状态表
     public static String StatusInfo_TableName = "StatusInfo";
     public static String StatusInfo_ImgUrl = "imgUrl";
     public static String StatusInfo_Content = "content";
@@ -260,6 +264,27 @@ public class Constants {
     public static String StatusInfo_FavorCount = "favorCount";
     public static String StatusInfo_CommentCount = "commentCount";
     public static String StatusInfo_IsDeleted = "deleted";
+    public static String StatusInfo_CreatedAt = "createdAt";
+    public static String StatusInfo_LabelId = "labelId";
+    public static String StatusInfo_LabelContent = "labelContent";
+    public static String StatusInfo_Province = "province";
+    public static String StatusInfo_City = "city";
+    public static String StatusInfo_District = "district";
+    public static String StatusInfo_Street = "street";
+    public static String StatusInfo_DetailLocation = "detailLocation";
+    public static String StatusInfo_StatusPosition = "statusPosition";
+    public static String StatusInfo_DiyLocation = "diyLocation";
+    public static String StatusInfo_HidePosition = "hidePosition";
+
+
+    //LabelInfo表
+    public static String LabelInfo_TableName = "LabelInfo";
+    public static String LabelInfo_UserId = "userId";
+    public static String LabelInfo_User = "user";
+    public static String LabelInfo_Content = "content";
+    public static String LabelInfo_JoinNum = "joinNum";
+    public static String LabelInfo_Deleted = "deleted";
+
 
 
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:paddingTop="10dp"
+    android:background="@drawable/jmui_dialog_default_style">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加自定义地址"
+        android:textSize="@dimen/text_medium_size"
+        android:textColor="@color/colorPrimary"/>
+
+    <EditText
+        android:id="@+id/location_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="20sp"
+        android:maxLines="4"
+        android:padding="5dp"
+        android:background="@null"
+        android:textColor="@color/black">
+        <requestFocus />
+    </EditText>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/confirm_btn"
+            android:layout_height="50dp"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:text="确定"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/jmui_dialog_bottom_left_btn"
+            />
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/jmui_cancel"
+            android:textColor="#808080"
+            android:background="@drawable/jmui_dialog_bottom_right_btn"
+            />
+    </LinearLayout>
+
+</LinearLayout>

@@ -45,11 +45,15 @@ public class LocationProvider implements ILocationProviderPresenter {
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
 
-                            mLocationClient = new LocationClient(mActivity);
+                            if (mLocationClient == null)
+                                mLocationClient = new LocationClient(mActivity);
                             mLocationClient.registerLocationListener(new MyLocationListener());
 
                             LocationClientOption option = new LocationClientOption();
+
                             option.setIsNeedAddress(true);
+                            option.setIsNeedLocationDescribe(true);
+                            option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
                             mLocationClient.setLocOption(option);
 
                             mLocationClient.start();

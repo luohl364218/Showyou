@@ -100,7 +100,6 @@ public class RegisterInfoOneActivity extends BaseActivity{
     private boolean isUserShortDesc = false;
     private Context mContext = this;
     private boolean isImgSet = false;
-    private static final int REQUEST_CODE_CHOOSE = 23;
     //注册以后要将当前用户自动登录
     //private UserInfoOpPresenterImpl userLoginImpl;
     //拿到用户的年级层次
@@ -299,7 +298,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
                                     .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                                     .thumbnailScale(0.85f)
                                     .imageEngine(new GlideEngine())
-                                    .forResult(REQUEST_CODE_CHOOSE);
+                                    .forResult(Constants.REQUEST_CODE_CHOOSE);
                         } else {
                             showToast("权限请求被拒绝");
                         }
@@ -322,7 +321,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
-            case REQUEST_CODE_CHOOSE:
+            case Constants.REQUEST_CODE_CHOOSE:
                 if (data == null)
                     break;
                 List<Uri> mUriList = Matisse.obtainResult(data);

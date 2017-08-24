@@ -43,11 +43,10 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
-    <!--baidu map-->
+    <!-- baidu map -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-
 
     <application
         android:name=".view.application.CampusTourApplication"
@@ -58,8 +57,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <meta-data android:name="com.baidu.lbsapi.API_KEY"
-                   android:value="d1Sx8TYs1wMKDmLhXGlUAYNsZwUFfxW6"/>
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="d1Sx8TYs1wMKDmLhXGlUAYNsZwUFfxW6"/>
         <meta-data
             android:name="AA_DB_NAME"
             android:value="jchat.db"/>
@@ -70,8 +70,10 @@
             android:name="AA_DB_VERSION"
             android:value="4"/>
 
-        <service android:name="com.baidu.location.f" android:enabled="true"
-                 android:process=":remote">
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote">
         </service>
 
         <activity
@@ -291,6 +293,9 @@
         <activity
             android:name=".view.activity.StatusNewActivity"
             android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.LabelSelectActivity"
+                  android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>
 

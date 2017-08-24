@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.activeandroid.ActiveAndroid;
 import com.zju.campustour.R;
-import com.zju.campustour.model.database.models.FriendRecommendEntry;
-import com.zju.campustour.model.database.models.UserEntry;
+import com.zju.campustour.model.bean.FriendRecommendEntry;
+import com.zju.campustour.model.bean.UserEntry;
 import com.zju.campustour.model.util.SharePreferenceManager;
 import com.zju.campustour.view.application.CampusTourApplication;
 import com.zju.campustour.view.chatting.adapter.FriendRecommendAdapter;

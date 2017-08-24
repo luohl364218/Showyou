@@ -1,6 +1,6 @@
 package com.zju.campustour.presenter.ipresenter;
 
-import com.zju.campustour.model.database.models.Comment;
+import com.zju.campustour.model.bean.Comment;
 
 /**
  * Created by HeyLink on 2017/5/20.

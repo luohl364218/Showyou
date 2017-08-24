@@ -1,6 +1,6 @@
 package com.zju.campustour.view.iview;
 
-import com.zju.campustour.model.database.models.HomepageSlideImg;
+import com.zju.campustour.model.bean.HomepageSlideImg;
 
 import java.util.List;
 

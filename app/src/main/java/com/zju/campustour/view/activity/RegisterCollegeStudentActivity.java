@@ -36,13 +36,16 @@ import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.SharePreferenceManager;
+import com.zju.campustour.presenter.implement.ImageUploader;
 import com.zju.campustour.presenter.listener.MyTextWatch;
 import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
+import com.zju.campustour.presenter.protocal.enumerate.UploadImgType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
 import com.zju.campustour.presenter.protocal.event.EditUserInfoDone;
 import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
+import com.zju.campustour.view.iview.IImageUploadView;
 import com.zju.campustour.view.widget.AreaSelectDialog;
 import com.zju.campustour.view.widget.CollegeSelectDialog;
 import com.zju.campustour.view.widget.GifSizeFilter;
@@ -75,7 +78,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RegisterCollegeStudentActivity extends BaseActivity {
+public class RegisterCollegeStudentActivity extends BaseActivity implements IImageUploadView {
 
     @BindView(R.id.register_info_one_toolbar)
     Toolbar mToolbar;
@@ -129,7 +132,6 @@ public class RegisterCollegeStudentActivity extends BaseActivity {
     private boolean isImgSet = false;
     private boolean isSchoolNameNotNull = false;
     private boolean isMajorNotNull = false;
-    private static final int REQUEST_CODE_CHOOSE = 23;
     private int gradeId = -1;
     private String schoolProvince = "";
     private String schoolCity = "";
@@ -138,6 +140,8 @@ public class RegisterCollegeStudentActivity extends BaseActivity {
     private Dialog dialog;
     private String collegeTag = "";
     private int majorId = -1;
+
+    private ImageUploader mImageUploader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +156,9 @@ public class RegisterCollegeStudentActivity extends BaseActivity {
             return;
 
         initView();
+
+        //请求照片
+        mImageUploader = new ImageUploader(this,this);
     }
 
     private void initView() {
@@ -353,167 +360,7 @@ public class RegisterCollegeStudentActivity extends BaseActivity {
     @OnClick(R.id.regist_user_img)
     public void chooseUserImg(){
 
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            Matisse.from(RegisterCollegeStudentActivity.this)
-                                    .choose(MimeType.ofAll(), false)
-                                    .countable(true)
-                                    .maxSelectable(1)
-                                    .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
-                                    .gridExpectedSize(
-                                            getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
-                                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                                    .thumbnailScale(0.85f)
-                                    .imageEngine(new GlideEngine())
-                                    .forResult(REQUEST_CODE_CHOOSE);
-                        } else {
-                            showToast("权限请求被拒绝");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case REQUEST_CODE_CHOOSE:
-                if (data == null)
-                    break;
-                List<Uri> mUriList = Matisse.obtainResult(data);
-                Uri mUri = mUriList.get(0);
-
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                Cursor cursor = getContentResolver().query(mUri,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                final String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-                startCrop(picturePath);
-                break;
-            case UCrop.REQUEST_CROP:
-                if (data == null)
-                    break;
-                Uri croppedFileUri = UCrop.getOutput(data);
-
-                if (croppedFileUri != null) {
-                    imageUpLoad(croppedFileUri.getPath());
-                }
-
-                break;
-            default:
-        }
-
-
-    }
-
-    private void startCrop(String url) {
-        Uri sourceUri = Uri.fromFile(new File(url));
-        //裁剪后保存到文件中
-        Date mDate = new Date();
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), mDate.getTime()+"_showyou.jpeg"));
-        UCrop.of(sourceUri, destinationUri).withAspectRatio(1, 1).withMaxResultSize(800, 800).start(this);
-    }
-
-    public void imageUpLoad(String localPath) {
-
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/jpeg");
-        OkHttpClient client = new OkHttpClient();
-        String suffix = localPath.substring(localPath.lastIndexOf("."));
-
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
-        File f = new File(localPath);
-        //上传极光聊天头像
-        JMessageClient.updateUserAvatar(f,null);
-        builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
-        Date mDate = new Date();
-        String uriSuffix = currentUser.getObjectId()+mDate.getTime()+suffix;
-        final MultipartBody requestBody = builder.addFormDataPart("name",uriSuffix).build();
-        //构建请求
-        final Request request = new Request.Builder()
-                .url("http://119.23.248.205:8080")//地址
-                .post(requestBody)//添加请求体
-                .build();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast("同学，不好意思，照片上传失败啦");
-                    }
-                }));
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                if (response.code() == 500){
-                    runOnUiThread(new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showToast("同学，照片太大，上传失败啦");
-                        }
-                    }));
-                }
-                else {
-                    runOnUiThread(new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            showToast("报告同学，照片上传成功");
-                            String imgUri = "http://119.23.248.205:8080/pictures/" + uriSuffix;
-                            EventBus.getDefault().post(new UserPictureUploadDone(imgUri, localPath));
-                        }
-                    }));
-                }
-
-            }
-        });
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onPictureUploadDoneEvent(UserPictureUploadDone event) {
-        currentUser = ParseUser.getCurrentUser();
-        if (event != null && currentUser != null){
-            try{
-                SharePreferenceManager.putString(this, Constants.DB_USERIMG,event.getLocalImgUrl());
-                currentUser.put("imgUrl",event.getCloudImgUrl());
-                currentUser.saveInBackground();
-                Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
-                isImgSet = true;
-                Glide.with(this).load(mUri).into(userImg);
-            }catch (Exception e){
-
-            }
-
-        }
+        showImgSelectDialog();
     }
 
     @OnClick(R.id.btn_finish)
@@ -628,4 +475,93 @@ public class RegisterCollegeStudentActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    private void showImgSelectDialog() {
+
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_img_select, null);
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        RelativeLayout albumBtn = (RelativeLayout) view.findViewById(R.id.album_btn);
+        RelativeLayout cameraBtn = (RelativeLayout) view.findViewById(R.id.camera_btn);
+
+        View.OnClickListener listener = new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                switch (v.getId()){
+
+                    case R.id.album_btn:
+
+                        mImageUploader.chooseUserImg(UploadImgType.IMG_AVATAR);
+                        dialog.dismiss();
+
+                        break;
+
+                    case R.id.camera_btn:
+                        mImageUploader.takePhoto(UploadImgType.IMG_AVATAR);
+                        dialog.dismiss();
+                        break;
+
+                    case R.id.cancel_btn:
+                        dialog.dismiss();
+                        break;
+
+                }
+            }
+        };
+
+
+        albumBtn.setOnClickListener(listener);
+        cameraBtn.setOnClickListener(listener);
+    }
+
+    @Override
+    public void imagePermissionRefused() {
+        showToast("照片获取请求被拒绝，请手动开启");
+    }
+
+    @Override
+    public void imageUploadSuccess(String imgUrl, Uri localPath) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Glide.with(getApplicationContext()).load(localPath).into(userImg);
+            }
+        });
+
+
+    }
+
+    @Override
+    public void imageUploadFailed(Exception e) {
+        showToast("图片上传失败");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case Constants.REQUEST_CODE_CHOOSE:
+                if (data == null)
+                    break;
+                mImageUploader.startCrop(data);
+                break;
+            case UCrop.REQUEST_CROP:
+                if (data == null)
+                    break;
+                mImageUploader.imageUpLoad(data);
+                break;
+            case Constants.REQUEST_CODE_TAKE_PHOTO:
+                mImageUploader.startCrop();
+                break;
+            default:
+        }
+
+
+    }
 }

@@ -1,4 +1,4 @@
-package com.zju.campustour.model.area;
+package com.zju.campustour.model.bean;
 
 import java.util.List;
 

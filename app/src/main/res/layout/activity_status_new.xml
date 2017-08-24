@@ -32,53 +32,196 @@
             android:layout_centerInParent="true"
             android:textSize="20sp"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/publish_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/title_bar_height"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="10dp"
-            android:text="发布"
-            android:textSize="@dimen/text_medium_size"
-            android:textColor="@color/alpha_60_white"
-            android:background="@drawable/jmui_back_btn_bg"/>
+            android:src="@mipmap/publish_gray"
+            android:background="@null"/>
     </RelativeLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <EditText
-        android:id="@+id/new_status_et"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/new_status_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="5dp"
+                android:cursorVisible="true"
+                android:textSize="16sp"
+                android:background="@null"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:textColor="@color/alpha_70_black"
+                android:hint="分享你的校园趣事和达人吧"
+                android:textColorHint="@color/me_info_hint_color">
+
+                <requestFocus />
+            </EditText>
+
+            <ImageView
+                android:id="@+id/new_status_img"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="20dp"
+                android:scaleType="centerCrop"
+                android:background="@mipmap/jmui_take_photo_black"
+
+                />
+
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingBottom="5dp"
-        android:cursorVisible="true"
-        android:textSize="16sp"
-        android:background="@null"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:minLines="3"
-        android:textColor="@color/alpha_70_black"
-        android:hint="分享你的校园趣事和达人吧"
-        android:textColorHint="@color/me_info_hint_color">
+        android:paddingTop="10dp">
 
-        <requestFocus />
-    </EditText>
+        <ImageView
+            android:id="@+id/location_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@mipmap/location_icon"/>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/new_status_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="20dp"
-        fresco:placeholderImage="@mipmap/jmui_take_photo_black"
-        fresco:placeholderImageScaleType="fitCenter"
+        <TextView
+            android:id="@+id/hide_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_round_gray"
+            android:maxLines="1"
+            android:text="显示位置"
+            android:textColor="@color/alpha_40_black"
+            android:textSize="12sp"
+            android:visibility="gone"/>
 
-        />
+        <TextView
+            android:id="@+id/city_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_round_gray"
+            android:maxLines="1"
+            android:text="杭州市"
+            android:textColor="@color/alpha_40_black"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/district_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/button_round_gray"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="西湖区"
+            android:textColor="@color/alpha_40_black"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/street_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/button_round_gray"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="知泉路"
+            android:textColor="@color/alpha_40_black"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/detail_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/button_round_gray"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="浙江大学玉泉校区"
+            android:textColor="@color/alpha_40_black"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:id="@+id/diy_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/button_round_gray"
+            android:ellipsize="end"
+            android:enabled="false"
+            android:hint="+自定义地址"
+            android:maxLines="1"
+            android:textColor="@color/alpha_30_black"
+            android:textColorHint="@color/alpha_30_black"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/alpha_20_black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/alpha_05_black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/select_topic_btn"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:padding="10dp"
+            android:background="@mipmap/topic_icon"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
 
 
+        <TextView
+            android:id="@+id/default_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#聊聊我们的班主任#"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/alpha_55_black"
+            android:maxLines="1"
+            android:ellipsize="end"
+            />
+
+    </LinearLayout>
 
 
 

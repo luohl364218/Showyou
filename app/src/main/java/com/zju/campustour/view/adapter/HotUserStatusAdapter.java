@@ -2,6 +2,7 @@ package com.zju.campustour.view.adapter;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.StatusInfoModel;
+import com.zju.campustour.model.common.Constants;
 
 import java.util.List;
 
@@ -40,7 +42,9 @@ public class HotUserStatusAdapter extends RecyclerView.Adapter<HotUserStatusAdap
 
         StatusInfoModel mStatusInfoModel = mStatusInfoModelList.get(position);
         String imgUrl = mStatusInfoModel.getImgUrl();
-        if (imgUrl != null){
+        if (!TextUtils.isEmpty(imgUrl)){
+            //新服务器上的图片
+            imgUrl += "!lgheader";
             Uri mUri = Uri.parse(imgUrl);
             holder.statusImg.setImageURI(mUri);
         }
@@ -51,7 +55,14 @@ public class HotUserStatusAdapter extends RecyclerView.Adapter<HotUserStatusAdap
         holder.statusContent.setText(mStatusInfoModel.getContent());
         holder.userName.setText(mStatusInfoModel.getUser().getRealName());
         holder.favourNum.setText(""+mStatusInfoModel.getFavourCount());
-        Uri mUri = Uri.parse(mStatusInfoModel.getUser().getImgUrl());
+
+        String headImgUrl = mStatusInfoModel.getUser().getImgUrl();
+        boolean isFromNewServer = headImgUrl.startsWith(Constants.URL_PREFIX_ALIYUN);
+        //作过滤，如果是新服务器上的头像，则加载小图片
+        if (isFromNewServer)
+            headImgUrl += "!header";
+
+        Uri mUri = Uri.parse(headImgUrl);
         holder.userImg.setImageURI(mUri);
 
     }

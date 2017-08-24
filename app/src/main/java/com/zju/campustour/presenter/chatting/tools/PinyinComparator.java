@@ -1,6 +1,6 @@
 package com.zju.campustour.presenter.chatting.tools;
 
-import com.zju.campustour.model.database.models.FriendEntry;
+import com.zju.campustour.model.bean.FriendEntry;
 
 import java.util.Comparator;
 

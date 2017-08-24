@@ -14,7 +14,7 @@ import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.chatting.entity.Event;
 import com.zju.campustour.model.chatting.entity.EventType;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.models.FriendEntry;
+import com.zju.campustour.model.bean.FriendEntry;
 import com.zju.campustour.model.chatting.utils.DialogCreator;
 import com.zju.campustour.presenter.chatting.controller.FriendInfoController;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;

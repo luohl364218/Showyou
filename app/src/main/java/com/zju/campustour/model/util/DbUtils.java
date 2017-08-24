@@ -12,16 +12,19 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.zju.campustour.model.bean.LabelInfo;
+import com.zju.campustour.model.bean.PositionModel;
 import com.zju.campustour.model.bean.StatusInfoModel;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.data.MajorModel;
-import com.zju.campustour.model.database.models.Comment;
-import com.zju.campustour.model.database.models.Project;
-import com.zju.campustour.model.database.models.ProjectSaleInfo;
-import com.zju.campustour.model.database.models.User;
-import com.zju.campustour.model.database.models.VerifyInfo;
+import com.zju.campustour.model.bean.MajorModel;
+import com.zju.campustour.model.bean.Comment;
+import com.zju.campustour.model.bean.Project;
+import com.zju.campustour.model.bean.ProjectSaleInfo;
+import com.zju.campustour.model.bean.User;
+import com.zju.campustour.model.bean.VerifyInfo;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
@@ -291,16 +294,44 @@ public class DbUtils {
             int favourCount = object.getInt(Constants.StatusInfo_FavorCount);
             int commentCount = object.getInt(Constants.StatusInfo_CommentCount);
             boolean isDeleted = object.getBoolean(Constants.StatusInfo_IsDeleted);
+            String labelId = object.getString(Constants.StatusInfo_LabelId);
+            String labelContent = object.getString(Constants.StatusInfo_LabelContent);
+            String province = object.getString(Constants.StatusInfo_Province);
+            String city = object.getString(Constants.StatusInfo_City);
+            String district = object.getString(Constants.StatusInfo_District);
+            String street = object.getString(Constants.StatusInfo_Street);
+            String detailLocation = object.getString(Constants.StatusInfo_DetailLocation);
+            String diyLocation = object.getString(Constants.StatusInfo_DiyLocation);
+            boolean hidePosition = object.getBoolean(Constants.StatusInfo_HidePosition);
 
             return new StatusInfoModel(objectId,
                     imgUrl,content,userId,provider,
-                    createdTime,favourCount,commentCount,isDeleted);
+                    createdTime,favourCount,commentCount,
+                    isDeleted,labelId,labelContent,province,city,
+                    district,street,detailLocation,diyLocation,hidePosition);
 
         }
         catch (Exception e){
             return null;
         }
     }
+
+    public static LabelInfo getLabelInfo(ParseObject object){
+
+        String labelId = object.getObjectId();
+        User provider;
+        ParseObject providerObject = object.getParseObject(Constants.LabelInfo_User);
+        if (providerObject != null)
+            provider = getUser(providerObject);
+        else
+            return null;
+
+        String content = object.getString(Constants.LabelInfo_Content);
+        int joinNum = object.getInt(Constants.LabelInfo_JoinNum);
+
+        return new LabelInfo(labelId,provider,content,joinNum);
+    }
+
 
 
 }

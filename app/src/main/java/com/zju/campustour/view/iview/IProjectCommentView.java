@@ -1,6 +1,6 @@
 package com.zju.campustour.view.iview;
 
-import com.zju.campustour.model.database.models.Comment;
+import com.zju.campustour.model.bean.Comment;
 
 import java.util.List;
 
