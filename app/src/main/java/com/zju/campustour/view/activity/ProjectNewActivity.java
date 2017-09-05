@@ -447,8 +447,8 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
 
     private void showImgSelectDialog() {
 
-        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
-        final LayoutInflater inflater = LayoutInflater.from(this);
+        final Dialog dialog = new Dialog(mContext, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.dialog_img_select, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -456,7 +456,7 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
         dialog.show();
         RelativeLayout albumBtn = (RelativeLayout) view.findViewById(R.id.album_btn);
         RelativeLayout cameraBtn = (RelativeLayout) view.findViewById(R.id.camera_btn);
-
+        RelativeLayout cancelBtn = (RelativeLayout) view.findViewById(R.id.cancel_btn);
         View.OnClickListener listener = new View.OnClickListener(){
 
             @Override
@@ -487,7 +487,9 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
 
         albumBtn.setOnClickListener(listener);
         cameraBtn.setOnClickListener(listener);
+        cancelBtn.setOnClickListener(listener);
     }
+
 
     @Override
     public void imagePermissionRefused() {

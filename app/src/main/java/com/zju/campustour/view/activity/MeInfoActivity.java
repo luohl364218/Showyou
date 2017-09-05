@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,27 +15,36 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.yalantis.ucrop.UCrop;
 import com.zju.campustour.R;
+import com.zju.campustour.model.chatting.entity.Event;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.chatting.utils.IdHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.presenter.chatting.controller.MeInfoController;
+import com.zju.campustour.presenter.implement.ImageUploader;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
+import com.zju.campustour.presenter.protocal.enumerate.UploadImgType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
+import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
 import com.zju.campustour.view.chatting.MeInfoView;
+import com.zju.campustour.view.iview.IImageUploadView;
 import com.zju.campustour.view.widget.AreaSelectDialog;
 import com.zju.campustour.view.widget.CollegeSelectDialog;
 import com.zju.campustour.view.widget.GradeSelectDialog;
 import com.zju.campustour.view.widget.MajorSelectDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 
-public class MeInfoActivity extends BaseActivity {
+public class MeInfoActivity extends BaseActivity implements IImageUploadView {
 
     private MeInfoView mMeInfoView;
     private MeInfoController mMeInfoController;
@@ -42,11 +52,12 @@ public class MeInfoActivity extends BaseActivity {
     private final static int SELECT_AREA_REQUEST_CODE = 3;
     private final static int MODIFY_SCHOOL_REQUEST_CODE = 2;
     private final static int MODIFY_EMAIL_REQUEST_CODE = 5;
-    private final static int MODIFY_SIGNATURE_REQUEST_CODE = 4;
+    private final static int MODIFY_SIGNATURE_REQUEST_CODE = 7;
     private final static int MODIFY_INTRODUCE_REQUEST_CODE = 6;
     private String mModifiedName;
     private Context mContext;
     private Dialog mDialog;
+    private ImageUploader mImageUploader;
 
 
     @Override
@@ -60,6 +71,9 @@ public class MeInfoActivity extends BaseActivity {
         mMeInfoView.setListeners(mMeInfoController);
         UserInfo userInfo = JMessageClient.getMyInfo();
         mMeInfoView.refreshUserInfo(userInfo);
+
+        //准备好负责图片上传的工具
+        mImageUploader = new ImageUploader(this,this);
     }
 
     public void startModifyNickNameActivity() {
@@ -423,6 +437,20 @@ public class MeInfoActivity extends BaseActivity {
                     String introduce = data.getStringExtra("description");
                     mMeInfoView.setDesc(introduce);
                     break;
+                case Constants.REQUEST_CODE_CHOOSE:
+                    if (data == null)
+                        break;
+                    mImageUploader.startCrop(data);
+                    break;
+                case UCrop.REQUEST_CROP:
+                    if (data == null)
+                        break;
+                    mImageUploader.imageUpLoad(data);
+                    break;
+                case Constants.REQUEST_CODE_TAKE_PHOTO:
+                    mImageUploader.startCrop();
+                    break;
+                default:
 
             }
 
@@ -440,6 +468,80 @@ public class MeInfoActivity extends BaseActivity {
         intent.putExtra("newName", mModifiedName);
         setResult(Constants.RESULT_CODE_ME_INFO, intent);
         finish();
+    }
+
+    public void editUserImg(){
+        showImgSelectDialog();
+    }
+
+
+    private void showImgSelectDialog() {
+
+        final Dialog dialog = new Dialog(mContext, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.dialog_img_select, null);
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        RelativeLayout albumBtn = (RelativeLayout) view.findViewById(R.id.album_btn);
+        RelativeLayout cameraBtn = (RelativeLayout) view.findViewById(R.id.camera_btn);
+        RelativeLayout cancelBtn = (RelativeLayout) view.findViewById(R.id.cancel_btn);
+        View.OnClickListener listener = new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                switch (v.getId()){
+
+                    case R.id.album_btn:
+
+                        mImageUploader.chooseUserImg(UploadImgType.IMG_AVATAR);
+                        dialog.dismiss();
+
+                        break;
+
+                    case R.id.camera_btn:
+                        mImageUploader.takePhoto(UploadImgType.IMG_AVATAR);
+                        dialog.dismiss();
+                        break;
+
+                    case R.id.cancel_btn:
+                        dialog.dismiss();
+                        break;
+
+                }
+            }
+        };
+
+
+        albumBtn.setOnClickListener(listener);
+        cameraBtn.setOnClickListener(listener);
+        cancelBtn.setOnClickListener(listener);
+    }
+
+    @Override
+    public void imagePermissionRefused() {
+        showToast("照片获取请求被拒绝，请手动开启");
+    }
+
+    @Override
+    public void imageUploadSuccess(String imgUrl, Uri localPath) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMeInfoView.showUserAvatar(localPath);
+                EventBus.getDefault().post(new UserPictureUploadDone(imgUrl,localPath.getPath()));
+            }
+        });
+
+
+    }
+
+    @Override
+    public void imageUploadFailed(Exception e) {
+        showToast("图片上传失败");
     }
 
 }

@@ -111,6 +111,23 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
 
         holder.commentNumTv.setText(""+commentCount);
 
+        holder.favorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null){
+                    holder.periscopeLayout.addHeart();
+
+                    int count = favourCount + 1;
+                    mStatusInfoModelList.get(position).setFavourCount(count);
+                    holder.favorAndCommentPart.setVisibility(View.VISIBLE);
+                    holder.favorPart.setVisibility(View.VISIBLE);
+                    holder.favourNum.setText(""+count);
+
+                    mListener.onClick(v, position, mStatusInfoModelList.get(position));
+                }
+            }
+        });
+
     }
 
     @Override
@@ -185,15 +202,7 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
                 }
             });
 
-            favorBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null){
-                        periscopeLayout.addHeart();
-                        mListener.onClick(v, getLayoutPosition(), mStatusInfoModelList.get(getLayoutPosition()));
-                    }
-                }
-            });
+
 
             commentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

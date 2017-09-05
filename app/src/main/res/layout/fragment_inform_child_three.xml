@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.zju.campustour.view.fragment.InformChildOneFragment">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/fragment_search_noResult_hint_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:src="@drawable/icon_search_for_nothing_middle"/>
+
+            <TextView
+                android:id="@+id/fragment_search_noResult_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                />
+        </LinearLayout>
+
+
+        <com.cjj.MaterialRefreshLayout
+            android:id="@+id/refresh_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:overlay="false"
+            app:wave_color="@color/transparent"
+            app:wave_show="true">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragment_search_recycle_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+
+        </com.cjj.MaterialRefreshLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

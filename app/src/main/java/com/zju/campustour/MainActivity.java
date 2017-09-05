@@ -77,6 +77,8 @@ import com.zju.campustour.view.activity.ReloginActivity;
 import com.zju.campustour.view.activity.SettingActivity;
 import com.zju.campustour.view.fragment.ChatFragment;
 import com.zju.campustour.view.fragment.ContactsFragment;
+import com.zju.campustour.view.fragment.InformFragment;
+import com.zju.campustour.view.fragment.MineFragment;
 import com.zju.campustour.view.fragment.StatusInfoFragment;
 import com.zju.campustour.view.iview.IImageUploadView;
 import com.zju.campustour.view.iview.IMajorInfoUpdateView;
@@ -169,7 +171,9 @@ public class MainActivity extends BaseMainActivity
     private MessageFragment mMessageFragment;
     private ChatFragment mChatFragment;
     private ContactsFragment mContactsFragment;
+    private InformFragment mInformFragment;
     private StatusInfoFragment mStatusInfoFragment;
+    private MineFragment mMineFragment;
 
     private ParseUser currentLoginUser;
     private Dialog mDialog;
@@ -379,18 +383,27 @@ public class MainActivity extends BaseMainActivity
         // 这里的添加顺序是否对 tab 页的前后顺序有影响
         //fragmentList.add(fragmentTabHost.getTabWidget().)
         mHomeFragment = new HomeFragment();
-        mSearchFragment = new SearchFragment();
-        mMessageFragment = new MessageFragment();
+        //mSearchFragment = new SearchFragment();
+        //mMessageFragment = new MessageFragment();
         mChatFragment = new ChatFragment();
         mContactsFragment = new ContactsFragment();
         mStatusInfoFragment = new StatusInfoFragment();
+        mInformFragment = new InformFragment();
+        mMineFragment = new MineFragment();
 
+
+        //主页
         fragmentList.add(mHomeFragment);
-        fragmentList.add(mSearchFragment);
+        //发现    校友和活动
+        fragmentList.add(mInformFragment);
+        //状态
         fragmentList.add(mStatusInfoFragment);
         //fragmentList.add(mMessageFragment);
+        //聊天
         fragmentList.add(mChatFragment);
-        fragmentList.add(mContactsFragment);
+        //个人
+        fragmentList.add(mMineFragment);
+        //fragmentList.add(mInformFragment);
 
 
 
@@ -627,16 +640,6 @@ public class MainActivity extends BaseMainActivity
         }
     }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onPictureUploadDoneEvent(UserPictureUploadDone event) {
-        currentLoginUser = ParseUser.getCurrentUser();
-        if (event != null && currentLoginUser != null){
-                Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
-                userImg.setImageURI(mUri);
-
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onLogoutEvent(LogoutEvent event) {
@@ -955,6 +958,10 @@ public class MainActivity extends BaseMainActivity
 
                     case R.id.camera_btn:
                         mImageUploader.takePhoto(UploadImgType.IMG_AVATAR);
+                        dialog.dismiss();
+                        break;
+
+                    case R.id.cancel_btn:
                         dialog.dismiss();
                         break;
 

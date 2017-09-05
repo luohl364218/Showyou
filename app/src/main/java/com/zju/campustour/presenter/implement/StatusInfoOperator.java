@@ -122,4 +122,16 @@ public class StatusInfoOperator implements IStatusInfoPresenter {
     public void getSpecifiedStatusInfo(int start, int count, String userId) {
 
     }
+
+    @Override
+    public void addStatusFavorInfo(String statusId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext) || statusId == null)
+            return;
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        ParseObject object = new ParseObject(Constants.StatusFavourInfo_TableName);
+        object.put(Constants.StatusFavourInfo_StatusInfo,ParseObject.createWithoutData(Constants.StatusInfo_TableName,statusId));
+        object.put(Constants.StatusFavourInfo_User,currentUser);
+
+        object.saveInBackground();
+    }
 }

@@ -293,5 +293,11 @@ public class Constants {
     public static String LabelInfo_Deleted = "deleted";
 
 
+    //StatusFavorInfo表
+    public static String StatusFavourInfo_TableName = "StatusInfoFavour";
+    public static String StatusFavourInfo_User = "user";
+    public static String StatusFavourInfo_StatusInfo = "statusInfo";
+
+
 
 }

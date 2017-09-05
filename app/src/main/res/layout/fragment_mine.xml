@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/alpha_02_black"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <FrameLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nav_header_height"
+                    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+
+                    <ImageView
+                        android:id="@+id/my_avatar_iv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary"
+                        android:scaleType="centerCrop"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="@dimen/activity_vertical_margin"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:paddingTop="@dimen/activity_vertical_margin">
+
+
+                        <FrameLayout
+                            android:id="@+id/user_edit_logo"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <com.facebook.drawee.view.SimpleDraweeView
+                                android:id="@+id/current_user_img"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:scaleType="centerCrop"
+                                fresco:failureImage="@mipmap/take_photo_me"
+                                fresco:failureImageScaleType="centerInside"
+                                fresco:roundAsCircle="true"
+                                fresco:roundedCornerRadius="1dp"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/user_edit"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="bottom|right"
+                                android:src="@mipmap/edit_user"
+                                android:visibility="visible"/>
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/login_hint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/user_edit_logo"
+                            android:layout_centerVertical="true"
+                            android:text="点击登录"/>
+
+                        <TextView
+                            android:id="@+id/user_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:textColor="@color/white"
+                            android:text="@string/default_email"/>
+
+                        <TextView
+                            android:id="@+id/username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@id/user_type"
+                            android:text="@string/default_username"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+                    </RelativeLayout>
+
+
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/edit_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/largePadding"
+                android:background="@drawable/selector_list_item"
+                android:drawableLeft="@mipmap/icon_info_round"
+                android:gravity="center_vertical"
+                android:drawablePadding="20dp"
+                android:text="@string/my_info"
+                android:textColor="@color/alpha_50_black"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/alpha_10_black"/>
+
+            <TextView
+                android:id="@+id/my_project"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/largePadding"
+                android:background="@drawable/selector_list_item"
+                android:drawableLeft="@mipmap/icon_activity_round"
+                android:gravity="center_vertical"
+                android:drawablePadding="20dp"
+                android:text="@string/my_project"
+                android:textColor="@color/alpha_50_black"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/alpha_10_black"/>
+
+            <TextView
+                android:id="@+id/my_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/largePadding"
+                android:background="@drawable/selector_list_item"
+                android:drawableLeft="@mipmap/icon_status_round"
+                android:gravity="center_vertical"
+                android:drawablePadding="20dp"
+                android:text="我的状态"
+                android:textColor="@color/alpha_50_black"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/alpha_10_black"/>
+
+            <TextView
+                android:id="@+id/my_schoolmate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/largePadding"
+                android:background="@drawable/selector_list_item"
+                android:drawableLeft="@mipmap/icon_xiaoyou_round"
+                android:gravity="center_vertical"
+                android:drawablePadding="20dp"
+                android:text="@string/my_schoolmate"
+                android:textColor="@color/alpha_50_black"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/alpha_10_black"/>
+
+            <TextView
+                android:id="@+id/build_project"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/largePadding"
+                android:background="@drawable/selector_list_item"
+                android:drawableLeft="@mipmap/icon_publish_round"
+                android:gravity="center_vertical"
+                android:drawablePadding="20dp"
+                android:text="@string/publish_project"
+                android:textColor="@color/alpha_50_black"/>
+
+
+
+            <TextView
+                android:id="@+id/my_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/selector_list_item"
+                android:drawableLeft="@mipmap/icon_setting_round"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:padding="@dimen/largePadding"
+                android:text="@string/app_setting"
+                android:textColor="@color/alpha_50_black"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/alpha_10_black"/>
+
+            <TextView
+                android:id="@+id/check_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/selector_list_item"
+                android:drawableLeft="@mipmap/icon_check_update"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:padding="@dimen/largePadding"
+                android:text="检查更新（当前已经是最新版本）"
+                android:textColor="@color/alpha_50_black"/>
+
+            <!--   <Button
+                   android:id="@+id/btn_logout"
+                   android:text="退出登录"
+                   style="@style/bigYellowButton"
+                   android:layout_marginLeft="15dp"
+                   android:layout_marginRight="15dp"
+                   android:layout_marginTop="20dp"
+                   android:layout_marginBottom="20dp"
+                   />
+   -->
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+</LinearLayout>

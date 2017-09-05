@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#F1EFF5"
+              android:background="@color/alpha_02_black"
               android:orientation="vertical" >
 
     <include layout="@layout/menu_title_bar" />
@@ -10,7 +10,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -22,21 +21,13 @@
             <TextView
                 style="@style/SettingItemTextStyle"
                 android:text="@string/new_msg_remind_hit"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@mipmap/arrow"/>
         </RelativeLayout>
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/me_split_line_color"/>
+            android:background="@color/alpha_02_black"/>
 
 
         <RelativeLayout
@@ -49,19 +40,13 @@
                 style="@style/SettingItemTextStyle"
                 android:text="@string/change_password"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:background="@mipmap/arrow"/>
+
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/me_split_line_color"/>
+            android:background="@color/alpha_02_black"/>
 
         <RelativeLayout
             android:id="@+id/disturb_mode_rl"
@@ -80,13 +65,10 @@
                 />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/me_split_line_color" />
 
         <RelativeLayout
             android:id="@+id/about_rl"
+            android:layout_marginTop="20dp"
             style="@style/SettingItemStyle">
 
 
@@ -96,20 +78,44 @@
                 android:text="@string/about"
                 />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:background="@mipmap/arrow" />
 
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/me_split_line_color" />
+            android:background="@color/alpha_02_black" />
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/check_update_rl"
+            style="@style/SettingItemStyle">
+
+
+            <TextView
+                style="@style/SettingItemTextStyle"
+                android:paddingLeft="20dp"
+                android:text="检查更新"
+                />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/logout_rl"
+            android:layout_marginTop="20dp"
+            style="@style/SettingItemStyle">
+
+
+            <TextView
+                style="@style/SettingItemTextStyle"
+                android:paddingLeft="20dp"
+                android:text="@string/logout"
+                />
+
+
+        </RelativeLayout>
 
     </LinearLayout>
 

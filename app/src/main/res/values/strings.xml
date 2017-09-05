@@ -501,4 +501,6 @@
     <string name="look_around_user">游客用户</string>
     <string name="identity_type">身份类型</string>
     <string name="verify_status">身份认证状态</string>
+    <string name="publish_project">发布活动</string>
+    <string name="avatar">头像</string>
 </resources>

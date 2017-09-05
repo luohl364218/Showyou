@@ -1,5 +1,6 @@
 package com.zju.campustour.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +18,7 @@ import com.zju.campustour.model.bean.StatusInfoModel;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.StatusInfoOperator;
+import com.zju.campustour.view.activity.UserActivity;
 import com.zju.campustour.view.adapter.FocusUserStatusAdapter;
 import com.zju.campustour.view.adapter.HotUserStatusAdapter;
 import com.zju.campustour.view.iview.IStatusInfoView;
@@ -159,10 +161,13 @@ public class StatusInfoChildTwoFragment extends BaseFragment implements IStatusI
 
                                 break;
                             case R.id.user_img:
-
+                                Intent mIntent = new Intent(getActivity(), UserActivity.class);
+                                mIntent.putExtra("provider",status.getUser());
+                                mIntent.putExtra("position",position);
+                                startActivity(mIntent);
                                 break;
                             case R.id.favor_btn:
-
+                                mStatusInfoOperator.addStatusFavorInfo(status.getObjectId());
                                 break;
                             case R.id.comment_btn:
 

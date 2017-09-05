@@ -202,8 +202,8 @@ public class RegisterLookAroundActivity extends BaseActivity implements IImageUp
 
     private void showImgSelectDialog() {
 
-        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
-        final LayoutInflater inflater = LayoutInflater.from(this);
+        final Dialog dialog = new Dialog(mContext, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.dialog_img_select, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -211,7 +211,7 @@ public class RegisterLookAroundActivity extends BaseActivity implements IImageUp
         dialog.show();
         RelativeLayout albumBtn = (RelativeLayout) view.findViewById(R.id.album_btn);
         RelativeLayout cameraBtn = (RelativeLayout) view.findViewById(R.id.camera_btn);
-
+        RelativeLayout cancelBtn = (RelativeLayout) view.findViewById(R.id.cancel_btn);
         View.OnClickListener listener = new View.OnClickListener(){
 
             @Override
@@ -230,6 +230,7 @@ public class RegisterLookAroundActivity extends BaseActivity implements IImageUp
                         mImageUploader.takePhoto(UploadImgType.IMG_AVATAR);
                         dialog.dismiss();
                         break;
+
                     case R.id.cancel_btn:
                         dialog.dismiss();
                         break;
@@ -241,7 +242,9 @@ public class RegisterLookAroundActivity extends BaseActivity implements IImageUp
 
         albumBtn.setOnClickListener(listener);
         cameraBtn.setOnClickListener(listener);
+        cancelBtn.setOnClickListener(listener);
     }
+
 
     @Override
     public void imagePermissionRefused() {

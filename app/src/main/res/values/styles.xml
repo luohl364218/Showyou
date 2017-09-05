@@ -220,13 +220,36 @@
 
     <style name="fragmentTabLayout" parent="Widget.Design.TabLayout">
         <!--<item name="tabMaxWidth">@dimen/tab_max_width</item>-->
-        <item name="tabIndicatorColor">#016D94</item>
+        <item name="tabIndicatorColor">@color/white</item>
         <item name="tabIndicatorHeight">2dp</item>
         <item name="tabPaddingStart">12dp</item>
         <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">@color/colorPrimary</item>
+        <item name="tabTextAppearance">@style/parentfragmentTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="ParentTabLayout" parent="Widget.Design.TabLayout">
+        <!--<item name="tabMaxWidth">@dimen/tab_max_width</item>-->
+        <!--高度0dp，隐藏滑动条-->
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">@color/colorPrimary</item>
+        <item name="tabTextAppearance">@style/parentfragmentTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="ChildTabLayout" parent="Widget.Design.TabLayout">
+        <!--<item name="tabMaxWidth">@dimen/tab_max_width</item>-->
+        <item name="tabIndicatorColor">#eb4f38</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">8dp</item>
+        <item name="tabPaddingEnd">8dp</item>
         <item name="tabBackground">@color/white</item>
-        <item name="tabTextAppearance">@style/fragmentTabTextAppearance</item>
-        <item name="tabSelectedTextColor">#016D94</item>
+        <item name="tabTextAppearance">@style/childfragmentTabTextAppearance</item>
+        <item name="tabSelectedTextColor">#eb4f38</item>
     </style>
 
     <style name="fragmentTabTextAppearance" parent="TextAppearance.Design.Tab">
@@ -235,7 +258,17 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="childfragmentTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/darkgrey</item>
+        <item name="textAllCaps">true</item>
+    </style>
 
+    <style name="parentfragmentTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/steelblue</item>
+        <item name="textAllCaps">true</item>
+    </style>
 
     <!--以下是聊天界面样式-->
     <style name="noTitle" parent="android:Theme.NoTitleBar">

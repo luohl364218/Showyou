@@ -32,6 +32,10 @@ public class MeInfoController implements OnClickListener {
             case R.id.return_btn:
                 mContext.setResultAndFinish();
                 break;
+            case R.id.avatar_ll:
+                mContext.editUserImg();
+                break;
+
             case R.id.nick_name_rl:
                 mContext.startModifyNickNameActivity();
                 break;

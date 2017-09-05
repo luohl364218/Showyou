@@ -15,4 +15,6 @@ public interface IStatusInfoPresenter {
     void getMyFocusStatusInfo(int start, int count);
 
     void getSpecifiedStatusInfo(int start,int count, String userId);
+
+    void addStatusFavorInfo(String statusId);
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+
+        <ImageButton
+            android:id="@+id/user_icon"
+            android:layout_width="@dimen/title_bar_height"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@null"
+            android:src="@mipmap/icon_user_default"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/ParentTabLayout"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/search_icon"
+            android:layout_width="@dimen/title_bar_height"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@null"
+            android:src="@mipmap/icon_search_60"/>
+
+    </LinearLayout>
+
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+</LinearLayout>

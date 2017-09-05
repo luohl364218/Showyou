@@ -2,6 +2,7 @@ package com.zju.campustour.view.chatting;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
@@ -50,6 +52,7 @@ public class MeInfoView extends LinearLayout {
     private TextView mTitle;
     private ImageButton mMenuBtn;
 
+    private LinearLayout mAvararLL;
     private LinearLayout mNickNameRl;
     private LinearLayout mSexRl;
     private LinearLayout mAreaRl;
@@ -62,6 +65,8 @@ public class MeInfoView extends LinearLayout {
     private LinearLayout mMajorLayout;
     private LinearLayout mEmailLayout;
     private LinearLayout mDescLayout;
+
+    SimpleDraweeView mUserAvatar;
 
     private int gradeId;
     private boolean isVerified;
@@ -147,6 +152,7 @@ public class MeInfoView extends LinearLayout {
         mTitle = (TextView) findViewById(R.id.title);
         mMenuBtn = (ImageButton) findViewById(R.id.right_btn);
         mNickNameRl = (LinearLayout) findViewById(R.id.nick_name_rl);
+        mAvararLL = (LinearLayout) findViewById(R.id.avatar_ll);
         mSexRl = (LinearLayout) findViewById(R.id.sex_rl);
         mAreaRl = (LinearLayout) findViewById(R.id.location_rl);
 
@@ -171,6 +177,7 @@ public class MeInfoView extends LinearLayout {
         mRegionTv = (TextView) findViewById(R.id.region_tv);
         mSignatureRl = (LinearLayout) findViewById(R.id.sign_rl);
         mNicknameTv = (TextView) findViewById(R.id.nick_name_tv);
+        mUserAvatar = (SimpleDraweeView) findViewById(R.id.user_avatar);
         mGenderTv = (TextView) findViewById(R.id.gender_tv);
         mGenderIv = (ImageView) findViewById(R.id.sex_icon);
         mVerifiedTv = (TextView) findViewById(R.id.verify_tv);
@@ -202,6 +209,9 @@ public class MeInfoView extends LinearLayout {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null){
+
+            //显示当前头像
+            mUserAvatar.setImageURI(currentUser.getString(Constants.User_imgUrl));
 
             //身份认证状态
             isVerified = currentUser.getBoolean(Constants.User_isVerified);
@@ -271,6 +281,7 @@ public class MeInfoView extends LinearLayout {
     public void setListeners(OnClickListener onClickListener) {
         mReturnBtn.setOnClickListener(onClickListener);
         mNickNameRl.setOnClickListener(onClickListener);
+        mAvararLL.setOnClickListener(onClickListener);
         mSexRl.setOnClickListener(onClickListener);
         mAreaRl.setOnClickListener(onClickListener);
         mSignatureRl.setOnClickListener(onClickListener);
@@ -302,5 +313,8 @@ public class MeInfoView extends LinearLayout {
         return mEmailTv.getText().toString().trim();
     }
 
+    public void showUserAvatar(Uri url){
+        mUserAvatar.setImageURI(url);
+    }
 
 }

@@ -60,7 +60,7 @@ public class StatusInfoFragment extends BaseFragment {
     }
 
     private void setTabs() {
-        FragmentViewPagerAdapter mViewPagerAdapter = new FragmentViewPagerAdapter(getFragmentManager());
+        FragmentViewPagerAdapter mViewPagerAdapter = new FragmentViewPagerAdapter(getChildFragmentManager());
         mViewPagerAdapter.addTab(new StatusInfoChildOneFragment(), "热门");
         mViewPagerAdapter.addTab(new StatusInfoChildTwoFragment(), "关注");
         mViewPagerAdapter.addTab(new StatusInfoChildThreeFrament(), "省内");
