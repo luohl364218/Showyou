@@ -117,23 +117,24 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseMainActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener, IUserFocusView ,
-        IMajorInfoUpdateView,IImageUploadView {
+        IUserFocusView,IMajorInfoUpdateView{
 
-    @BindView(R.id.drawer_layout)
+    /*从1.4版本开始废弃DrawerLayout*/
+   /* @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
     private ImageView mAvatarIv;
     private SimpleDraweeView userImg;
-    private CircleImageView userEditLogo;
+    private CircleImageView userEditLogo;*/
     private Context mContext = this;
 
-    @BindView(R.id.nav_view)
+    /*从1.4版本开始废弃DrawerLayout*/
+   /* @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     private View headerLayout;
     private TextView loginHint;
     private TextView userName;
-    private TextView userType;
+    private TextView userType;*/
 
     @BindView(R.id.bottomBar)
     BottomBar mBottomBar;
@@ -178,7 +179,6 @@ public class MainActivity extends BaseMainActivity
     private ParseUser currentLoginUser;
     private Dialog mDialog;
     private int unreadMsg = 0;
-    private ImageUploader mImageUploader;
 
     private String TAG = "mainActivity";
 
@@ -199,8 +199,7 @@ public class MainActivity extends BaseMainActivity
         //huanxin
       /*  //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener(this));*/
-      //准备好负责图片上传的工具
-        mImageUploader = new ImageUploader(this,this);
+
 
 
     }
@@ -301,7 +300,8 @@ public class MainActivity extends BaseMainActivity
 
     private void initLayoutElements(){
 
-        mNavigationView.setNavigationItemSelectedListener(this);
+        /*从1.4版本开始废弃DrawerLayout*/
+       /* mNavigationView.setNavigationItemSelectedListener(this);
         headerLayout = mNavigationView.getHeaderView(0);
         userImg = (SimpleDraweeView) headerLayout.findViewById(R.id.current_user_img);
         userImg.setOnClickListener(this);
@@ -311,25 +311,27 @@ public class MainActivity extends BaseMainActivity
         userEditLogo = (CircleImageView) headerLayout.findViewById(R.id.user_edit);
         userEditLogo.setOnClickListener(this);
         userName = (TextView) headerLayout.findViewById(R.id.username);
-        userType = (TextView) headerLayout.findViewById(R.id.user_type);
+        userType = (TextView) headerLayout.findViewById(R.id.user_type);*/
         currentLoginUser = ParseUser.getCurrentUser();
 
         if (currentLoginUser == null){
-            //双重防护， 只有同时登陆成功才能进入
+            /*从1.4版本开始废弃DrawerLayout*/
+           /* //双重防护， 只有同时登陆成功才能进入
             userImg.setImageURI(Uri.parse("www.cxx"));
             loginHint.setVisibility(View.VISIBLE);
-            userEditLogo.setVisibility(View.GONE);
+            userEditLogo.setVisibility(View.GONE);*/
 
         }
         else{
             initUserCloudInfo();
 
+            /*从1.4版本开始废弃DrawerLayout*/
+           /* String userImgUrl = currentLoginUser.getString("imgUrl");
             userEditLogo.setVisibility(View.VISIBLE);
-            String userImgUrl = currentLoginUser.getString("imgUrl");
             userImg.setImageURI(Uri.parse(userImgUrl == null? "www.cxx" :userImgUrl));
             loginHint.setVisibility(View.GONE);
             userName.setText(currentLoginUser.getUsername());
-            userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
+            userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());*/
             currentLoginUser.put("online",true);
             currentLoginUser.saveInBackground();
 
@@ -408,7 +410,7 @@ public class MainActivity extends BaseMainActivity
 
 
         //让viewPager缓存一定的页面，不要销毁
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
 
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -587,45 +589,22 @@ public class MainActivity extends BaseMainActivity
         manager.cancelAll();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.user_edit:
-                editUserImg();
-                break;
-            case R.id.login_hint:
-            case R.id.current_user_img:
-                currentLoginUser = ParseUser.getCurrentUser();
-                if (currentLoginUser == null) {
-                    Intent mIntent = new Intent(this, LoginActivity.class);
-                    startActivity(mIntent);
-                }
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-                break;
-
-            default:
-                break;
-        }
-
-    }
-
-
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onLoginDoneEvent(LoginDoneEvent event) {
         if (event.isLogin()){
             try{
                 currentLoginUser = ParseUser.getCurrentUser();
-                userName.setText(currentLoginUser.getUsername());
+                /*从1.4版本开始废弃DrawerLayout*/
+                /*userName.setText(currentLoginUser.getUsername());
                 loginHint.setVisibility(View.GONE);
-                userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
+                userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());*/
                 String img = currentLoginUser.getString("imgUrl");
                 if (img == null){
                     img = Constants.URL_DEFAULT_MAN_IMG;
                 }
-                userImg.setImageURI(Uri.parse(img));
-                userEditLogo.setVisibility(View.VISIBLE);
+                /*从1.4版本开始废弃DrawerLayout*/
+                /*userImg.setImageURI(Uri.parse(img));
+                userEditLogo.setVisibility(View.VISIBLE);*/
                 SharePreferenceManager.putString(mContext,Constants.DB_USERIMG_ONLINE, img);
                 SharePreferenceManager.putString(mContext,Constants.DB_USERNAME, currentLoginUser.getUsername());
 
@@ -645,12 +624,13 @@ public class MainActivity extends BaseMainActivity
     public void onLogoutEvent(LogoutEvent event) {
         if (event.isLogout()){
             try{
-                userImg.setImageURI(Uri.parse("www.cxx"));
+                /*从1.4版本开始废弃DrawerLayout*/
+                /*userImg.setImageURI(Uri.parse("www.cxx"));
                 loginHint.setVisibility(View.VISIBLE);
                 userEditLogo.setVisibility(View.GONE);
                 userName.setText("第0行代码");
                 userType.setText("1124281072@qq.com");
-                currentLoginUser = null;
+                currentLoginUser = null;*/
             }catch (Exception e){
 
             }
@@ -658,7 +638,8 @@ public class MainActivity extends BaseMainActivity
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+     /*从1.4版本开始废弃DrawerLayout*/
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onUserTypeChangeEvent(UserTypeChangeEvent event){
         if (event.isCommonUser()){
             userType.setText(UserType.USER.getName());
@@ -667,7 +648,7 @@ public class MainActivity extends BaseMainActivity
             userType.setText(UserType.PROVIDER.getName());
         }
 
-    }
+    }*/
 
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
@@ -676,14 +657,15 @@ public class MainActivity extends BaseMainActivity
             try{
 
                 currentLoginUser = ParseUser.getCurrentUser();
-                userName.setText(currentLoginUser.getUsername());
+                 /*从1.4版本开始废弃DrawerLayout*/
+                /*userName.setText(currentLoginUser.getUsername());
                 loginHint.setVisibility(View.GONE);
                 userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
                 String img = currentLoginUser.getString("imgUrl");
                 if (img == null){
                     img = Constants.URL_DEFAULT_MAN_IMG;
                 }
-                userImg.setImageURI(Uri.parse(img));
+                userImg.setImageURI(Uri.parse(img));*/
 
                 FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
                 mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
@@ -926,94 +908,10 @@ public class MainActivity extends BaseMainActivity
         }
     }
 
-    public void editUserImg(){
-        showImgSelectDialog();
-    }
-
-    private void showImgSelectDialog() {
-
-        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
-        final LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.dialog_img_select, null);
-        dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-        RelativeLayout albumBtn = (RelativeLayout) view.findViewById(R.id.album_btn);
-        RelativeLayout cameraBtn = (RelativeLayout) view.findViewById(R.id.camera_btn);
-
-        View.OnClickListener listener = new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-
-                switch (v.getId()){
-
-                    case R.id.album_btn:
-
-                        mImageUploader.chooseUserImg(UploadImgType.IMG_AVATAR);
-                        dialog.dismiss();
-
-                        break;
-
-                    case R.id.camera_btn:
-                        mImageUploader.takePhoto(UploadImgType.IMG_AVATAR);
-                        dialog.dismiss();
-                        break;
-
-                    case R.id.cancel_btn:
-                        dialog.dismiss();
-                        break;
-
-                }
-            }
-        };
-
-
-        albumBtn.setOnClickListener(listener);
-        cameraBtn.setOnClickListener(listener);
-    }
-
-    @Override
-    public void imagePermissionRefused() {
-        showToast("照片获取请求被拒绝，请手动开启");
-    }
-
-    @Override
-    public void imageUploadSuccess(String imgUrl, Uri localPath) {
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Glide.with(getApplicationContext()).load(localPath).into(userImg);
-            }
-        });
-
-
-    }
-
-    @Override
-    public void imageUploadFailed(Exception e) {
-        showToast("图片上传失败");
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
-            case Constants.REQUEST_CODE_CHOOSE:
-                if (data == null)
-                    break;
-                mImageUploader.startCrop(data);
-                break;
-            case UCrop.REQUEST_CROP:
-                if (data == null)
-                    break;
-                mImageUploader.imageUpLoad(data);
-                break;
-            case Constants.REQUEST_CODE_TAKE_PHOTO:
-                mImageUploader.startCrop();
-                break;
 
             case 1:
                 /**

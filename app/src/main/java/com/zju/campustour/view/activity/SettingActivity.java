@@ -72,6 +72,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mResetPwdRl.setOnClickListener(this);
         mAboutRl.setOnClickListener(this);
         mNoDisturbBtn.setOnChangedListener(R.id.global_no_disturb_setting, this);
+        mCheckUpdateRl.setOnClickListener(this);
+        mLogoutRl.setOnClickListener(this);
 
         final Dialog dialog = DialogCreator.createLoadingDialog(mContext, getString(R.string.jmui_loading));
         dialog.show();

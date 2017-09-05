@@ -5,6 +5,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/fragment_search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/jmui_jpush_blue"
+        app:layout_scrollFlags="scroll|enterAlways|snap">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/fragment_search_title_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:maxWidth="190dp"
+                android:singleLine="true"
+                android:text="我"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+
+        <ImageButton
+            android:id="@+id/fragment_search_switch_user"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/jmui_back_btn_bg"
+            android:src="@mipmap/icon_setting_white" />
+
+
+
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -52,8 +90,8 @@
 
                             <com.facebook.drawee.view.SimpleDraweeView
                                 android:id="@+id/current_user_img"
-                                android:layout_width="80dp"
-                                android:layout_height="80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
                                 android:scaleType="centerCrop"
                                 fresco:failureImage="@mipmap/take_photo_me"
                                 fresco:failureImageScaleType="centerInside"
@@ -104,15 +142,16 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/edit_info"
+                android:id="@+id/my_schoolmate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:padding="@dimen/largePadding"
                 android:background="@drawable/selector_list_item"
-                android:drawableLeft="@mipmap/icon_info_round"
+                android:drawableLeft="@mipmap/icon_xiaoyou_round"
                 android:gravity="center_vertical"
                 android:drawablePadding="20dp"
-                android:text="@string/my_info"
+                android:text="@string/my_schoolmate"
                 android:textColor="@color/alpha_50_black"/>
 
             <View
@@ -150,21 +189,18 @@
                 android:text="我的状态"
                 android:textColor="@color/alpha_50_black"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/alpha_10_black"/>
 
             <TextView
-                android:id="@+id/my_schoolmate"
+                android:id="@+id/edit_info"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/largePadding"
                 android:background="@drawable/selector_list_item"
-                android:drawableLeft="@mipmap/icon_xiaoyou_round"
+                android:drawableLeft="@mipmap/icon_info_round"
                 android:gravity="center_vertical"
                 android:drawablePadding="20dp"
-                android:text="@string/my_schoolmate"
+                android:text="@string/my_info"
                 android:textColor="@color/alpha_50_black"/>
 
             <View

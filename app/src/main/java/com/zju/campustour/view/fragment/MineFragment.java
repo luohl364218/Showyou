@@ -17,9 +17,11 @@ import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseUser;
 import com.zju.campustour.R;
+import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.presenter.implement.ImageUploader;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
+import com.zju.campustour.presenter.protocal.event.UserTypeChangeEvent;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MeInfoActivity;
 import com.zju.campustour.view.activity.MyProjectActivity;
@@ -112,7 +114,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             String userImgUrl = currentLoginUser.getString("imgUrl");
             userImg.setImageURI(Uri.parse(userImgUrl == null? "www.cxx" :userImgUrl));
             loginHint.setVisibility(View.GONE);
-            userName.setText(currentLoginUser.getUsername());
+            userName.setText(currentLoginUser.getString(Constants.User_realName));
             userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());
             currentLoginUser.put("online",true);
             currentLoginUser.saveInBackground();
@@ -198,6 +200,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             userImg.setImageURI(mUri);
 
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUserTypeChangeEvent(UserTypeChangeEvent event){
+        if (event.isCommonUser()){
+            userType.setText(UserType.USER.getName());
+        }
+        else {
+            userType.setText(UserType.PROVIDER.getName());
+        }
+
     }
 
 

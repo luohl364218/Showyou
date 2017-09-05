@@ -115,7 +115,8 @@ public class ChatFragment extends BaseFragment {
         mToolbar.inflateMenu(R.menu.chat_fragment_menu);
         mToolbar.setTitle("");
         mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+         /*从1.4版本开始废弃DrawerLayout*/
+      /*  mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
@@ -123,7 +124,7 @@ public class ChatFragment extends BaseFragment {
                     drawer.openDrawer(GravityCompat.START);
                 }
             }
-        });
+        });*/
 
         mConvListView = new ConversationListView(mRootView, this.getActivity());
         mConvListView.initModule();

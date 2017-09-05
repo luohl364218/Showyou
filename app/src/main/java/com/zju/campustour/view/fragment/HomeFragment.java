@@ -160,7 +160,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         scanBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_right_btn);
         addBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_add_btn);
 
-        userBtn.setOnClickListener(new View.OnClickListener() {
+         /*从1.4版本开始废弃DrawerLayout*/
+       /* userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
@@ -168,7 +169,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     drawer.openDrawer(GravityCompat.START);
                 }
             }
-        });
+        });*/
         scanBtn.setOnClickListener(this);
 
 
