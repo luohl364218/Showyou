@@ -100,7 +100,6 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ProjectUserMap");
         query.whereEqualTo("userId",userId)
                 .whereEqualTo("userProjectState",type.getIndex())
-                .whereEqualTo(Constants.Project_IsDelete, false)
                 .selectKeys(asList("projectId"));
         mProjects = new ArrayList<>();
         ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
@@ -113,7 +112,11 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
                     }
 
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("Project");
-                    query.whereContainedIn("objectId",projectIdList).include("providerV2").setSkip(startIndex).setLimit(count);
+                    query.whereContainedIn("objectId",projectIdList)
+                            .include("providerV2")
+                            .whereEqualTo(Constants.Project_IsDelete, false)
+                            .setSkip(startIndex)
+                            .setLimit(count);
 
                     query.findInBackground(new FindCallback<ParseObject>() {
                         @Override
