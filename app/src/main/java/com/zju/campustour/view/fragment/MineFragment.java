@@ -22,6 +22,7 @@ import com.zju.campustour.presenter.implement.ImageUploader;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.event.UserPictureUploadDone;
 import com.zju.campustour.presenter.protocal.event.UserTypeChangeEvent;
+import com.zju.campustour.view.activity.AnotherMyProjectActivity;
 import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MeInfoActivity;
 import com.zju.campustour.view.activity.MyProjectActivity;
@@ -62,6 +63,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             mRootView = inflater.inflate(R.layout.fragment_mine, container, false);
             mContext = getActivity();
             currentLoginUser = ParseUser.getCurrentUser();
+            EventBus.getDefault().register(this);
             initView();
 
         }
@@ -146,7 +148,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.my_project:
                 //打开我的活动
-                Intent mIntent_1 = new Intent(mContext, MyProjectActivity.class);
+                Intent mIntent_1 = new Intent(mContext, AnotherMyProjectActivity.class);
                 currentLoginUser = ParseUser.getCurrentUser();
                 if (currentLoginUser != null)
                     mIntent_1.putExtra("userType", currentLoginUser.getInt("userType"));
@@ -213,5 +215,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     }
 
+    @Override
+    public void onDestroy() {
 
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

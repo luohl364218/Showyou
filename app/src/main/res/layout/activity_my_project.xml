@@ -25,27 +25,22 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/my_project_tab_layout"
+        style="@style/customTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/customTabLayout"
         app:tabGravity="fill"
-        app:tabMode="fixed"/>
+        app:tabMode="fixed" />
 
-    <com.cjj.MaterialRefreshLayout
-        android:id="@+id/my_project_refresh_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:overlay="false"
-        app:wave_color="@color/transparent"
-        app:wave_show="true">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_project_recycle_view"
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
-    </com.cjj.MaterialRefreshLayout>
+
 
 
 </LinearLayout>

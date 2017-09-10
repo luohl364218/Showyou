@@ -1,13 +1,8 @@
 package com.zju.campustour.view.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+/*中学学生*/
 public class InformChildTwoFragment extends BaseFragment implements ISearchUserInfoView {
 
     private String TAG = "InformChildTwoFragment";
@@ -48,26 +44,17 @@ public class InformChildTwoFragment extends BaseFragment implements ISearchUserI
     private MaterialRefreshLayout mMaterialRefreshLayout;
     IUserInfoOpPresenter mUserInfoOpPresenter;
 
-
     private LinearLayout noResultHintWrapper;
     private TextView noResultHint;
 
-    //area index in array
-    int searchArea = -1;
-    String searchSchool = null;
-    String searchMajor = null;
-
     boolean isRefreshing = false;
-    //todo 标志位，让界面视图发生改变
-    boolean isMajorNotCommon = true;
+
+    boolean isMajorNotCommon = false;
     boolean isOrderByFans = true;
     boolean isOrderByLatest = false;
 
-
     //设置一个全局变量保存已有的user，只在单独更新某个item时使用
     private List<User> mUserList;
-
-
 
     @Nullable
     @Override
@@ -130,7 +117,7 @@ public class InformChildTwoFragment extends BaseFragment implements ISearchUserI
     private void loadMoreServiceInfoData() {
 
         state = Constants.STATE_MORE;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,mItemInfoAdapter.getDatas().size(),searchArea,-1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
+        mUserInfoOpPresenter.queryUserWithConditions(mItemInfoAdapter.getItemCount(),Constants.GRADE_PRIMARY_SCHOOL,Constants.GRADE_HIGH_SCHOOL,isOrderByFans,isOrderByLatest,isMajorNotCommon);
         isRefreshing = false;
         //mMaterialRefreshLayout.finishRefreshLoadMore();
     }
@@ -138,7 +125,7 @@ public class InformChildTwoFragment extends BaseFragment implements ISearchUserI
     private void refreshServiceItemInfoData() {
 
         state = Constants.STATE_REFRESH;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
+        mUserInfoOpPresenter.queryUserWithConditions(0,Constants.GRADE_PRIMARY_SCHOOL,Constants.GRADE_HIGH_SCHOOL,isOrderByFans,isOrderByLatest,isMajorNotCommon);
         //showLocalServiceItemInfoData();
     }
 
@@ -211,7 +198,7 @@ public class InformChildTwoFragment extends BaseFragment implements ISearchUserI
             mMaterialRefreshLayout.setLoadMore(true);
             if (mUserList == null || mUserList.size() == 0) {
                 state = Constants.STATE_NORMAL;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                mUserInfoOpPresenter.queryUserWithConditions(0,Constants.GRADE_PRIMARY_SCHOOL,Constants.GRADE_HIGH_SCHOOL,isOrderByFans,isOrderByLatest,isMajorNotCommon);
             }
 
         }
@@ -222,16 +209,17 @@ public class InformChildTwoFragment extends BaseFragment implements ISearchUserI
             mMaterialRefreshLayout.finishRefresh();
             mMaterialRefreshLayout.finishRefreshLoadMore();
             mMaterialRefreshLayout.setLoadMore(false);
-            showToast(getContext(),"网络连接已经断开");
+            //showToast(getContext(),"网络连接已经断开");
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (mUserList == null || mUserList.size() == 0)
-            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,
-                    0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+        if (mUserList == null || mUserList.size() == 0) {
+            mUserInfoOpPresenter.queryUserWithConditions(0,
+                    Constants.GRADE_PRIMARY_SCHOOL,Constants.GRADE_HIGH_SCHOOL,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+        }
     }
 
     @Override
@@ -239,72 +227,6 @@ public class InformChildTwoFragment extends BaseFragment implements ISearchUserI
         super.onDestroy();
         EventBus.getDefault().unregister(this);//解除订阅
     }
-
-
-
-  /*  @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-
-        int tag = (int) tab.getTag();
-        if (mMaterialRefreshLayout != null){
-            mMaterialRefreshLayout.finishRefresh();
-            mMaterialRefreshLayout.finishRefreshLoadMore();
-            mMaterialRefreshLayout.setLoadMore(true);
-        }
-
-        switch (tag){
-            case Constants.TAG_HOT_RECOMMEND:
-                searchSchool = null;
-                searchMajor = null;
-                searchArea = -1;
-                state = Constants.STATE_REFRESH;
-                isOrderByFans = true;
-                isOrderByLatest = false;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
-                break;
-            case Constants.TAG_SAME_PROVINCE:
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                String userProvince = "";
-                if (currentUser == null)
-                    userProvince = "北京市";
-                else if (currentUser.getString("province") == null){
-                    showToast(getContext(),"默认地区：北京市");
-                    userProvince = "北京市";
-                }
-                else {
-                    userProvince = currentUser.getString("province");
-                }
-
-                searchSchool = null;
-                searchMajor = null;
-                isOrderByFans = false;
-                isOrderByLatest = false;
-                int index = 0;
-                for (int i = 0; i <= SchoolData.allAreaGroup.length; i++){
-                    if (userProvince.equals(SchoolData.allAreaGroup[i])){
-                        index = i;
-                        break;
-                    }
-                }
-                searchArea = index;
-                state = Constants.STATE_REFRESH;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);
-                break;
-            case Constants.TAG_LATEST:
-                searchSchool = null;
-                searchMajor = null;
-                searchArea = -1;
-                state = Constants.STATE_REFRESH;
-                isOrderByFans = false;
-                isOrderByLatest = true;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
-                break;
-            default:
-                break;
-        }
-
-    }
-*/
 
 
     @Override

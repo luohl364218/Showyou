@@ -165,7 +165,7 @@ public class SearchActivity extends BaseActivity implements ISearchUserInfoView 
             mUserInfoOpPresenter.searchRelativeUserWithConditions(conditions,0);
         }
         else
-            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest);
+            mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest);
         //showLocalServiceItemInfoData();
 
 
@@ -178,7 +178,7 @@ public class SearchActivity extends BaseActivity implements ISearchUserInfoView 
             mUserInfoOpPresenter.searchRelativeUserWithConditions(conditions, mItemInfoAdapter.getDatas().size());
         }
         else {
-            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,mItemInfoAdapter.getDatas().size(),searchArea,-1,isOrderByFans, isOrderByLatest);
+            mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,mItemInfoAdapter.getDatas().size(),searchArea,-1,isOrderByFans, isOrderByLatest);
             isRefreshing = false;
             //mMaterialRefreshLayout.finishRefreshLoadMore();
         }
@@ -218,7 +218,7 @@ public class SearchActivity extends BaseActivity implements ISearchUserInfoView 
         searchSchool = event.getSchool();
         searchArea = event.getArea();
         state = Constants.STATE_REFRESH;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool, searchMajor, 0, searchArea,-1,isOrderByFans, isOrderByLatest);
+        mUserInfoOpPresenter.queryUserWithConditions(searchSchool, searchMajor, 0, searchArea,-1,isOrderByFans, isOrderByLatest);
 
     }
 

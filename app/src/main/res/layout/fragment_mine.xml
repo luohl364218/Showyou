@@ -90,8 +90,8 @@
 
                             <com.facebook.drawee.view.SimpleDraweeView
                                 android:id="@+id/current_user_img"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
                                 android:scaleType="centerCrop"
                                 fresco:failureImage="@mipmap/take_photo_me"
                                 fresco:failureImageScaleType="centerInside"

@@ -202,8 +202,8 @@ public class RegisterLookAroundActivity extends BaseActivity implements IImageUp
 
     private void showImgSelectDialog() {
 
-        final Dialog dialog = new Dialog(mContext, R.style.jmui_default_dialog_style);
-        final LayoutInflater inflater = LayoutInflater.from(mContext);
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_img_select, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -253,7 +253,7 @@ public class RegisterLookAroundActivity extends BaseActivity implements IImageUp
 
     @Override
     public void imageUploadSuccess(String imgUrl, Uri localPath) {
-
+        isImgSet = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

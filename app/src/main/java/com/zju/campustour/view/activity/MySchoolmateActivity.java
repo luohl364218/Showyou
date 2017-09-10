@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,9 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.FocusMapOpPresenterImpl;
+import com.zju.campustour.view.adapter.FragmentViewPagerAdapter;
+import com.zju.campustour.view.fragment.MySchoolmateChildOneFragment;
+import com.zju.campustour.view.fragment.MySchoolmateChildTwoFragment;
 import com.zju.campustour.view.iview.ISearchUserInfoView;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.widget.DividerItemDecortion;
@@ -30,9 +34,59 @@ import butterknife.ButterKnife;
 
 import static com.zju.campustour.model.common.Constants.STATE_NORMAL;
 
-public class MySchoolmateActivity extends BaseActivity implements ISearchUserInfoView ,TabLayout.OnTabSelectedListener{
+public class MySchoolmateActivity extends BaseActivity  {
+
+
+
 
     @BindView(R.id.my_schoolmate_toolbar)
+    Toolbar mToolbar;
+
+    @BindView(R.id.my_schoolmate_tab_layout)
+    TabLayout mTabLayout;
+
+    @BindView(R.id.view_pager)
+    ViewPager mViewPager;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_schoolmate);
+        ButterKnife.bind(this);
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
+
+        initView();
+        setTabs();
+
+    }
+
+
+    private void initView() {
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+    }
+
+    private void setTabs() {
+        FragmentViewPagerAdapter mViewPagerAdapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
+        mViewPagerAdapter.addTab(new MySchoolmateChildOneFragment(), "我的关注");
+        mViewPagerAdapter.addTab(new MySchoolmateChildTwoFragment(), "我的粉丝");
+
+        mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
+        //把tabLayout和Viewpager关联起来
+        mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+   /* @BindView(R.id.my_schoolmate_toolbar)
     Toolbar mToolbar;
 
     @BindView(R.id.my_schoolmate_tab_layout)
@@ -63,7 +117,7 @@ public class MySchoolmateActivity extends BaseActivity implements ISearchUserInf
         ButterKnife.bind(this);
         currentLoginUser = ParseUser.getCurrentUser();
 
-        /*让toolbar显示我们的标题*/
+        *//*让toolbar显示我们的标题*//*
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
         initView();
@@ -280,5 +334,8 @@ public class MySchoolmateActivity extends BaseActivity implements ISearchUserInf
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
-    }
+    }*/
+
+
+
 }

@@ -20,6 +20,10 @@ public interface IProjectInfoOpPresenter {
 
     public void getLimitProjectInfo(int start, int count ,boolean isLatest, boolean isHotest);
 
+    public void getLimitProjectInfo(int start, int count ,boolean isLatest, boolean isHotest,boolean isRecommend);
+
+    public void getLimitProjectInfo(int start, int count ,boolean isLatest, boolean isHotest,boolean isRecommend, boolean isOffline);
+
     public void queryProjectWithId(String projectId);
 
     public void queryProjectSaleInfoWithId(String projectId);

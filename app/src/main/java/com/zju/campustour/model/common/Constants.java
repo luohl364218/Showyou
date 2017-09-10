@@ -260,6 +260,7 @@ public class Constants {
     //project表
     public static String Project_IsDelete = "isDelete";
     public static String Project_IsOffline = "isOffline";
+    public static String Project_IsRecommend = "isRecommend";
 
 
     //Status 状态表

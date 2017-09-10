@@ -1,13 +1,8 @@
 package com.zju.campustour.view.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,17 +15,14 @@ import android.widget.TextView;
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.common.Constants;
-import com.zju.campustour.model.database.data.SchoolData;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.view.activity.UserActivity;
-import com.zju.campustour.view.adapter.FragmentViewPagerAdapter;
 import com.zju.campustour.view.adapter.UserInfoAdapter;
 import com.zju.campustour.view.iview.ISearchUserInfoView;
 import com.zju.campustour.view.widget.DividerItemDecortion;
@@ -41,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-
+/*该页显示的是最新注册的校友*/
 public class InformChildOneFragment extends BaseFragment implements ISearchUserInfoView{
 
 
@@ -63,16 +55,13 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
     String searchMajor = null;
 
     boolean isRefreshing = false;
-    //todo 标志位，让界面视图发生改变
-    boolean isMajorNotCommon = true;
+    //显示最新人员，不是专业的也行
+    boolean isMajorNotCommon = false;
     boolean isOrderByFans = false;
     boolean isOrderByLatest = false;
 
-
     //设置一个全局变量保存已有的user，只在单独更新某个item时使用
     private List<User> mUserList;
-
-
 
 
     @Nullable
@@ -136,7 +125,7 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
     private void loadMoreServiceInfoData() {
 
         state = Constants.STATE_MORE;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,mItemInfoAdapter.getDatas().size(),searchArea,-1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
+        mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,mItemInfoAdapter.getDatas().size(),searchArea,-1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
         isRefreshing = false;
         //mMaterialRefreshLayout.finishRefreshLoadMore();
     }
@@ -144,7 +133,7 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
     private void refreshServiceItemInfoData() {
 
         state = Constants.STATE_REFRESH;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
+        mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
         //showLocalServiceItemInfoData();
     }
 
@@ -217,7 +206,7 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
             mMaterialRefreshLayout.setLoadMore(true);
             if (mUserList == null || mUserList.size() == 0) {
                 state = Constants.STATE_NORMAL;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
             }
 
         }
@@ -236,7 +225,7 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
     public void onStart() {
         super.onStart();
         if (mUserList == null || mUserList.size() == 0)
-            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,
+            mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,
                     0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
     }
 
@@ -266,7 +255,7 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
                 state = Constants.STATE_REFRESH;
                 isOrderByFans = true;
                 isOrderByLatest = false;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
                 break;
             case Constants.TAG_SAME_PROVINCE:
                 ParseUser currentUser = ParseUser.getCurrentUser();
@@ -294,7 +283,7 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
                 }
                 searchArea = index;
                 state = Constants.STATE_REFRESH;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);
                 break;
             case Constants.TAG_LATEST:
                 searchSchool = null;
@@ -303,7 +292,7 @@ public class InformChildOneFragment extends BaseFragment implements ISearchUserI
                 state = Constants.STATE_REFRESH;
                 isOrderByFans = false;
                 isOrderByLatest = true;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
                 break;
             default:
                 break;

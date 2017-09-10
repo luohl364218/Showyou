@@ -132,7 +132,7 @@ public class RegisterCollegeStudentActivity extends BaseActivity implements IIma
     private boolean isImgSet = false;
     private boolean isSchoolNameNotNull = false;
     private boolean isMajorNotNull = false;
-    private int gradeId = -1;
+    private int gradeId = 13;
     private String schoolProvince = "";
     private String schoolCity = "";
     private String schoolDistrict = "";
@@ -370,12 +370,11 @@ public class RegisterCollegeStudentActivity extends BaseActivity implements IIma
             return;
         }
 
-        if (gradeId < 0){
-            showToast("请选择年级");
+        String userRealName = realName.getText().toString().trim();
+        if (TextUtils.isEmpty(userRealName)){
+            showToast("姓名不能为空");
             return;
         }
-
-        String userRealName = realName.getText().toString().trim();
 
         if (!TextUtils.isEmpty(schoolProvince)){
             currentUser.put(Constants.User_province, schoolProvince);
@@ -477,8 +476,8 @@ public class RegisterCollegeStudentActivity extends BaseActivity implements IIma
 
     private void showImgSelectDialog() {
 
-        final Dialog dialog = new Dialog(mContext, R.style.jmui_default_dialog_style);
-        final LayoutInflater inflater = LayoutInflater.from(mContext);
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_img_select, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -529,6 +528,7 @@ public class RegisterCollegeStudentActivity extends BaseActivity implements IIma
     @Override
     public void imageUploadSuccess(String imgUrl, Uri localPath) {
 
+        isImgSet = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

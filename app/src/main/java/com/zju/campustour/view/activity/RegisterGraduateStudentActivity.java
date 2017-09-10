@@ -109,7 +109,7 @@ public class RegisterGraduateStudentActivity extends BaseActivity implements IIm
     private boolean isRealNameNotNull = false;
     private boolean isImgSet = false;
     private boolean isSchoolNameNotNull = false;
-    private int gradeId = -1;
+    private int gradeId = 13;
 
     /*学位选择Dialog*/
     private Dialog mDialog;
@@ -283,8 +283,8 @@ public class RegisterGraduateStudentActivity extends BaseActivity implements IIm
 
     private void showImgSelectDialog() {
 
-        final Dialog dialog = new Dialog(mContext, R.style.jmui_default_dialog_style);
-        final LayoutInflater inflater = LayoutInflater.from(mContext);
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_img_select, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -335,6 +335,7 @@ public class RegisterGraduateStudentActivity extends BaseActivity implements IIm
     @Override
     public void imageUploadSuccess(String imgUrl, Uri localPath) {
 
+        isImgSet = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

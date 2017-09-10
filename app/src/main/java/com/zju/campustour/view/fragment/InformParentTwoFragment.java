@@ -53,8 +53,6 @@ public class InformParentTwoFragment extends BaseFragment {
         viewPager.setOffscreenPageLimit(3);
         //把tabLayout和Viewpager关联起来
         tablayout.setupWithViewPager(viewPager);
-
-        TabLayoutUtil.setIndicator(getContext(),tablayout,30,30);
     }
 
 

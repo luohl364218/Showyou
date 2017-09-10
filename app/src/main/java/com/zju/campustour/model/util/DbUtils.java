@@ -79,8 +79,17 @@ public class DbUtils {
         else
             school = user.getString("school");
 
+        if (TextUtils.isEmpty(realName))
+            realName =  "校友";
+
         if (TextUtils.isEmpty(school))
             school =  "未填写";
+
+        if (TextUtils.isEmpty(major))
+            major =  "神秘专业";
+
+        if (TextUtils.isEmpty(shortDescription))
+            shortDescription =  "初来乍到，请多多指教";
 
         String collegeTag = user.getString("collegeTag");
         boolean isVerified = user.getBoolean(Constants.User_isVerified);

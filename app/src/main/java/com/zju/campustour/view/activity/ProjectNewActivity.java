@@ -88,7 +88,7 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
     boolean isProjectDateNotNull = false;
     boolean isImgSet = false;
 
-    String imgUrl = "";
+    String mImgUrl = "";
     Date startTime;
 
     private ImageUploader mImageUploader;
@@ -196,8 +196,8 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
             if (currentProject != null && isEditMode){
                 mTitle.setText("修改活动");
                 isImgSet = true;
-                imgUrl = currentProject.getImgUrl();
-                Glide.with(mContext).load(imgUrl).into(backgroundPic);
+                mImgUrl = currentProject.getImgUrl();
+                Glide.with(mContext).load(mImgUrl).into(backgroundPic);
 
                 projectTitle.setText(currentProject.getTitle());
                 isTitleNotNull = true;
@@ -274,14 +274,14 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
 
 
      /*      if (!isImgSet){
-            imgUrl=Constants.URL_DEFAULT_PROJECT_BG;
+            mImgUrl=Constants.URL_DEFAULT_PROJECT_BG;
         }
      Project project = new Project(
                 currentProject.getUserTypeId(),
                 currentUser,
                 projectName,
                 startTime,
-                imgUrl,
+                mImgUrl,
                 Integer.valueOf(projectPrice),
                 Integer.valueOf(projectSalePrice),
                 projectDescription,
@@ -320,13 +320,13 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
                         object.put("startTime",startTime);
                         currentProject.setStartTime(startTime);
 
-                        //默认线下活动
+                        //默认线上活动
                         object.put(Constants.Project_IsOffline,false);
                         currentProject.setOffline(false);
 
                         if (isImgSet) {
-                            object.put("imgUrl", imgUrl);
-                            currentProject.setImgUrl(imgUrl);
+                            object.put("mImgUrl", mImgUrl);
+                            currentProject.setImgUrl(mImgUrl);
                         }
                         object.saveInBackground(new SaveCallback() {
                             @Override
@@ -401,11 +401,12 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
             project.put("official",false);
             project.put(Constants.Project_IsDelete,false);
             project.put(Constants.Project_IsOffline,false);
+            project.put(Constants.Project_IsRecommend,false);
             if (!isImgSet){
-                project.put("imgUrl", Constants.URL_DEFAULT_PROJECT_BG);
+                project.put("mImgUrl", Constants.URL_DEFAULT_PROJECT_BG);
             }
             else
-                project.put("imgUrl",imgUrl);
+                project.put("mImgUrl", mImgUrl);
 
             project.saveInBackground(new SaveCallback() {
                 @Override
@@ -499,6 +500,8 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
     @Override
     public void imageUploadSuccess(String imgUrl, Uri localPath) {
 
+        isImgSet = true;
+        mImgUrl = imgUrl;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

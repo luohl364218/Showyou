@@ -31,7 +31,15 @@
         app:tabGravity="fill"
         app:tabMode="fixed"/>
 
-    <com.cjj.MaterialRefreshLayout
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+   <!-- <com.cjj.MaterialRefreshLayout
         android:id="@+id/my_schoolmate_refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,7 +53,7 @@
             android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
 
-    </com.cjj.MaterialRefreshLayout>
+    </com.cjj.MaterialRefreshLayout>-->
 
 
 </LinearLayout>

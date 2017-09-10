@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * Created by HeyLink on 2017/4/1.
  */
-
+@Deprecated
 public class SearchFragment extends BaseFragment implements ISearchUserInfoView,TabLayout.OnTabSelectedListener , View.OnClickListener{
 
     private String TAG = "SearchFragment";
@@ -90,7 +90,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     public void onStart() {
         super.onStart();
         if (mUserList == null || mUserList.size() == 0)
-            mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,
+            mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,
                     0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
 
     }
@@ -249,7 +249,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     private void refreshServiceItemInfoData(){
 
         state = Constants.STATE_REFRESH;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
+        mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
         //showLocalServiceItemInfoData();
 
 
@@ -258,7 +258,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
     private void loadMoreServiceInfoData(){
 
         state = Constants.STATE_MORE;
-        mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,mItemInfoAdapter.getDatas().size(),searchArea,-1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
+        mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,mItemInfoAdapter.getDatas().size(),searchArea,-1,isOrderByFans, isOrderByLatest,isMajorNotCommon);
         isRefreshing = false;
         //mMaterialRefreshLayout.finishRefreshLoadMore();
 
@@ -328,7 +328,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
             mMaterialRefreshLayout.setLoadMore(true);
             if (mUserList == null || mUserList.size() == 0) {
                 state = Constants.STATE_NORMAL;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
             }
 
         }
@@ -357,7 +357,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
             if (mFloatingActionButton!= null)
                 mFloatingActionButton.show();
             if (isNetworkUseful)
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,
                         0,-1,-1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
             else {
                 showWrongHint("网络连接出错啦~");
@@ -391,7 +391,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
                 state = Constants.STATE_REFRESH;
                 isOrderByFans = true;
                 isOrderByLatest = false;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
                 break;
             case Constants.TAG_SAME_PROVINCE:
                 ParseUser currentUser = ParseUser.getCurrentUser();
@@ -419,7 +419,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
                 }
                 searchArea = index;
                 state = Constants.STATE_REFRESH;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1);
                 break;
             case Constants.TAG_LATEST:
                 searchSchool = null;
@@ -428,7 +428,7 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
                 state = Constants.STATE_REFRESH;
                 isOrderByFans = false;
                 isOrderByLatest = true;
-                mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
                 break;
             default:
                 break;
@@ -462,14 +462,14 @@ public class SearchFragment extends BaseFragment implements ISearchUserInfoView,
                     showToast(getContext(),"普通用户");
                     isMajorNotCommon = false;
                     state = Constants.STATE_REFRESH;
-                    mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                    mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
 
                 }
                 else {
                     showToast(getContext(),"专业用户");
                     isMajorNotCommon = true;
                     state = Constants.STATE_REFRESH;
-                    mUserInfoOpPresenter.queryProviderUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
+                    mUserInfoOpPresenter.queryUserWithConditions(searchSchool,searchMajor,0,searchArea, -1,isOrderByFans,isOrderByLatest,isMajorNotCommon);
                 }
 
                 break;

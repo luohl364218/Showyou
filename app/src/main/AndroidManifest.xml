@@ -83,7 +83,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.activity.SplashActivity"
-            android:theme="@style/WelcomeNoActionBar">
+            android:theme="@style/WelcomeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -295,6 +295,9 @@
             android:theme="@style/WelcomeNoActionBar">
         </activity>
         <activity android:name=".view.activity.LabelSelectActivity"
+                  android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.AnotherMyProjectActivity"
                   android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>

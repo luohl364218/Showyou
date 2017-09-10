@@ -80,14 +80,9 @@ import com.zju.campustour.view.fragment.ContactsFragment;
 import com.zju.campustour.view.fragment.InformFragment;
 import com.zju.campustour.view.fragment.MineFragment;
 import com.zju.campustour.view.fragment.StatusInfoFragment;
-import com.zju.campustour.view.iview.IImageUploadView;
 import com.zju.campustour.view.iview.IMajorInfoUpdateView;
 import com.zju.campustour.view.iview.IUserFocusView;
 import com.zju.campustour.view.activity.BaseMainActivity;
-import com.zju.campustour.view.activity.LoginActivity;
-import com.zju.campustour.view.activity.MyProjectActivity;
-import com.zju.campustour.view.activity.MySchoolmateActivity;
-import com.zju.campustour.view.activity.ProjectNewActivity;
 import com.zju.campustour.view.adapter.FragmentAdapter;
 import com.zju.campustour.view.fragment.HomeFragment;
 import com.zju.campustour.view.fragment.MessageFragment;
@@ -116,8 +111,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MainActivity extends BaseMainActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        IUserFocusView,IMajorInfoUpdateView{
+        implements IUserFocusView,IMajorInfoUpdateView{
 
     /*从1.4版本开始废弃DrawerLayout*/
    /* @BindView(R.id.drawer_layout)
@@ -444,149 +438,6 @@ public class MainActivity extends BaseMainActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        switch (id){
-            case R.id.edit_info:
-                //编辑我的信息
-                //// TODO: 2017/5/31 要把编辑信息的范围扩大
-                /*Intent mIntent = new Intent(this,RegisterInfoOneActivity.class);
-                mIntent.putExtra("isEditMode",true);
-                //修复BUG，需要登录验证
-                startActivity(mIntent,true);*/
-
-                startActivity(new Intent(this, MeInfoActivity.class), true);
-                break;
-            case R.id.my_project:
-                //打开我的活动
-
-                Intent mIntent_1 = new Intent(this,MyProjectActivity.class);
-                currentLoginUser = ParseUser.getCurrentUser();
-                if (currentLoginUser != null)
-                    mIntent_1.putExtra("userType",currentLoginUser.getInt("userType"));
-                else
-                    mIntent_1.putExtra("userType",0);
-
-                startActivity(mIntent_1,true);
-                break;
-
-            case R.id.my_schoolmate:
-                //打开我的校友
-                startActivity(new Intent(this,MySchoolmateActivity.class),true);
-                break;
-
-            case R.id.my_setting:
-                startActivity(new Intent(this, SettingActivity.class),true);
-                break;
-
-            case R.id.logout:
-                //退出登录
-                currentLoginUser = ParseUser.getCurrentUser();
-            /*退出登录也要网络可用*/
-                if (currentLoginUser != null){
-
-                    View.OnClickListener listener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            switch (view.getId()) {
-                                case R.id.jmui_cancel_btn:
-                                    mDialog.cancel();
-                                    break;
-                                case R.id.jmui_commit_btn:
-                                    currentLoginUser.put("online",false);
-                                    currentLoginUser.saveInBackground();
-
-                                    Logout();
-                                    cancelNotification();
-                                    NativeImageLoader.getInstance().releaseCache();
-                                    finish();
-                                    mDialog.cancel();
-                                    break;
-                            }
-                        }
-                    };
-                    mDialog = DialogCreator.createLogoutDialog(mContext, listener);
-                    mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
-                    mDialog.show();
-
-
-                }
-                break;
-            case R.id.build_project:
-                //发布活动
-
-                currentLoginUser = ParseUser.getCurrentUser();
-                //修复Bug，未登录状态下不能发布活动
-                if (currentLoginUser != null) {
-                    UserType mUserType = UserType.values()[currentLoginUser.getInt("userType")];
-                    if (mUserType == UserType.PROVIDER) {
-                        Intent mIntent_2 = new Intent(this, ProjectNewActivity.class);
-                        mIntent_2.putExtra("isEditMode", false);
-                        startActivity(mIntent_2, true);
-                    } else {
-                        showToast("同学你是普通用户，没有权限创建活动哦");
-                    }
-                }
-                break;
-            /*case R.id.test_enter:
-                startActivity(new Intent(this, IdentityConfirmActivity.class));
-                break;*/
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
-    //退出登录
-    private void Logout() {
-
-
-
-        EventBus.getDefault().post(new LogoutEvent(true));
-        // TODO Auto-generated method stub
-        final Intent intent = new Intent();
-        UserInfo info = JMessageClient.getMyInfo();
-        if (null != info) {
-            intent.putExtra("userName", info.getUserName());
-            File file = info.getAvatarFile();
-            if (file != null && file.isFile()) {
-                intent.putExtra("avatarFilePath", file.getAbsolutePath());
-            } else {
-                String path = FileHelper.getUserAvatarPath(info.getUserName());
-                file = new File(path);
-                if (file.exists()) {
-                    intent.putExtra("avatarFilePath", file.getAbsolutePath());
-                }
-            }
-            SharePreferenceManager.putString(this,Constants.DB_USERNAME,info.getUserName());
-            SharePreferenceManager.putString(this,Constants.DB_USERIMG,file.getAbsolutePath());
-
-            if (NetworkUtil.isNetworkAvailable(mContext)){
-                JMessageClient.logout();
-                ParseUser.logOut();
-            }
-
-            intent.setClass(mContext, ReloginActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Log.d(TAG, "user info is null!");
-        }
-    }
-
-    public void cancelNotification() {
-        NotificationManager manager = (NotificationManager) this.getApplicationContext()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.cancelAll();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行

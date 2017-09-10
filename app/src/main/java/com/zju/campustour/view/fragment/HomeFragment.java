@@ -105,15 +105,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     //设置一个全局变量保存已有的project，只在单独更新某个item时使用
     private List<Project> mProjectList;
 
-    //定义二维码扫描请求
-
     private boolean isLatest = false;
     private boolean isHotest = false;
 
-
-
     private ParseUser currentUser;
-
 
     private String TAG = "HomeFragment";
     public HomeFragment() {
@@ -138,8 +133,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             mHomePageImgLoader = new HomePageImgLoader(getContext(),this);
             mHomePageImgLoader.getImgList();
 
-            isLatest = false;
-            isHotest = true;
+            isLatest = true;
+            isHotest = false;
             mProjectInfoPresenter.getLimitProjectInfo(0,10,isLatest,isHotest);
 
             EventBus.getDefault().register(this);
@@ -171,12 +166,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });*/
         scanBtn.setOnClickListener(this);
-
-
         addBtn.setOnClickListener(this);
-
-
-
 
         //mMaterialRefreshLayout = (PullToRefreshScrollView) mRootView.findViewById(R.id.home_refresh_view);
         renwenBtn = (LinearLayout)mRootView.findViewById(R.id.fragment_home_renwen);
@@ -373,7 +363,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 });
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setAdapter(mProjectAdapter);
-                mRecyclerView.addItemDecoration(new DividerItemDecortion());
                 Log.d(TAG, "------------loading project info done----------");
                 EventBus.getDefault().post(new LoadingDone(true));
                 break;

@@ -429,7 +429,7 @@ public class RegisterInfoOneActivity extends BaseActivity{
         if (event != null && currentUser != null){
             try{
                 SharePreferenceManager.putString(this,Constants.DB_USERIMG,event.getLocalImgUrl());
-                currentUser.put("imgUrl",event.getCloudImgUrl());
+                currentUser.put("mImgUrl",event.getCloudImgUrl());
                 currentUser.saveInBackground();
                 Uri mUri = Uri.fromFile(new File(event.getLocalImgUrl()));
                 isImgSet = true;

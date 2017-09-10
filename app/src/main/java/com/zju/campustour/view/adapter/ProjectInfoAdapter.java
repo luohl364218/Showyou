@@ -60,6 +60,7 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
         LinearLayout projectCardViewTail;
         ImageView projectOfflineIv;
         ImageView projectOnlineIv;
+        LinearLayout projectBody;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -79,6 +80,7 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
             projectCardViewTail = (LinearLayout) itemView.findViewById(R.id.project_cardview_tail);
             projectOfflineIv = (ImageView) itemView.findViewById(R.id.offline_activity_iv);
             projectOnlineIv = (ImageView) itemView.findViewById(R.id.online_activity_iv);
+            projectBody = (LinearLayout) itemView.findViewById(R.id.project_body);
             if (state == Constants.PART_VIEW){
                 providerImgView.setVisibility(View.GONE);
                 projectCardViewTail.setVisibility(View.GONE);
@@ -88,10 +90,7 @@ public class ProjectInfoAdapter extends RecyclerView.Adapter<ProjectInfoAdapter.
                 projectCardViewTail.setVisibility(View.GONE);
             }
 
-
-
-
-            projectCardViewBody.setOnClickListener(new View.OnClickListener() {
+            projectBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null){

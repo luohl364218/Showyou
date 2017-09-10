@@ -14,15 +14,15 @@
 
  import com.zju.campustour.R;
  import com.zju.campustour.model.util.TabLayoutUtil;
+ import com.zju.campustour.view.activity.SearchActivity;
  import com.zju.campustour.view.activity.StatusNewActivity;
  import com.zju.campustour.view.adapter.FragmentViewPagerAdapter;
 
  public class InformFragment extends BaseFragment {
 
-
-
      private View mRootView;
      private ImageButton userIcon;
+     private ImageButton searchBtn;
      private TabLayout tablayout;
      private ViewPager viewPager;
 
@@ -44,10 +44,16 @@
 
      private void initView() {
          userIcon = (ImageButton) mRootView.findViewById(R.id.user_icon);
+         searchBtn = (ImageButton) mRootView.findViewById(R.id.search_icon);
          tablayout = (TabLayout) mRootView.findViewById(R.id.tab_layout);
          viewPager = (ViewPager) mRootView.findViewById(R.id.view_pager);
 
-
+         searchBtn.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity(new Intent(getActivity(), SearchActivity.class));
+             }
+         });
 
          setTabs();
      }
@@ -56,12 +62,11 @@
          FragmentViewPagerAdapter mViewPagerAdapter = new FragmentViewPagerAdapter(getChildFragmentManager());
          mViewPagerAdapter.addTab(new InformParentOneFragment(), "校友");
          mViewPagerAdapter.addTab(new InformParentTwoFragment(), "活动");
+ 		 mViewPagerAdapter.addTab(new InformParentThreeFragment(), "资讯");
          viewPager.setAdapter(mViewPagerAdapter);
          viewPager.setOffscreenPageLimit(4);
          //把tabLayout和Viewpager关联起来
          tablayout.setupWithViewPager(viewPager);
-
-
      }
 
 

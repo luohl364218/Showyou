@@ -21,11 +21,13 @@ public interface IUserInfoOpPresenter {
 
     public void queryMajorStudent(String majorName, int categoryId);
 
-    public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId);
+    public void queryUserWithConditions(int start, int startGrade, int endGrade,boolean isOrderByFansNum, boolean isOrderByLatest, boolean isMajorNotCommon);
 
-    public void queryProviderUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest);
+    public void queryUserWithConditions(String school, String major, int start, int area, int categoryId);
 
-    public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest,boolean isMajorNotCommon);
+    public void queryUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest);
+
+    public void queryUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest, boolean isMajorNotCommon);
 
     public void searchRelativeUserWithConditions(String condition,int start);
 

@@ -204,6 +204,90 @@ public class ProjectInfoOpPresenterImpl implements IProjectInfoOpPresenter {
     }
 
     @Override
+    public void getLimitProjectInfo(int start, int count,boolean isLatest, boolean isHotest, boolean isRecommend) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").whereNotEqualTo("projectState",3)
+                .whereEqualTo(Constants.Project_IsDelete, false)
+                .setSkip(start).setLimit(count).include("providerV2").selectKeys(Constants.projectDefaultKeys);
+
+        if (isLatest)
+            query.orderByDescending("createdAt");
+
+        if (isHotest)
+            query.orderByDescending("bookedNum");
+
+        if (isRecommend)
+            query.whereEqualTo(Constants.Project_IsRecommend,true);
+
+        mProjects = new ArrayList<>();
+        ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> projectList, ParseException e) {
+                if (e == null) {
+                     /*信息转换*/
+                    for(ParseObject project: projectList) {
+                        Project mProject = DbUtils.getProject(project);
+                        mProjects.add(mProject);
+                    }
+                    mISearchProjectInfoView.onGetProjectInfoDone(mProjects);
+                } else {
+                    Log.d(TAG, "Error: " + e.getMessage());
+                    mISearchProjectInfoView.onGetProjectInfoError(e);
+                }
+
+
+
+            }
+        });
+    }
+
+
+    @Override
+    public void getLimitProjectInfo(int start, int count,boolean isLatest, boolean isHotest, boolean isRecommend, boolean isOffline) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Project").whereNotEqualTo("projectState",3)
+                .whereEqualTo(Constants.Project_IsDelete, false)
+                .setSkip(start).setLimit(count).include("providerV2").selectKeys(Constants.projectDefaultKeys);
+
+        if (isLatest)
+            query.orderByDescending("createdAt");
+
+        if (isHotest)
+            query.orderByDescending("bookedNum");
+
+        if (isRecommend)
+            query.whereEqualTo(Constants.Project_IsRecommend,true);
+
+        if (isOffline)
+            query.whereEqualTo(Constants.Project_IsOffline, true);
+        else
+            query.whereEqualTo(Constants.Project_IsOffline,false);
+
+        mProjects = new ArrayList<>();
+        ISearchProjectInfoView mISearchProjectInfoView = (ISearchProjectInfoView)mProjectInfoView;
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> projectList, ParseException e) {
+                if (e == null) {
+                     /*信息转换*/
+                    for(ParseObject project: projectList) {
+                        Project mProject = DbUtils.getProject(project);
+                        mProjects.add(mProject);
+                    }
+                    mISearchProjectInfoView.onGetProjectInfoDone(mProjects);
+                } else {
+                    Log.d(TAG, "Error: " + e.getMessage());
+                    mISearchProjectInfoView.onGetProjectInfoError(e);
+                }
+
+
+
+            }
+        });
+    }
+
+    @Override
     public void queryProjectWithId(String projectId) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;

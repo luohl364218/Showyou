@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.parse.FindCallback;
@@ -16,6 +17,7 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.bean.UserEntry;
+import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IUserInfoOpPresenter;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
@@ -318,14 +320,62 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     }
 
     @Override
-    public void queryProviderUserWithConditions(String school, String major,int start, int area, int categoryId) {
+    public void queryUserWithConditions(int start, int startGrade, int endGrade, boolean isOrderByFansNum, boolean isOrderByLatest, boolean isMajorNotCommon) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
-       this.queryProviderUserWithConditions(school,major,start,area,categoryId,false,false,true);
+
+        if (endGrade < startGrade)
+            return;
+
+        ParseQuery<ParseUser> query = ParseUser.getQuery().setSkip(start).setLimit(10);
+        if (isOrderByFansNum)
+            query.orderByDescending(Constants.User_fansNum);
+        if (isOrderByLatest)
+            query.orderByDescending("createdAt");
+        if (isMajorNotCommon)
+            query.whereEqualTo(Constants.User_userType, UserType.PROVIDER.getValue());
+
+        List<Integer> list = new ArrayList<>();
+        for (int i = startGrade+1; i <= endGrade; i++)
+            list.add(i);
+
+        query.whereContainedIn(Constants.User_grade,list);
+
+        userResults = new ArrayList<>();
+        query.findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> userList, ParseException e) {
+                if (e == null) {
+                    /*信息转换*/
+                    for(ParseUser user: userList){
+                        User provider = getUser(user);
+                        userResults.add(provider);
+                    }
+                    Log.d(TAG, "find user-----------------: " + userList.size());
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserDone(userResults);
+
+                } else {
+                    Log.d(TAG,"get user error!!!!");
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserError(e);
+                }
+
+
+
+            }
+        });
+
     }
 
     @Override
-    public void queryProviderUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest, boolean isMajorNotCommon) {
+    public void queryUserWithConditions(String school, String major, int start, int area, int categoryId) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+       this.queryUserWithConditions(school,major,start,area,categoryId,false,false,true);
+    }
+
+    @Override
+    public void queryUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest, boolean isMajorNotCommon) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         ParseQuery<ParseUser> query = ParseUser.getQuery().setSkip(start).setLimit(10);
@@ -352,8 +402,8 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
 
         if (isMajorNotCommon)
             query.whereEqualTo("userType", UserType.PROVIDER.getValue());
-        else
-            query.whereEqualTo("userType",UserType.USER.getValue());
+
+        query.whereContainedIn(Constants.User_identityType, Arrays.asList(0,1,2,3));
 
         userResults = new ArrayList<>();
         query.findInBackground(new FindCallback<ParseUser>() {
@@ -433,7 +483,7 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     }
 
     @Override
-    public void queryProviderUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest){
+    public void queryUserWithConditions(String school, String major, int start, int area, int categoryId, boolean isOrderByFansNum, boolean isOrderByLatest){
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
         ParseQuery<ParseUser> query = ParseUser.getQuery().setSkip(start).setLimit(10);

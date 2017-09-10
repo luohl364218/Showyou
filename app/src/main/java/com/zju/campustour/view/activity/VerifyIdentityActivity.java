@@ -63,7 +63,7 @@ public class VerifyIdentityActivity extends BaseActivity implements IUserVerifyI
     ParseUser currentUser;
     boolean isImgSet = false;
     private Context mContext = this;
-    String imgUrl = "";
+    String mImgUrl = "";
     boolean isRefresh = false;
     VerifyInfo verifyInfo;
     private ImageUploader mImageUploader;
@@ -77,7 +77,6 @@ public class VerifyIdentityActivity extends BaseActivity implements IUserVerifyI
         if (currentUser == null)
             finish();
 
-
         initView();
         //请求照片
         mImageUploader = new ImageUploader(this,this);
@@ -88,13 +87,14 @@ public class VerifyIdentityActivity extends BaseActivity implements IUserVerifyI
             //加载默认背景图片
             verifyInfo = new VerifyInfo();
             Glide.with(this).load(URL_VERIFIED_ID_BG).into(backgroundPic);
+            verifyBtn.setEnabled(false);
         }
         else{
             //进入修改模式
             isRefresh = true;
-            imgUrl = verifyInfo.getSubmitImgUrl();
+            mImgUrl = verifyInfo.getSubmitImgUrl();
 
-            Glide.with(mContext).load(imgUrl).into(backgroundPic);
+            Glide.with(mContext).load(mImgUrl).into(backgroundPic);
 
             projectDesc.setText(verifyInfo.getSubmitDescription());
 
@@ -140,7 +140,7 @@ public class VerifyIdentityActivity extends BaseActivity implements IUserVerifyI
         UserVerifyInfoImpl userVerifyInfo = new UserVerifyInfoImpl(this,this);
 
         verifyInfo.setSubmitUserId(currentUser.getObjectId());
-        verifyInfo.setSubmitImgUrl(imgUrl);
+        verifyInfo.setSubmitImgUrl(mImgUrl);
         verifyInfo.setSubmitDescription(description);
         verifyInfo.setSubmitVerifyStateType(VerifyStateType.VERIFY_ING);
         verifyInfo.setSubmitTime(new Date());
@@ -180,8 +180,8 @@ public class VerifyIdentityActivity extends BaseActivity implements IUserVerifyI
 
     private void showImgSelectDialog() {
 
-        final Dialog dialog = new Dialog(mContext, R.style.jmui_default_dialog_style);
-        final LayoutInflater inflater = LayoutInflater.from(mContext);
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_img_select, null);
         dialog.setContentView(view);
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -232,13 +232,14 @@ public class VerifyIdentityActivity extends BaseActivity implements IUserVerifyI
     @Override
     public void imageUploadSuccess(String imgUrl, Uri localPath) {
 
+        mImgUrl = imgUrl;
+        verifyBtn.setEnabled(true);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Glide.with(getApplicationContext()).load(localPath).into(backgroundPic);
             }
         });
-
 
     }
 

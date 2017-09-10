@@ -43,6 +43,7 @@ import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateTy
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.COLLECT;
 import static com.zju.campustour.presenter.protocal.enumerate.UserProjectStateType.FINISHED;
 
+@Deprecated
 public class MyProjectActivity extends BaseActivity implements ISearchProjectInfoView,TabLayout.OnTabSelectedListener{
 
     @BindView(R.id.my_project_toolbar)
