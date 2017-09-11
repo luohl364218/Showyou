@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
+import cn.bmob.v3.update.BmobUpdateAgent;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -187,7 +188,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.check_update:
-
+                BmobUpdateAgent.forceUpdate(getContext());
                 break;
 
 

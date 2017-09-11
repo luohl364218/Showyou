@@ -104,6 +104,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.jiguang.api.JCoreInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
@@ -190,6 +191,9 @@ public class MainActivity extends BaseMainActivity
         mIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         mNetworkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(mNetworkChangeReceiver, mIntentFilter);
+        //调用自动更新接口
+        BmobUpdateAgent.setUpdateOnlyWifi(false);
+        BmobUpdateAgent.update(this);
         //huanxin
       /*  //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener(this));*/

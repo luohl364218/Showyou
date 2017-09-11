@@ -11,6 +11,8 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zju.campustour.model.bean.UserEntry;
 import com.zju.campustour.presenter.receiver.NotificationClickEventReceiver;
 
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 
@@ -23,6 +25,7 @@ public class CampusTourApplication extends com.activeandroid.app.Application {
 
     public static boolean isNeedAtMsg = true;
     public static String PICTURE_DIR = "sdcard/showyou/pictures/";
+    private boolean flag = true;
 
     @Override
     public void onCreate() {
@@ -51,6 +54,14 @@ public class CampusTourApplication extends com.activeandroid.app.Application {
         //注册Notification点击的接收器
         new NotificationClickEventReceiver(getApplicationContext());
         mInstance = this;
+        //自动更新和手动更新功能初始化
+        Bmob.initialize(this,"13298107f78d5a596be774c30df169d1");
+
+        if (flag){
+            BmobUpdateAgent.initAppVersion();
+            flag = false;
+        }
+
 
     }
 

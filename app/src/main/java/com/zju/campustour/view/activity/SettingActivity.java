@@ -19,6 +19,7 @@ import com.zju.campustour.model.chatting.utils.DialogCreator;
 import com.zju.campustour.model.chatting.utils.FileHelper;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.model.util.DataCleanManager;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.model.util.SharePreferenceManager;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
@@ -29,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
+import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.IntegerCallback;
 import cn.jpush.im.android.api.model.UserInfo;
@@ -44,6 +46,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout mAboutRl;
     private RelativeLayout mCheckUpdateRl;
     private RelativeLayout mLogoutRl;
+    private RelativeLayout mCleanDataRl;
+    private TextView cacheSizeTv;
     private SlipButton mNoDisturbBtn;
     private Context mContext;
     private Dialog mDialog;
@@ -63,7 +67,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mAboutRl = (RelativeLayout) findViewById(R.id.about_rl);
         mCheckUpdateRl = (RelativeLayout) findViewById(R.id.check_update_rl);
         mLogoutRl = (RelativeLayout)findViewById(R.id.logout_rl);
-
+        mCleanDataRl = (RelativeLayout) findViewById(R.id.clean_data_rl);
+        cacheSizeTv = (TextView) findViewById(R.id.cache_size);
 
         mMenuBtn.setVisibility(View.GONE);
         mTitle.setText(this.getString(R.string.setting));
@@ -74,6 +79,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mNoDisturbBtn.setOnChangedListener(R.id.global_no_disturb_setting, this);
         mCheckUpdateRl.setOnClickListener(this);
         mLogoutRl.setOnClickListener(this);
+        mCleanDataRl.setOnClickListener(this);
+
+        String cacheSize = null;
+        try {
+            cacheSize = DataCleanManager.getTotalCacheSize(this);
+            cacheSizeTv.setText(cacheSize);
+        } catch (Exception mE) {
+            mE.printStackTrace();
+        }
 
         final Dialog dialog = DialogCreator.createLoadingDialog(mContext, getString(R.string.jmui_loading));
         dialog.show();
@@ -120,7 +134,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.check_update_rl:
-                //// TODO: 2017/9/5 检查版本更新,后续版本加
+                //// TODO: 2017/9/10
+                break;
+            case R.id.clean_data_rl:
+                DataCleanManager.clearAllCache(this);
+                showToast("缓存清除完毕");
+                cacheSizeTv.setText("0KB");
                 break;
 
             case R.id.logout_rl:

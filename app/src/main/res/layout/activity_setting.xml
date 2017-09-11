@@ -101,10 +101,39 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/clean_data_rl"
+            android:layout_marginTop="20dp"
+            style="@style/SettingItemStyle">
+
+
+            <TextView
+                style="@style/SettingItemTextStyle"
+                android:paddingLeft="20dp"
+                android:text="清除缓存"
+                />
+
+            <TextView
+                android:id="@+id/cache_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:text="0.0KB"
+                android:textColor="@color/alpha_20_black"
+                android:textSize="17sp" />
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/alpha_02_black" />
 
         <RelativeLayout
             android:id="@+id/logout_rl"
-            android:layout_marginTop="20dp"
             style="@style/SettingItemStyle">
 
 

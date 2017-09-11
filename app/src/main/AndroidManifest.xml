@@ -69,6 +69,12 @@
         <meta-data
             android:name="AA_DB_VERSION"
             android:value="4"/>
+        <!--Bmob自动升级配置-->
+       <!-- <meta-data android:value="Channel ID" android:name="BMOB_CHANNEL"/>-->
+        <activity
+            android:name="cn.bmob.v3.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
 
         <service
             android:name="com.baidu.location.f"

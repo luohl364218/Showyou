@@ -43,6 +43,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-fresco.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -91,6 +94,7 @@ dependencies {
     compile 'cn.jiguang.sdk:jpush:3.0.5'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'com.belerweb:pinyin4j:2.5.1'
+    compile 'cn.bmob.android:bmob-sdk:3.5.5'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile project(':favor_animator')
