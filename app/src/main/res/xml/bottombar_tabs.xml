@@ -16,7 +16,7 @@
     <tab
         id="@+id/tab_info"
         icon="@drawable/selector_icon_info"
-        title="资讯"
+        title="动态"
         />
 
     <tab
@@ -28,6 +28,6 @@
     <tab
         id="@+id/tab_contact"
         icon="@drawable/selector_icon_contact"
-        title="校友"
+        title="我的"
         />
 </tabs>

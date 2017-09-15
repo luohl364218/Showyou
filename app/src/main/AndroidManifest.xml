@@ -69,11 +69,11 @@
         <meta-data
             android:name="AA_DB_VERSION"
             android:value="4"/>
-        <!--Bmob自动升级配置-->
-       <!-- <meta-data android:value="Channel ID" android:name="BMOB_CHANNEL"/>-->
+        <!-- Bmob自动升级配置 -->
+        <!-- <meta-data android:value="Channel ID" android:name="BMOB_CHANNEL"/> -->
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
 
         <service
@@ -300,10 +300,15 @@
             android:name=".view.activity.StatusNewActivity"
             android:theme="@style/WelcomeNoActionBar">
         </activity>
-        <activity android:name=".view.activity.LabelSelectActivity"
-                  android:theme="@style/WelcomeNoActionBar">
+        <activity
+            android:name=".view.activity.LabelSelectActivity"
+            android:theme="@style/WelcomeNoActionBar">
         </activity>
-        <activity android:name=".view.activity.AnotherMyProjectActivity"
+        <activity
+            android:name=".view.activity.AnotherMyProjectActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.ContactsActivity"
                   android:theme="@style/WelcomeNoActionBar">
         </activity>
     </application>

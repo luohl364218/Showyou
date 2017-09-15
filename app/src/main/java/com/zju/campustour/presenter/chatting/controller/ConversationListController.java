@@ -69,6 +69,22 @@ public class ConversationListController implements OnClickListener,
         mConvListView.setHeaderListener(this);
     }
 
+    public void refreshConvListAdapter(){
+        if(mListAdapter == null)
+            return;
+
+        mDatas = JMessageClient.getConversationList();
+        if (mDatas == null)
+            return;
+        //对会话列表进行时间排序
+        if (mDatas.size() > 1) {
+            SortConvList sortList = new SortConvList();
+            Collections.sort(mDatas, sortList);
+        }
+
+        mListAdapter.refreshConversations(mDatas);
+    }
+
     @Override
     public void onClick(View v) {
        //没有自定义的menu了，不需要捕捉点击事件
@@ -142,7 +158,7 @@ public class ConversationListController implements OnClickListener,
                                         .getUserName(), conv.getTargetAppKey());
                             }
                             mDatas.remove(position - 2);
-                            mListAdapter.notifyDataSetChanged();
+                            mListAdapter.refreshConversations(mDatas);
                             mDialog.dismiss();
                         }
                     };

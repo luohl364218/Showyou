@@ -245,6 +245,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 public void onSliderClick(BaseSliderView slider) {
                     Intent intent = new Intent(getActivity(), InfoWebActivity.class);
                     intent.putExtra("web",mSlideImg.getLinkUrl());
+                    intent.putExtra("title",mSlideImg.getDescription());
                     getActivity().startActivity(intent);
                 }
             });

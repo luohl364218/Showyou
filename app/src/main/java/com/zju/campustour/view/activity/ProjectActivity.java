@@ -360,6 +360,7 @@ public class ProjectActivity extends BaseActivity implements IProjectInfoOperate
                 Intent intent = new Intent(this, InfoWebActivity.class);
                 String url = "http://119.23.248.205:8080/comment?projectId="+projectId;
                 intent.putExtra("web",url);
+                intent.putExtra("title","用户评价");
                 startActivity(intent);
 
                 break;

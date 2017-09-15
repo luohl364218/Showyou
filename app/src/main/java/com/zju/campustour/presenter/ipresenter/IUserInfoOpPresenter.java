@@ -13,6 +13,8 @@ public interface IUserInfoOpPresenter {
 
     public void queryUserInfoWithId(String userId);
 
+    public void queryUserInfoWithUserName(String userName);
+
     public void userLogin(String loginName, String password);
 
     public void userLogout(String userId);

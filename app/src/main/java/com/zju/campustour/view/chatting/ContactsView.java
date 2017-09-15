@@ -24,7 +24,7 @@ import com.zju.campustour.view.chatting.widget.StickyListHeadersListView;
 
 public class ContactsView extends LinearLayout{
 
-    private ImageButton userBtn;
+    private ImageButton returnBtn;
     private EditText mSearchEt;
     private TextView mHint;
     private Context mContext;
@@ -45,7 +45,7 @@ public class ContactsView extends LinearLayout{
 	}
 	
 	public void initModule(float ratio, float density){
-        userBtn = (ImageButton) findViewById(R.id.fragment_contact_user_icon);
+        returnBtn = (ImageButton) findViewById(R.id.return_btn);
         mSearchEt = (EditText) findViewById(R.id.search_et);
         mHint = (TextView) findViewById(R.id.contact_hint);
 
@@ -79,7 +79,7 @@ public class ContactsView extends LinearLayout{
         mFriendVerifyRl.setOnClickListener(controller);
         mGroupRl.setOnClickListener(controller);
         mSideBar.setOnClickListener(controller);
-        userBtn.setOnClickListener(controller);
+        returnBtn.setOnClickListener(controller);
     }
 
     public void setSideBarTouchListener(SideBar.OnTouchingLetterChangedListener listener) {

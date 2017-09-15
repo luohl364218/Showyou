@@ -137,6 +137,7 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
     public void forgetPassword(){
         Intent mIntent = new Intent(this, InfoWebActivity.class);
         mIntent.putExtra("web","http://www.jianshu.com/p/677a0aaf760e");
+        mIntent.putExtra("title","重设密码");
         startActivity(mIntent);
     }
 

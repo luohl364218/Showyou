@@ -67,8 +67,7 @@ public class LabelSelectActivity extends BaseActivity implements ILabelInfoView 
         setContentView(R.layout.activity_label_select);
         ButterKnife.bind(this);
 
-
-        changePrimaryDarkColor();
+        //changePrimaryDarkColor();
 
         mLabelInfoOperator = new LabelInfoOperator(this,this);
         mLabelInfoOperator.getRecommendLabel(0,10);

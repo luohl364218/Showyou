@@ -1,5 +1,6 @@
 package com.zju.campustour.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cjj.MaterialRefreshLayout;
@@ -19,6 +21,7 @@ import com.zju.campustour.model.bean.StatusInfoModel;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.StatusInfoOperator;
+import com.zju.campustour.view.activity.InfoWebActivity;
 import com.zju.campustour.view.adapter.HotUserStatusAdapter;
 import com.zju.campustour.view.iview.IStatusInfoView;
 
@@ -40,6 +43,7 @@ public class StatusInfoChildOneFragment extends BaseFragment implements IStatusI
     private int state = Constants.STATE_NORMAL;
     StatusInfoOperator mStatusInfoOperator;
     HotUserStatusAdapter mUserStatusAdapter;
+    RelativeLayout hotTopicsBtn;
 
     @Nullable
     @Override
@@ -52,7 +56,17 @@ public class StatusInfoChildOneFragment extends BaseFragment implements IStatusI
             recommendTitleEng = (TextView) mRootView.findViewById(R.id.hot_status_title_eng);
             mMaterialRefreshLayout = (MaterialRefreshLayout) mRootView.findViewById(R.id.refresh_view);
             mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycle_view);
-
+            hotTopicsBtn = (RelativeLayout) mRootView.findViewById(R.id.hot_topics);
+            hotTopicsBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), InfoWebActivity.class);
+                    String url = "http://ct.dcchan.site/m/topics";
+                    intent.putExtra("web",url);
+                    intent.putExtra("title","今日热门话题");
+                    startActivity(intent);
+                }
+            });
             //// TODO: 2017/8/15
             hotStatusImg.setImageURI("http://campustour.oss-cn-shenzhen.aliyuncs.com/20170707.jpg");
 

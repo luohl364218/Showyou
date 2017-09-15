@@ -138,11 +138,8 @@ public class ContactsController implements OnClickListener, SideBar.OnTouchingLe
                 break;
             case R.id.group_chat_rl:
                 break;
-            case R.id.fragment_contact_user_icon:
-                DrawerLayout drawer = (DrawerLayout) mContext.findViewById(R.id.drawer_layout);
-                if (!drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.openDrawer(GravityCompat.START);
-                }
+            case R.id.return_btn:
+                mContext.finish();
                 break;
 
         }

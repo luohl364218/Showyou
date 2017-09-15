@@ -59,7 +59,7 @@ public class FriendInfoController implements OnClickListener, SlipButton.OnChang
                 mContext.startChatActivity();
                 break;
             case R.id.friend_detail_avatar:
-                mContext.startBrowserAvatar();
+                mContext.mUserInfoOpPresenter.queryUserInfoWithUserName(mContext.mUserInfo.getUserName());
                 break;
             case R.id.name_ll:
                 intent.setClass(mContext, EditNoteNameActivity.class);

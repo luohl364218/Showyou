@@ -7,35 +7,54 @@
               android:fitsSystemWindows="true"
               android:background="@color/colorPrimary">
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/jmui_jpush_blue">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/webview_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:navigationIcon="@mipmap/icon_return"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways|snap">
+        <ImageButton
+            android:id="@+id/return_btn"
+            android:layout_width="@dimen/title_bar_height"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/jmui_back_btn_bg"
+            android:src="@mipmap/icon_return" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
             <TextView
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:maxWidth="190dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="校友"
                 android:textColor="@color/white"
-                android:textSize="20sp"
-                android:text="@string/toolbar_title"/>
-        </android.support.v7.widget.Toolbar>
+                android:textSize="20sp" />
 
-    </android.support.design.widget.AppBarLayout>
+        </LinearLayout>
 
-    <WebView
+        <ImageButton
+            android:id="@+id/fragment_contact_right_btn"
+            android:layout_width="@dimen/title_bar_height"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:background="@drawable/jmui_back_btn_bg"
+            android:src="@mipmap/icon_scan_white" />
+
+    </RelativeLayout>
+
+    <com.zju.campustour.view.widget.ProgressWebView
         android:id="@+id/activity_infoweb_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </WebView>
+    </com.zju.campustour.view.widget.ProgressWebView>
 
 </LinearLayout>

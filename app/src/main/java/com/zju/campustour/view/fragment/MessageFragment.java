@@ -34,7 +34,7 @@ import static com.zju.campustour.model.common.Constants.STATE_NORMAL;
 /**
  * Created by HeyLink on 2017/4/1.
  */
-
+@Deprecated
 public class MessageFragment extends BaseFragment implements INewsShowView ,TabLayout.OnTabSelectedListener{
 
     private View mRootView;

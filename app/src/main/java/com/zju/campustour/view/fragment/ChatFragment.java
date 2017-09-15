@@ -22,6 +22,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 import com.zju.campustour.R;
 import com.zju.campustour.model.chatting.entity.Event;
 import com.zju.campustour.model.common.Constants;
@@ -30,6 +33,7 @@ import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.chatting.controller.ConversationListController;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.view.activity.ChatActivity;
+import com.zju.campustour.view.activity.ContactsActivity;
 import com.zju.campustour.view.activity.SearchActivity;
 import com.zju.campustour.view.application.CampusTourApplication;
 import com.zju.campustour.view.chatting.ConversationListView;
@@ -66,6 +70,7 @@ public class ChatFragment extends BaseFragment {
     private HandlerThread mThread;
     private BackgroundHandler mBackgroundHandler;
     private ConversationListController mConvListController;
+    private MaterialRefreshLayout mMaterialRefreshLayout;
     private Activity mContext;
     private static final int REFRESH_CONVERSATION_LIST = 0x3000;
     private static final int DISMISS_REFRESH_HEADER = 0x3001;
@@ -100,6 +105,8 @@ public class ChatFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         mConvListController.getAdapter().notifyDataSetChanged();
+        if (mToolbar != null)
+            mToolbar.setTitle("");
         //todo 更新bottombar上面的数字
        /* EventBus.getDefault().post(new UnreadMsgEvent(mConvListController.getAdapter().getUnreadMsg()));
         mConvListController.getAdapter().clearUnreadMsg();*/
@@ -110,21 +117,19 @@ public class ChatFragment extends BaseFragment {
     private void initFragmentView() {
         mContext = this.getActivity();
         mToolbar = (Toolbar) mRootView.findViewById(R.id.fragment_chat_toolbar);
+        mMaterialRefreshLayout = (MaterialRefreshLayout) mRootView.findViewById(R.id.refresh_view);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
         mToolbar.inflateMenu(R.menu.chat_fragment_menu);
         mToolbar.setTitle("");
-        mToolbar.setNavigationIcon(R.mipmap.icon_user_default);
-         /*从1.4版本开始废弃DrawerLayout*/
-      /*  mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar.setNavigationIcon(R.mipmap.icon_contact);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                if (!drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.openDrawer(GravityCompat.START);
-                }
+                startActivity(new Intent(getContext(), ContactsActivity.class));
             }
-        });*/
+        });
 
         mConvListView = new ConversationListView(mRootView, this.getActivity());
         mConvListView.initModule();
@@ -137,6 +142,7 @@ public class ChatFragment extends BaseFragment {
         mConvListView.setItemListeners(mConvListController);
         mConvListView.setLongClickListener(mConvListController);
 
+        initRefreshLayout();
 
         if (!NetworkUtil.isNetworkAvailable(mContext)) {
             mConvListView.showHeaderView();
@@ -146,6 +152,25 @@ public class ChatFragment extends BaseFragment {
             mBackgroundHandler.sendEmptyMessageDelayed(DISMISS_REFRESH_HEADER, 1000);
         }
 
+    }
+
+    private void initRefreshLayout() {
+
+        mMaterialRefreshLayout.setLoadMore(false);
+        mMaterialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+            @Override
+            public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
+                //下拉刷新...
+                isNetworkUseful = NetworkUtil.isNetworkAvailable(getContext());
+                if (isNetworkUseful){
+                    mConvListController.refreshConvListAdapter();
+
+                }
+
+                mMaterialRefreshLayout.finishRefresh();
+
+            }
+        });
     }
 
 
@@ -307,6 +332,7 @@ public class ChatFragment extends BaseFragment {
                                 @Override
                                 public void gotResult(int status, String desc, Bitmap bitmap) {
                                     if (status == 0) {
+
                                         mConvListController.getAdapter().notifyDataSetChanged();
                                     } else {
                                         HandleResponseCode.onHandle(mContext, status, false);

@@ -155,6 +155,7 @@ public class MessageChildFourFragment extends BaseFragment implements INewsShowV
                     public void onClick(View v, String url) {
                         Intent mIntent = new Intent(getActivity(), InfoWebActivity.class);
                         mIntent.putExtra("web",url);
+                        mIntent.putExtra("title",mType.getTypeName());
                         startActivity(mIntent);
                     }
                 });
@@ -207,7 +208,7 @@ public class MessageChildFourFragment extends BaseFragment implements INewsShowV
             mMaterialRefreshLayout.finishRefresh();
             mMaterialRefreshLayout.finishRefreshLoadMore();
             mMaterialRefreshLayout.setLoadMore(false);
-            showToast(getContext(),"网络连接已经断开");
+            //showToast(getContext(),"网络连接已经断开");
         }
     }
 

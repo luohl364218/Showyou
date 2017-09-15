@@ -8,8 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.parse.ParseException;
 import com.zju.campustour.MainActivity;
 import com.zju.campustour.R;
+import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.chatting.entity.Event;
 import com.zju.campustour.model.chatting.entity.EventType;
@@ -18,8 +20,12 @@ import com.zju.campustour.model.bean.FriendEntry;
 import com.zju.campustour.model.chatting.utils.DialogCreator;
 import com.zju.campustour.presenter.chatting.controller.FriendInfoController;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
+import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.view.application.CampusTourApplication;
 import com.zju.campustour.view.chatting.FriendInfoView;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
+
+import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
@@ -30,18 +36,19 @@ import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.android.eventbus.EventBus;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class FriendInfoActivity extends BaseActivity {
+public class FriendInfoActivity extends BaseActivity implements ISearchUserInfoView {
 
     private Toolbar mToolbar;
     private FriendInfoView mFriendInfoView;
     private FriendInfoController mFriendInfoController;
     private String mTargetId;
     private long mGroupId;
-    private UserInfo mUserInfo;
+    public UserInfo mUserInfo;
     private String mTitle;
     private boolean mIsGetAvatar = false;
     private String mTargetAppKey;
     private boolean mIsFromContact;
+    public UserInfoOpPresenterImpl mUserInfoOpPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +62,8 @@ public class FriendInfoActivity extends BaseActivity {
         if (mTargetAppKey == null) {
             mTargetAppKey = JMessageClient.getMyInfo().getAppKey();
         }
+
+        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,this);
         mFriendInfoView.initModule();
         mFriendInfoController = new FriendInfoController(mFriendInfoView, this);
         mFriendInfoView.setListeners(mFriendInfoController);
@@ -258,5 +267,29 @@ public class FriendInfoActivity extends BaseActivity {
         JMessageClient.deleteSingleConversation(mTargetId, mTargetAppKey);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+
+    @Override
+    public void onGetProviderUserDone(List<User> mUsers) {
+        if (mUsers == null)
+            return;
+
+        if (mUsers.size() > 0){
+            Intent mIntent = new Intent(this, UserActivity.class);
+            mIntent.putExtra("provider",mUsers.get(0));
+            startActivity(mIntent);
+
+        }
+    }
+
+    @Override
+    public void onGetProviderUserError(ParseException e) {
+
+    }
+
+    @Override
+    public void refreshUserOnlineState(boolean isOnline) {
+
     }
 }

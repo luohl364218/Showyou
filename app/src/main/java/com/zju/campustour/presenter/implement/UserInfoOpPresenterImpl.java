@@ -213,6 +213,38 @@ public class UserInfoOpPresenterImpl implements IUserInfoOpPresenter {
     }
 
     @Override
+    public void queryUserInfoWithUserName(String userName) {
+        if (userName == null)
+            return;
+
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
+
+        userResults = new ArrayList<>();
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo(Constants.User_userName,userName);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    if (objects.size() > 0){
+                        User provider = getUser(objects.get(0));
+                        userResults.add(provider);
+                    }
+
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserDone(userResults);
+                } else {
+                    Log.d(TAG,"get user error!!!!");
+                    mSearchUserInfoView = (ISearchUserInfoView) mUserView;
+                    mSearchUserInfoView.onGetProviderUserError(e);
+                }
+            }
+        });
+
+    }
+
+    @Override
     public void userLogin(String loginName, String password) {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;

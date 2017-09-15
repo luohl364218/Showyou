@@ -112,7 +112,7 @@ public class StatusNewActivity extends BaseActivity implements ILocationConsumer
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         //更改顶部栏的颜色
-        changePrimaryDarkColor();
+        //changePrimaryDarkColor();
 
         mLocationProvider = new LocationProvider(this,this);
         mLocationProvider.requestUserLocation();

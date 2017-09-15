@@ -64,6 +64,7 @@ dependencies {
     compile files('libs/aliyun-oss-sdk-android-2.3.0.jar')
     compile files('libs/okio-1.10.0.jar')
     compile files('libs/BaiduLBS_Android.jar')
+    compile project(':favor_animator')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -95,7 +96,7 @@ dependencies {
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'com.belerweb:pinyin4j:2.5.1'
     compile 'cn.bmob.android:bmob-sdk:3.5.5'
+    compile 'com.tencent.sonic:sdk:1.0.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    compile project(':favor_animator')
 }

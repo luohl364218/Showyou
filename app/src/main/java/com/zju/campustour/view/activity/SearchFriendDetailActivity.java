@@ -12,12 +12,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseException;
 import com.zju.campustour.R;
+import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.chatting.utils.DialogCreator;
 import com.zju.campustour.model.chatting.utils.HandleResponseCode;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
+import com.zju.campustour.presenter.implement.UserInfoOpPresenterImpl;
 import com.zju.campustour.view.chatting.widget.CircleImageView;
+import com.zju.campustour.view.iview.ISearchUserInfoView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +32,7 @@ import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;
 import cn.jpush.im.android.api.model.UserInfo;
 
-public class SearchFriendDetailActivity extends BaseActivity {
+public class SearchFriendDetailActivity extends BaseActivity implements ISearchUserInfoView {
 
     @BindView(R.id.friend_detail_info_toolbar)
     Toolbar mToolbar;
@@ -53,6 +59,7 @@ public class SearchFriendDetailActivity extends BaseActivity {
     private String mAppKey;
     private String mAvatarPath;
     private String mDisplayName;
+    private UserInfoOpPresenterImpl mUserInfoOpPresenter;
 
     private UserInfo mToUserInfo;
 
@@ -72,6 +79,7 @@ public class SearchFriendDetailActivity extends BaseActivity {
         });
 
 
+        mUserInfoOpPresenter = new UserInfoOpPresenterImpl(this,this);
         inModule();
 
 
@@ -90,7 +98,7 @@ public class SearchFriendDetailActivity extends BaseActivity {
                         startActivity(intent);
                         break;
                     case R.id.friend_detail_avatar:
-                        startBrowserAvatar();
+                        mUserInfoOpPresenter.queryUserInfoWithUserName(mToUserInfo.getUserName());
                         break;
                     case R.id.bt_chat:
                         Intent intentChat = new Intent(SearchFriendDetailActivity.this, ChatActivity.class);
@@ -215,5 +223,28 @@ public class SearchFriendDetailActivity extends BaseActivity {
                 });
             }
         }
+    }
+
+    @Override
+    public void onGetProviderUserDone(List<User> mUsers) {
+        if (mUsers == null)
+            return;
+
+        if (mUsers.size() > 0){
+            Intent mIntent = new Intent(this, UserActivity.class);
+            mIntent.putExtra("provider",mUsers.get(0));
+            startActivity(mIntent);
+
+        }
+    }
+
+    @Override
+    public void onGetProviderUserError(ParseException e) {
+
+    }
+
+    @Override
+    public void refreshUserOnlineState(boolean isOnline) {
+
     }
 }

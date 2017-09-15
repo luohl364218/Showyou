@@ -24,12 +24,22 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/conv_list_view"
+    <com.cjj.MaterialRefreshLayout
+        android:id="@+id/refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/conv_list_split_line_color"
-        android:headerDividersEnabled="false"
-        android:dividerHeight="1dp"/>
+        app:overlay="false"
+        app:wave_color="@color/transparent"
+        app:wave_show="true">
+
+        <ListView
+            android:id="@+id/conv_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/conv_list_split_line_color"
+            android:headerDividersEnabled="false"
+            android:dividerHeight="1dp"/>
+
+    </com.cjj.MaterialRefreshLayout>
 
 </LinearLayout>

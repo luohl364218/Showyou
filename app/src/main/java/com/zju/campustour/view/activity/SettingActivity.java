@@ -130,6 +130,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);*/
                 Intent mIntent = new Intent(mContext, InfoWebActivity.class);
                 mIntent.putExtra("web","http://www.jianshu.com/p/57f5767af536");
+                mIntent.putExtra("title","关于校游");
                 startActivity(mIntent);
                 break;
 

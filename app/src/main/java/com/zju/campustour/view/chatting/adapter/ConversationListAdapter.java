@@ -91,6 +91,12 @@ public class ConversationListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void refreshConversations(List<Conversation> datas){
+        mDatas.clear();
+        mDatas.addAll(datas);
+        notifyDataSetChanged();
+    }
+
     public void addAndSort(Conversation conv) {
         mDatas.add(conv);
         SortConvList sortConvList = new SortConvList();

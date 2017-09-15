@@ -224,7 +224,7 @@ public class InformChildThreeFragment extends BaseFragment implements ISearchUse
             mMaterialRefreshLayout.finishRefresh();
             mMaterialRefreshLayout.finishRefreshLoadMore();
             mMaterialRefreshLayout.setLoadMore(false);
-            showToast(getContext(),"网络连接已经断开");
+            //showToast(getContext(),"网络连接已经断开");
         }
     }
 
