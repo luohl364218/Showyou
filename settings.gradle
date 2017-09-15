@@ -1,0 +1,2 @@
+include ':app', ':lib_ratingbar', ':libs_scan', ':sharesdk', ':matisse', ':smssdk', ':gloablelibrary', ':bottom-bar', ':favor_animator'
+project(':libs_scan').projectDir = new File('lib_scan')
