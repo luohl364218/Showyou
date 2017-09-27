@@ -1,10 +1,13 @@
 package com.zju.campustour.view.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.parse.ParseUser;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zju.campustour.R;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.presenter.implement.ImageUploader;
@@ -28,6 +32,7 @@ import com.zju.campustour.view.activity.LoginActivity;
 import com.zju.campustour.view.activity.MeInfoActivity;
 import com.zju.campustour.view.activity.MyProjectActivity;
 import com.zju.campustour.view.activity.MySchoolmateActivity;
+import com.zju.campustour.view.activity.PickPictureTotalActivity;
 import com.zju.campustour.view.activity.ProjectNewActivity;
 import com.zju.campustour.view.activity.SettingActivity;
 import com.zju.campustour.view.iview.IImageUploadView;
@@ -40,6 +45,8 @@ import java.io.File;
 
 import cn.bmob.v3.update.BmobUpdateAgent;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by HeyLink on 2017/9/5.
@@ -130,6 +137,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
 
@@ -193,7 +201,35 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
 
             case R.id.check_update:
-                BmobUpdateAgent.forceUpdate(getContext());
+
+                RxPermissions rxPermissions = new RxPermissions(getActivity());
+                rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .subscribe(new Observer<Boolean>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(Boolean aBoolean) {
+                                if (aBoolean) {
+                                    BmobUpdateAgent.forceUpdate(getContext());
+                                } else {
+                                    showToast(getContext(),"权限请求被拒绝");
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+
                 break;
 
 
