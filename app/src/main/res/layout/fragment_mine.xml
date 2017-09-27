@@ -32,7 +32,7 @@
 
 
         <ImageButton
-            android:id="@+id/fragment_search_switch_user"
+            android:id="@+id/setting"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -175,12 +175,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:background="@color/alpha_10_black"/>
 
             <TextView
                 android:id="@+id/my_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:padding="@dimen/largePadding"
                 android:background="@drawable/selector_list_item"
                 android:drawableLeft="@mipmap/icon_status_round"

@@ -145,7 +145,7 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
         }
 
 
-        currentUserId = defaultUser.getId();
+        currentUserId = defaultUser.getObjectId();
         currentUserType = defaultUser.getUserType();
         if (currentUserType == UserType.PROVIDER){
             mProjectInfoOpPresenter = new ProjectInfoOpPresenterImpl(this,this);
@@ -425,7 +425,7 @@ public class UserActivity extends BaseActivity implements ISearchUserInfoView,
         oks.setTitle(defaultUser.getSchool()+ " " + defaultUser.getRealName());
 
         // titleUrl是标题的网络链接，QQ和QQ空间等使用
-        String url ="http://119.23.248.205:8080/user?objectId="+defaultUser.getId();
+        String url ="http://119.23.248.205:8080/user?objectId="+defaultUser.getObjectId();
         oks.setTitleUrl(url);
 
         // text是分享文本，所有平台都需要这个字段

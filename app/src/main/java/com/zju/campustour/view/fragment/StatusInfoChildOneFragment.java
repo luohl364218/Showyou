@@ -22,6 +22,7 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.StatusInfoOperator;
 import com.zju.campustour.view.activity.InfoWebActivity;
+import com.zju.campustour.view.activity.UserActivity;
 import com.zju.campustour.view.adapter.HotUserStatusAdapter;
 import com.zju.campustour.view.iview.IStatusInfoView;
 
@@ -176,7 +177,10 @@ public class StatusInfoChildOneFragment extends BaseFragment implements IStatusI
                 mUserStatusAdapter.setOnStatusInfoItemClickListener(new HotUserStatusAdapter.StatusInfoItemListener() {
                     @Override
                     public void onClick(View v, int position, StatusInfoModel status) {
-                        showToast(getContext(),status.getContent());
+                        Intent mIntent = new Intent(getActivity(), UserActivity.class);
+                        mIntent.putExtra("provider",status.getUser());
+                        mIntent.putExtra("position",position);
+                        startActivity(mIntent);
                     }
                 });
 

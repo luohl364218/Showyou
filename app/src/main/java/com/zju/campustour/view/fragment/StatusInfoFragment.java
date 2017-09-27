@@ -3,6 +3,7 @@ package com.zju.campustour.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.zju.campustour.R;
+import com.zju.campustour.view.activity.MeInfoActivity;
 import com.zju.campustour.view.activity.StatusNewActivity;
 import com.zju.campustour.view.adapter.FragmentViewPagerAdapter;
 
@@ -26,6 +28,7 @@ public class StatusInfoFragment extends BaseFragment {
     private ImageButton editBtn;
     private TabLayout tablayout;
     private ViewPager viewPager;
+    FloatingActionButton editTab;
 
     @Nullable
     @Override
@@ -48,11 +51,27 @@ public class StatusInfoFragment extends BaseFragment {
         editBtn = (ImageButton) mRootView.findViewById(R.id.edit_btn);
         tablayout = (TabLayout) mRootView.findViewById(R.id.tab_layout);
         viewPager = (ViewPager) mRootView.findViewById(R.id.view_pager);
+        editTab = (FloatingActionButton) mRootView.findViewById(R.id.major_favor_tab);
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), StatusNewActivity.class));
+            }
+        });
+
+        userIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), MeInfoActivity.class));
+            }
+        });
+
+        editTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), StatusNewActivity.class));
+                editTab.hide();
             }
         });
 
@@ -63,7 +82,7 @@ public class StatusInfoFragment extends BaseFragment {
         FragmentViewPagerAdapter mViewPagerAdapter = new FragmentViewPagerAdapter(getChildFragmentManager());
         mViewPagerAdapter.addTab(new StatusInfoChildOneFragment(), "热门");
         mViewPagerAdapter.addTab(new StatusInfoChildTwoFragment(), "关注");
-        mViewPagerAdapter.addTab(new StatusInfoChildThreeFrament(), "省内");
+        //mViewPagerAdapter.addTab(new StatusInfoChildThreeFrament(), "省内");
         viewPager.setAdapter(mViewPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         //把tabLayout和Viewpager关联起来

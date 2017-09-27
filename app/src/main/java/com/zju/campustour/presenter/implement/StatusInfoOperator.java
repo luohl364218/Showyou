@@ -2,8 +2,15 @@ package com.zju.campustour.presenter.implement;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -16,9 +23,13 @@ import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.DbUtils;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.ipresenter.IStatusInfoPresenter;
+import com.zju.campustour.presenter.protocal.enumerate.StatusType;
 import com.zju.campustour.view.iview.IStatusInfoView;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -81,27 +92,22 @@ public class StatusInfoOperator implements IStatusInfoPresenter {
         if (!NetworkUtil.isNetworkAvailable(mContext))
             return;
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.StatusInfo_TableName);
-        query.setSkip(start)
-                .setLimit(count)
-                .whereExists(Constants.StatusInfo_ImgUrl)
-                .orderByDescending(Constants.StatusInfo_FavorCount)
-                .orderByDescending(Constants.StatusInfo_CreatedAt)
-                .include(Constants.StatusInfo_User);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("skip", start);
+        params.put("limit",count);
+        params.put("type", StatusType.HOT_STATUS.getTypeId());
 
-        List<StatusInfoModel> mStatusInfoModelList = new ArrayList<>();
+        ParseCloud.callFunctionInBackground("StatusInfoWithFav", params, new FunctionCallback<List<HashMap>>() {
+            public void done(List<HashMap> mStatusInfoList, ParseException e) {
+                if (e == null) {
 
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null){
-                    if (objects != null && objects.size() > 0) {
-                        for (ParseObject mObject : objects){
-                            StatusInfoModel mStatusInfoModel = DbUtils.getStatusInfo(mObject);
-                            if (mStatusInfoModel != null && !mStatusInfoModel.isDeleted()){
-                                mStatusInfoModelList.add(mStatusInfoModel);
-                            }
-                        }
+                    List<StatusInfoModel> mStatusInfoModelList = new ArrayList<>();
+                    for (HashMap jsonData: mStatusInfoList){
+                        StatusInfoModel mStatusInfoModel = DbUtils.getStatusInfo(jsonData);
+                        if (mStatusInfoModel != null)
+                            mStatusInfoModelList.add(mStatusInfoModel);
+                        else
+                            Log.e("error!!!","convert wrong"+(String)jsonData.get("objectId"));
                     }
 
                     mIStatusInfoView.onStatusInfoGotSuccess(mStatusInfoModelList);
@@ -115,7 +121,33 @@ public class StatusInfoOperator implements IStatusInfoPresenter {
 
     @Override
     public void getMyFocusStatusInfo(int start, int count) {
+        if (!NetworkUtil.isNetworkAvailable(mContext))
+            return;
 
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("skip", start);
+        params.put("limit",count);
+        params.put("type", StatusType.FOCUS_STATUS.getTypeId());
+
+        ParseCloud.callFunctionInBackground("StatusInfoWithFav", params, new FunctionCallback<List<HashMap>>() {
+            public void done(List<HashMap> mStatusInfoList, ParseException e) {
+                if (e == null) {
+
+                    List<StatusInfoModel> mStatusInfoModelList = new ArrayList<>();
+                    for (HashMap jsonData: mStatusInfoList){
+                        StatusInfoModel mStatusInfoModel = DbUtils.getStatusInfo(jsonData);
+                        if (mStatusInfoModel != null)
+                            mStatusInfoModelList.add(mStatusInfoModel);
+                        else
+                            Log.e("error!!!","convert wrong"+(String)jsonData.get("objectId"));
+                    }
+
+                    mIStatusInfoView.onStatusInfoGotSuccess(mStatusInfoModelList);
+                }
+                else
+                    mIStatusInfoView.onStatusInfoGotError(e);
+            }
+        });
     }
 
     @Override
@@ -131,7 +163,6 @@ public class StatusInfoOperator implements IStatusInfoPresenter {
         ParseObject object = new ParseObject(Constants.StatusFavourInfo_TableName);
         object.put(Constants.StatusFavourInfo_StatusInfo,ParseObject.createWithoutData(Constants.StatusInfo_TableName,statusId));
         object.put(Constants.StatusFavourInfo_User,currentUser);
-
         object.saveInBackground();
     }
 }

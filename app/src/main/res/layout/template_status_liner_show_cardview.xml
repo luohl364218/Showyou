@@ -130,55 +130,95 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:orientation="horizontal">
 
-
-            <ImageButton
+            <LinearLayout
                 android:id="@+id/favor_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@mipmap/icon_favor_gray"
-                />
+                android:layout_width="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/favour_img"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/icon_favor_gray"
+                    />
+
+            </LinearLayout>
 
 
-            <ImageButton
+            <LinearLayout
                 android:id="@+id/comment_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="30dp"
-                android:background="@mipmap/icon_comment_gray"
-                />
+                android:layout_width="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_height="match_parent">
 
-            <ImageButton
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/icon_comment_gray"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/share_btn"
+                android:layout_width="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                android:visibility="gone"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginLeft="30dp"
                 android:background="@mipmap/icon_share_gray"
                 />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"/>
 
-            <ImageButton
+            <LinearLayout
                 android:id="@+id/report_btn"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@null"
-                android:src="@mipmap/icon_report"
-                />
+                android:layout_width="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/icon_report"
+                    />
+
+            </LinearLayout>
+
+
 
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/favor_and_comment"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
@@ -199,6 +239,7 @@
 
                 <LinearLayout
                     android:id="@+id/favor_part"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -237,6 +278,7 @@
 
                 <LinearLayout
                     android:id="@+id/comment_part"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"

@@ -179,9 +179,23 @@ public class StatusNewActivity extends BaseActivity implements ILocationConsumer
         district = mLocation.getDistrict();
         street = mLocation.getStreet();
 
-        cityTv.setText(""+mLocation.getCity());
-        districtTv.setText(""+mLocation.getDistrict());
-        streetTv.setText(""+mLocation.getStreet());
+        if (TextUtils.isEmpty(city)){
+            city = "无名市";
+            showToast("位置获取失败，百度的锅，请重新进入该页面");
+        }
+
+
+        if (TextUtils.isEmpty(district))
+            district = "未知区";
+
+        if (TextUtils.isEmpty(street)){
+            street = "某个角落";
+        }
+
+
+        cityTv.setText(city);
+        districtTv.setText(district);
+        streetTv.setText(street);
         detailTv.setText(""+nearLocationList.get(0).getName());
 
         detailLocation = nearLocationList.get(0).getName();

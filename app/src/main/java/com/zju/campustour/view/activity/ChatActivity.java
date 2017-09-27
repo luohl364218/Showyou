@@ -20,13 +20,18 @@ import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.parse.ParseUser;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.zju.campustour.R;
 import com.zju.campustour.model.chatting.entity.Event;
 import com.zju.campustour.model.chatting.entity.EventType;
 import com.zju.campustour.model.chatting.utils.BitmapLoader;
@@ -354,20 +359,29 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
             // 点击添加按钮，弹出更多选项菜单
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_add_file_btn")) {
-            //如果在语音输入时点击了添加按钮，则显示菜单并切换到输入框
-            if (!isInputByKeyBoard) {
-                mChatView.isKeyBoard();
-                isInputByKeyBoard = true;
-                mChatView.showMoreMenu();
-            } else {
-                //如果弹出软键盘 则隐藏软键盘
-                if (mChatView.getMoreMenu().getVisibility() != View.VISIBLE) {
-                    dismissSoftInputAndShowMenu();
-                    mChatView.focusToInput(false);
-                    //如果弹出了更多选项菜单，则隐藏菜单并显示软键盘
+            //判断当前用户身份是否验证
+            ParseUser currentUser = ParseUser.getCurrentUser();
+            //如果已经验证
+            if (currentUser.getBoolean(Constants.User_isVerified)) {
+
+                //如果在语音输入时点击了添加按钮，则显示菜单并切换到输入框
+                if (!isInputByKeyBoard) {
+                    mChatView.isKeyBoard();
+                    isInputByKeyBoard = true;
+                    mChatView.showMoreMenu();
                 } else {
-                    showSoftInputAndDismissMenu();
+                    //如果弹出软键盘 则隐藏软键盘
+                    if (mChatView.getMoreMenu().getVisibility() != View.VISIBLE) {
+                        dismissSoftInputAndShowMenu();
+                        mChatView.focusToInput(false);
+                        //如果弹出了更多选项菜单，则隐藏菜单并显示软键盘
+                    } else {
+                        showSoftInputAndDismissMenu();
+                    }
                 }
+            }
+            else {
+                showIDVerifyDialog();
             }
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_pick_from_camera_btn")) {
             takePhoto();
@@ -1121,5 +1135,45 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
         }
         return false;
+    }
+
+    private void showIDVerifyDialog() {
+
+        final Dialog dialog = new Dialog(this, R.style.jmui_default_dialog_style);
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.jmui_dialog_base_with_button, null);
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        TextView title = (TextView) view.findViewById(R.id.jmui_title);
+        Button confirmBtn = (Button) view.findViewById(R.id.jmui_commit_btn);
+        Button cancelBtn = (Button) view.findViewById(R.id.jmui_cancel_btn);
+
+        title.setText("您还未完成身份认证，当前只能发送文字消息");
+        confirmBtn.setText("去认证");
+        cancelBtn.setText("不认证");
+        View.OnClickListener listener = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+
+                    case R.id.jmui_commit_btn:
+                        Intent intent = new Intent(mContext,VerifyStatusActivity.class);
+                        intent.putExtra("isVerified",false);
+                        startActivity(intent);
+                        dialog.dismiss();
+                        break;
+
+                    case R.id.jmui_cancel_btn:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        confirmBtn.setOnClickListener(listener);
+        cancelBtn.setOnClickListener(listener);
+
     }
 }

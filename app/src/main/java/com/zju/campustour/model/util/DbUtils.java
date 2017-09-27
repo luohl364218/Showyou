@@ -2,6 +2,7 @@ package com.zju.campustour.model.util;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -25,12 +26,15 @@ import com.zju.campustour.model.bean.Project;
 import com.zju.campustour.model.bean.ProjectSaleInfo;
 import com.zju.campustour.model.bean.User;
 import com.zju.campustour.model.bean.VerifyInfo;
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 import com.zju.campustour.presenter.protocal.enumerate.ProjectStateType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 import com.zju.campustour.presenter.protocal.enumerate.VerifyStateType;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import static com.zju.campustour.model.common.Constants.GRADE_HIGH_SCHOOL;
 import static com.zju.campustour.model.common.Constants.GRADE_JUNIOR_HIGH_SCHOOL;
@@ -57,12 +61,15 @@ public class DbUtils {
         String phoneNum = user.getString(Constants.User_phoneNum);
         String emailAddr = user.getString(Constants.User_emailAddr);
         UserType userType = UserType.values()[user.getInt("userType")];
+        IdentityType identityType = IdentityType.values()[user.getInt(Constants.User_identityType)];
         String user_description = user.getString("description");
         String shortDescription = user.getString("shortDescription");
         int categoryId = user.getInt("categoryId");
+        String country = user.getString(Constants.User_country);
         String province = user.getString("province");
         String city = user.getString("city");
         String district = user.getString("district");
+        String street = user.getString(Constants.User_street);
         int gradeId = user.getInt("gradeId");
         String grade = Constants.studentGrades[gradeId];
 
@@ -80,10 +87,10 @@ public class DbUtils {
             school = user.getString("school");
 
         if (TextUtils.isEmpty(realName))
-            realName =  "校友";
+            realName =  "匿名校友";
 
         if (TextUtils.isEmpty(school))
-            school =  "未填写";
+            school =  "神秘学校";
 
         if (TextUtils.isEmpty(major))
             major =  "神秘专业";
@@ -91,13 +98,20 @@ public class DbUtils {
         if (TextUtils.isEmpty(shortDescription))
             shortDescription =  "初来乍到，请多多指教";
 
+        if (identityType == IdentityType.LOOK_AROUND_USER){
+            school =  "游客";
+            major =  "名校体验";
+            grade = "VIP";
+            shortDescription =  "上校游，找校友";
+        }
+
         String collegeTag = user.getString("collegeTag");
         boolean isVerified = user.getBoolean(Constants.User_isVerified);
 
         return new User(user_id,userName, realName, password, sex,
                 school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
-                userType, user_description, shortDescription,categoryId,province,city,
-                district,gradeId,collegeTag,isVerified);
+                userType,identityType, user_description, shortDescription,categoryId,country,province,city,
+                district,street,gradeId,collegeTag,isVerified);
     }
 
     @NonNull
@@ -116,12 +130,15 @@ public class DbUtils {
         String phoneNum = user.getString("phoneNum");
         String emailAddr = user.getString("emailAddr");
         UserType userType = UserType.values()[user.getInt("userType")];
+        IdentityType identityType = IdentityType.values()[user.getInt(Constants.User_identityType)];
         String user_description = user.getString("description");
         String shortDescription = user.getString("shortDescription");
         int categoryId = user.getInt("categoryId");
+        String country = user.getString(Constants.User_country);
         String province = user.getString("province");
         String city = user.getString("city");
         String district = user.getString("district");
+        String street = user.getString(Constants.User_street);
         int gradeId = user.getInt("gradeId");
         String grade = Constants.studentGrades[gradeId];
 
@@ -138,17 +155,87 @@ public class DbUtils {
         else
             school = user.getString("school");
 
+        if (TextUtils.isEmpty(realName))
+            realName =  "匿名校友";
+
         if (TextUtils.isEmpty(school))
-            school =  "未填写";
+            school =  "神秘学校";
+
+        if (TextUtils.isEmpty(major))
+            major =  "神秘专业";
+
+        if (TextUtils.isEmpty(shortDescription))
+            shortDescription =  "初来乍到，请多多指教";
 
         String collegeTag = user.getString("collegeTag");
         boolean isVerified = user.getBoolean(Constants.User_isVerified);
 
         return new User(user_id,userName, realName, password, sex,
                 school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
-                userType, user_description, shortDescription,categoryId,province,city,
-                district,gradeId,collegeTag,isVerified);
+                userType, identityType,user_description, shortDescription,categoryId,country,province,city,
+                district,street,gradeId,collegeTag,isVerified);
     }
+
+    public static User getUser(HashMap user) {
+        String user_id = (String) user.get("objectId");
+        String userName = (String) user.get(Constants.User_userName);
+        String realName = (String) user.get(Constants.User_realName);
+        String password = "";
+        SexType sex = SexType.values()[(int) user.get(Constants.User_sex)];
+
+        String major = (String) user.get(Constants.User_major);
+        int fansNum = (int) user.get(Constants.User_fansNum);
+        boolean online = (boolean) user.get(Constants.User_online);
+        String user_imgUrl = (String) user.get(Constants.User_imgUrl);
+        String phoneNum = (String) user.get(Constants.User_phoneNum);
+        String emailAddr = (String) user.get(Constants.User_emailAddr);
+        UserType userType = UserType.values()[(int) user.get("userType")];
+        IdentityType identityType = IdentityType.values()[(int) user.get(Constants.User_identityType)];
+        String user_description = (String) user.get("description");
+        String shortDescription = (String) user.get("shortDescription");
+        int categoryId = (int) user.get("categoryId");
+        String country = (String) user.get(Constants.User_country);
+        String province = (String) user.get("province");
+        String city = (String) user.get("city");
+        String district = (String) user.get("district");
+        String street = (String) user.get(Constants.User_street);
+        int gradeId = (int) user.get("gradeId");
+        String grade = Constants.studentGrades[gradeId];
+
+        String school = "";
+        if (gradeId <= GRADE_PRIMARY_SCHOOL){
+            school = (String) user.get("primarySchool");
+        }
+        else if (gradeId <= GRADE_JUNIOR_HIGH_SCHOOL){
+            school = (String) user.get("juniorHighSchool");
+        }
+        else if (gradeId <= GRADE_HIGH_SCHOOL){
+            school = (String) user.get("highSchool");
+        }
+        else
+            school = (String) user.get("school");
+
+        if (TextUtils.isEmpty(realName))
+            realName =  "匿名校友";
+
+        if (TextUtils.isEmpty(school))
+            school =  "神秘学校";
+
+        if (TextUtils.isEmpty(major))
+            major =  "神秘专业";
+
+        if (TextUtils.isEmpty(shortDescription))
+            shortDescription =  "初来乍到，请多多指教";
+
+        String collegeTag = (String) user.get("collegeTag");
+        boolean isVerified = (boolean) user.get(Constants.User_isVerified);
+
+        return new User(user_id,userName, realName, password, sex,
+                school, major, grade, fansNum, online, user_imgUrl, phoneNum, emailAddr,
+                userType,identityType, user_description, shortDescription,categoryId,country,province,city,
+                district,street,gradeId,collegeTag,isVerified);
+    }
+
 
     public static void setImg(SimpleDraweeView mImg, String url, int width, int heigth)
     {
@@ -318,6 +405,60 @@ public class DbUtils {
                     createdTime,favourCount,commentCount,
                     isDeleted,labelId,labelContent,province,city,
                     district,street,detailLocation,diyLocation,hidePosition);
+
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
+    @Nullable
+    public static StatusInfoModel getStatusInfo(HashMap object){
+        try{
+            String objectId = (String) object.get("objectId");
+
+            String imgUrl = "";
+            if (object.get(Constants.StatusInfo_ImgUrl) != null) {
+                imgUrl = (String) object.get(Constants.StatusInfo_ImgUrl);
+            }
+            String content = (String) object.get(Constants.StatusInfo_Content);
+            String userId = (String) object.get(Constants.StatusInfo_UserId);
+            User provider;
+            ParseUser providerObject = (ParseUser) object.get(Constants.StatusInfo_User);
+            if (providerObject != null)
+                provider = getUser(providerObject);
+            else
+                return null;
+
+            String strDate = (String) object.get("createdAt");;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Date createdTime = sdf.parse(strDate);
+            long rightTime = (long) (createdTime.getTime() + 8 * 60 * 60 * 1000);
+            Date realTime = new Date(rightTime);
+            int favourCount = (int) object.get(Constants.StatusInfo_FavorCount);
+            int commentCount = (int) object.get(Constants.StatusInfo_CommentCount);
+            boolean isDeleted = (boolean) object.get(Constants.StatusInfo_IsDeleted);
+            String labelId = (String) object.get(Constants.StatusInfo_LabelId);
+            String labelContent = (String) object.get(Constants.StatusInfo_LabelContent);
+            String province = (String) object.get(Constants.StatusInfo_Province);
+            String city = (String) object.get(Constants.StatusInfo_City);
+            String district = (String) object.get(Constants.StatusInfo_District);
+            String street = (String) object.get(Constants.StatusInfo_Street);
+            String detailLocation = (String) object.get(Constants.StatusInfo_DetailLocation);
+            String diyLocation = (String) object.get(Constants.StatusInfo_DiyLocation);
+            boolean hidePosition = false;
+            if (object.get(Constants.StatusInfo_HidePosition) != null)
+                hidePosition = (boolean) object.get(Constants.StatusInfo_HidePosition);
+
+            StatusInfoModel statusInfo = new StatusInfoModel(objectId,
+                    imgUrl,content,userId,provider,
+                    realTime,favourCount,commentCount,
+                    isDeleted,labelId,labelContent,province,city,
+                    district,street,detailLocation,diyLocation,hidePosition);
+
+            statusInfo.setFavorited((boolean) object.get(Constants.StatusInfo_IsFavorited));
+
+            return statusInfo;
 
         }
         catch (Exception e){

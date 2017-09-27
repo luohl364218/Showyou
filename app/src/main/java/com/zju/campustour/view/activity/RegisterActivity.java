@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.zju.campustour.R;
+import com.zju.campustour.model.chatting.entity.Event;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.CountTimerView;
 import com.zju.campustour.model.util.NetworkUtil;

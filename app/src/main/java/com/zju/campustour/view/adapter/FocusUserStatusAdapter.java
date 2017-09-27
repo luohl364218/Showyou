@@ -1,25 +1,39 @@
 package com.zju.campustour.view.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.StatusInfoModel;
+import com.zju.campustour.model.chatting.utils.IdHelper;
 import com.zju.campustour.model.chatting.utils.TimeFormat;
 import com.zju.campustour.model.common.Constants;
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
+import com.zju.campustour.view.activity.FriendInfoActivity;
+import com.zju.campustour.view.activity.IdentityConfirmActivity;
+import com.zju.campustour.view.activity.SearchFriendDetailActivity;
 
 import java.util.List;
 
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.model.UserInfo;
 import me.yifeiyuan.library.PeriscopeLayout;
 
 /**
@@ -74,8 +88,9 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
 
         Uri mUri = Uri.parse(headImgUrl);
         holder.userImg.setImageURI(mUri);
-        //用户名
-        holder.userName.setText(mStatusInfoModel.getUser().getRealName());
+        //用户名 学校
+        holder.userName.setText(mStatusInfoModel.getUser().getRealName()
+                +" "+ mStatusInfoModel.getUser().getSchool());
         //发布地点
         if (mStatusInfoModel.isHidePosition() || mStatusInfoModel.getCity() == null){
             holder.statusLocation.setVisibility(View.GONE);
@@ -87,13 +102,14 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
         }
 
         //发布时间
-        TimeFormat timeFormat = new TimeFormat(mContext, mStatusInfoModel.getCreatedTime().getTime());
+        TimeFormat timeFormat = new TimeFormat(mContext, mStatusInfoModel.getCreatedAt().getTime());
         holder.statusDate.setText(timeFormat.getTime());
 
         int favourCount = mStatusInfoModel.getFavourCount();
         int commentCount = mStatusInfoModel.getCommentCount();
 
-        if (favourCount ==0 && commentCount ==0){
+        //// TODO: 2017/9/20 暂且把评论功能关闭，直接打开聊天功能
+       /* if (favourCount ==0 && commentCount ==0){
             holder.favorAndCommentPart.setVisibility(View.GONE);
         }
         else if (favourCount == 0){
@@ -106,25 +122,64 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
             holder.commentPart.setVisibility(View.GONE);
             holder.favorPart.setVisibility(View.VISIBLE);
         }
+        else{
+            holder.favorAndCommentPart.setVisibility(View.VISIBLE);
+            holder.commentPart.setVisibility(View.VISIBLE);
+            holder.favorPart.setVisibility(View.VISIBLE);
+        }*/
+
+        if (favourCount ==0 ){
+            holder.favorAndCommentPart.setVisibility(View.GONE);
+        }
+        else{
+            holder.favorAndCommentPart.setVisibility(View.VISIBLE);
+            holder.commentPart.setVisibility(View.GONE);
+            holder.favorPart.setVisibility(View.VISIBLE);
+        }
 
         holder.favourNum.setText(""+favourCount);
 
         holder.commentNumTv.setText(""+commentCount);
 
+        if (mStatusInfoModel.isFavorited()){
+            holder.favorImg.setImageResource(R.mipmap.icon_favor_blue);
+        }
+        else {
+            holder.favorImg.setImageResource(R.mipmap.icon_favor_gray);
+        }
+
         holder.favorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null){
-                    holder.periscopeLayout.addHeart();
+                    for (int i = 0; i <= 2; i++)
+                        holder.periscopeLayout.addHeart();
 
-                    int count = favourCount + 1;
-                    mStatusInfoModelList.get(position).setFavourCount(count);
-                    holder.favorAndCommentPart.setVisibility(View.VISIBLE);
-                    holder.favorPart.setVisibility(View.VISIBLE);
-                    holder.favourNum.setText(""+count);
+                    if (!mStatusInfoModel.isFavorited()) {
+                        int count = favourCount + 1;
+                        mStatusInfoModel.setFavourCount(count);
+                        holder.favorAndCommentPart.setVisibility(View.VISIBLE);
+                        holder.favorPart.setVisibility(View.VISIBLE);
+                        holder.favourNum.setText("" + count);
+                        holder.favorImg.setImageResource(R.mipmap.icon_favor_blue);
+                        mListener.onClick(v, position, mStatusInfoModel);
+                        mStatusInfoModel.setFavorited(true);
+                    }
+                    else {
+                        mListener.onClick(v, position, mStatusInfoModel);
+                        mStatusInfoModel.setFavorited(false);
+                    }
 
-                    mListener.onClick(v, position, mStatusInfoModelList.get(position));
                 }
+            }
+        });
+
+
+        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener !=null)
+                    mListener.onClick(v, position, mStatusInfoModel);
             }
         });
 
@@ -145,10 +200,11 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
         TextView statusDate;
         SimpleDraweeView statusImg;
         TextView statusContent;
-        ImageButton favorBtn;
-        ImageButton commentBtn;
-        ImageButton shareBtn;
-        ImageButton reportBtn;
+        ImageView favorImg;
+        LinearLayout favorBtn;
+        LinearLayout commentBtn;
+        LinearLayout shareBtn;
+        LinearLayout reportBtn;
         LinearLayout favorAndCommentPart;
         LinearLayout favorPart;
         LinearLayout commentPart;
@@ -166,10 +222,11 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
             favourNum = (TextView)itemView.findViewById(R.id.favour_num);
             statusLocation = (TextView) itemView.findViewById(R.id.status_location);
             statusDate = (TextView) itemView.findViewById(R.id.status_date);
-            favorBtn = (ImageButton) itemView.findViewById(R.id.favor_btn);
-            commentBtn = (ImageButton) itemView.findViewById(R.id.comment_btn);
-            shareBtn = (ImageButton) itemView.findViewById(R.id.share_btn);
-            reportBtn = (ImageButton) itemView.findViewById(R.id.report_btn);
+            favorImg = (ImageView) itemView.findViewById(R.id.favour_img);
+            favorBtn = (LinearLayout) itemView.findViewById(R.id.favor_btn);
+            commentBtn = (LinearLayout) itemView.findViewById(R.id.comment_btn);
+            shareBtn = (LinearLayout) itemView.findViewById(R.id.share_btn);
+            reportBtn = (LinearLayout) itemView.findViewById(R.id.report_btn);
             favorAndCommentPart = (LinearLayout) itemView.findViewById(R.id.favor_and_comment);
             favorPart = (LinearLayout) itemView.findViewById(R.id.favor_part);
             commentPart = (LinearLayout) itemView.findViewById(R.id.comment_part);
@@ -202,6 +259,14 @@ public class FocusUserStatusAdapter extends RecyclerView.Adapter<FocusUserStatus
                 }
             });
 
+            favorBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null){
+                        mListener.onClick(v, getLayoutPosition(), mStatusInfoModelList.get(getLayoutPosition()));
+                    }
+                }
+            });
 
 
             commentBtn.setOnClickListener(new View.OnClickListener() {

@@ -230,7 +230,7 @@ public class ProjectActivity extends BaseActivity implements IProjectInfoOperate
 
         /*如果是当前用户进自己的界面，不显示关注按钮,不显示聊天界面*/
         if (defaultUser != null && currentLoginUser != null
-                && currentLoginUser.getObjectId().equals(defaultUser.getId())){
+                && currentLoginUser.getObjectId().equals(defaultUser.getObjectId())){
             contactTa.setVisibility(View.GONE);
             betweenLine.setVisibility(View.GONE);
 

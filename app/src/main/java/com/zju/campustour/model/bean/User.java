@@ -1,5 +1,6 @@
 package com.zju.campustour.model.bean;
 
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
 import com.zju.campustour.presenter.protocal.enumerate.SexType;
 import com.zju.campustour.presenter.protocal.enumerate.UserType;
 
@@ -11,61 +12,45 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-
-    private String id;
-
+    private String objectId;
     private String userName;
-
     private String realName;
-
     private String password;
-
     private SexType sex;
-
     private String school;
-
     private String major;
-
     private String grade;
-
     private int fansNum;
-
     private boolean online;
-
     private String imgUrl;
-
     private String phoneNum;
-
     private String emailAddr;
-
     private UserType userType;
-
+    private IdentityType identityType;
     private String description;
-
     private String shortDescription;
-
     private int categoryId;
-
+    private String country;
     private String province;
     private String city;
     private String district;
+    private String street;
     private int    gradeId;
     private String collegeTag;
-
-
     private boolean isVerified;
+    private PositionModel userPosition;
 
   
     public User(){
 
     }
 
-    public User(String mId, String mUserName, String mRealName, String mPassword,
+    public User(String mObjectId, String mUserName, String mRealName, String mPassword,
                 SexType mSex, String mSchool, String mMajor, String mGrade,
                 int mFansNum, boolean mOnline, String mImgUrl, String mPhoneNum,
-                String mEmailAddr, UserType mUserType, String mDescription, String mShortDescription, int mCategoryId,
-                String mProvince,String mCity, String mDistrict, int mGradeId, String mCollegeTag, boolean mIsVerified) {
-        id = mId;
+                String mEmailAddr, UserType mUserType, IdentityType mIdentityType,String mDescription, String mShortDescription, int mCategoryId,
+                String mCountry,String mProvince, String mCity, String mDistrict,String mStreet, int mGradeId, String mCollegeTag, boolean mIsVerified) {
+        objectId = mObjectId;
         userName = mUserName;
         realName = mRealName;
         password = mPassword;
@@ -79,13 +64,15 @@ public class User implements Serializable {
         phoneNum = mPhoneNum;
         emailAddr = mEmailAddr;
         userType = mUserType;
+        identityType = mIdentityType;
         description = mDescription;
         shortDescription = mShortDescription;
         categoryId = mCategoryId;
-
+        country = mCountry;
         province = mProvince;
         city = mCity;
         district = mDistrict;
+        street = mStreet;
         gradeId = mGradeId;
         collegeTag = mCollegeTag;
         isVerified = mIsVerified;
@@ -107,12 +94,12 @@ public class User implements Serializable {
         shortDescription = mShortDescription;
     }
 
-    public String getId() {
-        return id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public void setId(String mId) {
-        id = mId;
+    public void setObjectId(String mObjectId) {
+        objectId = mObjectId;
     }
 
     public String getUserName() {
@@ -320,4 +307,29 @@ public class User implements Serializable {
 
         setVerified(mUser.isVerified());
     }
+
+    public IdentityType getIdentityType() {
+        return identityType;
+    }
+
+    public void setIdentityType(IdentityType mIdentityType) {
+        identityType = mIdentityType;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String mCountry) {
+        country = mCountry;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String mStreet) {
+        street = mStreet;
+    }
+
 }

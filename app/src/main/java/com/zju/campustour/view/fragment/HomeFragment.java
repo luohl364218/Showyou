@@ -42,6 +42,7 @@ import com.zju.campustour.presenter.protocal.event.ToolbarItemClickEvent;
 import com.zju.campustour.presenter.protocal.event.LoadingDone;
 import com.zju.campustour.presenter.protocal.event.NetworkChangeEvent;
 import com.zju.campustour.presenter.protocal.event.RecycleViewRefreshEvent;
+import com.zju.campustour.view.activity.MeInfoActivity;
 import com.zju.campustour.view.activity.ProjectNewActivity;
 import com.zju.campustour.view.iview.IHomepageImgLoadView;
 import com.zju.campustour.view.iview.ISearchProjectInfoView;
@@ -155,16 +156,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         scanBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_right_btn);
         addBtn = (ImageButton) mRootView.findViewById(R.id.fragment_home_add_btn);
 
-         /*从1.4版本开始废弃DrawerLayout*/
-       /* userBtn.setOnClickListener(new View.OnClickListener() {
+
+        userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                if (!drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.openDrawer(GravityCompat.START);
-                }
+                startActivity(new Intent(getContext(), MeInfoActivity.class));
             }
-        });*/
+        });
         scanBtn.setOnClickListener(this);
         addBtn.setOnClickListener(this);
 

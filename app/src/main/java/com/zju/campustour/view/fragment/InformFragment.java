@@ -14,6 +14,7 @@
 
  import com.zju.campustour.R;
  import com.zju.campustour.model.util.TabLayoutUtil;
+ import com.zju.campustour.view.activity.MeInfoActivity;
  import com.zju.campustour.view.activity.SearchActivity;
  import com.zju.campustour.view.activity.StatusNewActivity;
  import com.zju.campustour.view.adapter.FragmentViewPagerAdapter;
@@ -47,6 +48,13 @@
          searchBtn = (ImageButton) mRootView.findViewById(R.id.search_icon);
          tablayout = (TabLayout) mRootView.findViewById(R.id.tab_layout);
          viewPager = (ViewPager) mRootView.findViewById(R.id.view_pager);
+
+         userIcon.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity(new Intent(getContext(), MeInfoActivity.class));
+             }
+         });
 
          searchBtn.setOnClickListener(new View.OnClickListener() {
              @Override

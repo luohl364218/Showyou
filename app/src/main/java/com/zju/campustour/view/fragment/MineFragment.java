@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,6 +54,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private TextView loginHint;
     private TextView userName;
     private TextView userType;
+    private ImageButton setting;
     private Activity mContext;
     ParseUser currentLoginUser;
 
@@ -87,6 +89,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         userEditLogo.setOnClickListener(this);
         userName = (TextView) mRootView.findViewById(R.id.username);
         userType = (TextView) mRootView.findViewById(R.id.user_type);
+        setting = (ImageButton) mRootView.findViewById(R.id.setting);
+        setting.setOnClickListener(this);
 
         TextView myInfo = (TextView) mRootView.findViewById(R.id.edit_info);
         TextView myProject = (TextView) mRootView.findViewById(R.id.my_project);
@@ -183,6 +187,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 }
                 break;
 
+            case R.id.setting:
             case R.id.my_setting:
                 startActivity(new Intent(mContext, SettingActivity.class));
                 break;

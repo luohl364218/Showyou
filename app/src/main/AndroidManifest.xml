@@ -308,8 +308,11 @@
             android:name=".view.activity.AnotherMyProjectActivity"
             android:theme="@style/WelcomeNoActionBar">
         </activity>
-        <activity android:name=".view.activity.ContactsActivity"
-                  android:theme="@style/WelcomeNoActionBar">
+        <activity
+            android:name=".view.activity.ContactsActivity"
+            android:theme="@style/WelcomeNoActionBar">
+        </activity>
+        <activity android:name=".view.activity.UserStatusActivity">
         </activity>
     </application>
 

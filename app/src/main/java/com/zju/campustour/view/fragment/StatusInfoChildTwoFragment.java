@@ -1,29 +1,46 @@
 package com.zju.campustour.view.fragment;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
+import com.parse.ParseUser;
 import com.zju.campustour.R;
 import com.zju.campustour.model.bean.StatusInfoModel;
+import com.zju.campustour.model.chatting.utils.IdHelper;
 import com.zju.campustour.model.common.Constants;
 import com.zju.campustour.model.util.NetworkUtil;
 import com.zju.campustour.presenter.implement.StatusInfoOperator;
+import com.zju.campustour.presenter.protocal.enumerate.IdentityType;
+import com.zju.campustour.view.activity.FriendInfoActivity;
+import com.zju.campustour.view.activity.IdentityConfirmActivity;
+import com.zju.campustour.view.activity.SearchFriendDetailActivity;
 import com.zju.campustour.view.activity.UserActivity;
 import com.zju.campustour.view.adapter.FocusUserStatusAdapter;
 import com.zju.campustour.view.adapter.HotUserStatusAdapter;
 import com.zju.campustour.view.iview.IStatusInfoView;
 
 import java.util.List;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.model.UserInfo;
 
 /**
  * Created by HeyLink on 2017/8/15.
@@ -38,6 +55,7 @@ public class StatusInfoChildTwoFragment extends BaseFragment implements IStatusI
     private int state = Constants.STATE_NORMAL;
     StatusInfoOperator mStatusInfoOperator;
     FocusUserStatusAdapter mFocusUserStatusAdapter;
+    private Dialog mDialog;
 
 
     @Nullable
@@ -48,7 +66,7 @@ public class StatusInfoChildTwoFragment extends BaseFragment implements IStatusI
             mMaterialRefreshLayout = (MaterialRefreshLayout) mRootView.findViewById(R.id.refresh_view);
             mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycle_view);
             mStatusInfoOperator = new StatusInfoOperator(getContext(),this);
-            mStatusInfoOperator.getHotStatusInfo(0,20);
+            mStatusInfoOperator.getMyFocusStatusInfo(0,10);
 
             initRefreshLayout();
 
@@ -106,19 +124,19 @@ public class StatusInfoChildTwoFragment extends BaseFragment implements IStatusI
             return;
         }
 
-        mStatusInfoOperator.getHotStatusInfo(mFocusUserStatusAdapter.getItemCount(),20);
+        mStatusInfoOperator.getMyFocusStatusInfo(mFocusUserStatusAdapter.getItemCount(),10);
         isRefreshing = false;
     }
 
     private void refreshStatusInfoData() {
         state = Constants.STATE_REFRESH;
-        mStatusInfoOperator.getHotStatusInfo(0,20);
+        mStatusInfoOperator.getMyFocusStatusInfo(0,10);
     }
 
 
     @Override
     public void onStatusInfoGotSuccess(List<StatusInfoModel> mStatusInfoModels) {
-        if (mStatusInfoModels.size() > 0 && mStatusInfoModels.size() <= 20){
+        if (mStatusInfoModels.size() > 0 && mStatusInfoModels.size() <= 10){
             if (mFocusUserStatusAdapter != null && state == Constants.STATE_NORMAL)
                 state = Constants.STATE_REFRESH;
 
@@ -167,9 +185,26 @@ public class StatusInfoChildTwoFragment extends BaseFragment implements IStatusI
                                 startActivity(mIntent);
                                 break;
                             case R.id.favor_btn:
-                                mStatusInfoOperator.addStatusFavorInfo(status.getObjectId());
+                                if (status.isFavorited()){
+                                    showToast(getContext(),"您已经点赞过该状态");
+                                }
+                                else {
+                                    mStatusInfoOperator.addStatusFavorInfo(status.getObjectId());
+                                }
                                 break;
                             case R.id.comment_btn:
+
+                                ParseUser user = ParseUser.getCurrentUser();
+                                String toUser = status.getUser().getUserName();
+                                if (TextUtils.isEmpty(toUser))
+                                    return;
+
+                                if (user.getUsername().equals(toUser)) {
+                                    showToast(getContext(),"你无法与自己聊天哦~");
+                                    return;
+                                }
+
+                                talkToSomeone(toUser);
 
                                 break;
                             case R.id.share_btn:
@@ -219,7 +254,7 @@ public class StatusInfoChildTwoFragment extends BaseFragment implements IStatusI
                 mFocusUserStatusAdapter.addData(mFocusUserStatusAdapter.getItemCount(), mStatusInfoModels);
                 mRecyclerView.scrollToPosition(mFocusUserStatusAdapter.getItemCount());
 
-                if (mStatusInfoModels.size() < 20){
+                if (mStatusInfoModels.size() < 10){
                     showToast(getContext(),"已经获取全部数据");
                     mMaterialRefreshLayout.setLoadMore(false);
                 }
@@ -242,4 +277,31 @@ public class StatusInfoChildTwoFragment extends BaseFragment implements IStatusI
     public void onStatusInfoCommitError(Exception e) {
 
     }
+
+    private void talkToSomeone(String userName){
+
+        //获取极光用户信息
+        JMessageClient.getUserInfo(userName, new GetUserInfoCallback() {
+            @Override
+            public void gotResult(int status, String desc, UserInfo userInfo) {
+
+                if (status == 0) {
+                    Intent intent = new Intent();
+
+                    if (userInfo.isFriend()) {
+                        intent.setClass(getContext(), FriendInfoActivity.class);
+                        intent.putExtra("fromContact", true);
+                    } else {
+                        intent.setClass(getContext(), SearchFriendDetailActivity.class);
+                    }
+                    intent.putExtra(Constants.TARGET_ID, userInfo.getUserName());
+                    intent.putExtra(Constants.TARGET_APP_KEY, userInfo.getAppKey());
+                    getActivity().startActivity(intent);
+                } else {
+                    showToast(getContext(),"该用户还未开通聊天功能");
+                }
+            }
+        });
+    }
+
 }

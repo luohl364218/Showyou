@@ -403,10 +403,10 @@ public class ProjectNewActivity extends BaseActivity implements IImageUploadView
             project.put(Constants.Project_IsOffline,false);
             project.put(Constants.Project_IsRecommend,false);
             if (!isImgSet){
-                project.put("mImgUrl", Constants.URL_DEFAULT_PROJECT_BG);
+                project.put(Constants.Project_ImgUrl, Constants.URL_DEFAULT_PROJECT_BG);
             }
             else
-                project.put("mImgUrl", mImgUrl);
+                project.put(Constants.Project_ImgUrl, mImgUrl);
 
             project.saveInBackground(new SaveCallback() {
                 @Override

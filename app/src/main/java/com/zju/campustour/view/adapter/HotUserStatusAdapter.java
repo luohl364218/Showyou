@@ -54,7 +54,7 @@ public class HotUserStatusAdapter extends RecyclerView.Adapter<HotUserStatusAdap
         }
 
         holder.statusContent.setText(mStatusInfoModel.getContent());
-        holder.userName.setText(mStatusInfoModel.getUser().getRealName());
+        holder.userName.setText(mStatusInfoModel.getUser().getRealName() + " " + mStatusInfoModel.getUser().getSchool());
         holder.favourNum.setText(""+mStatusInfoModel.getFavourCount());
 
         String headImgUrl = mStatusInfoModel.getUser().getImgUrl();

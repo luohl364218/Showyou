@@ -261,6 +261,7 @@ public class Constants {
     public static String Project_IsDelete = "isDelete";
     public static String Project_IsOffline = "isOffline";
     public static String Project_IsRecommend = "isRecommend";
+    public static String Project_ImgUrl = "imgUrl";
 
 
     //Status 状态表
@@ -269,7 +270,7 @@ public class Constants {
     public static String StatusInfo_Content = "content";
     public static String StatusInfo_User = "user";
     public static String StatusInfo_UserId = "userId";
-    public static String StatusInfo_FavorCount = "favorCount";
+    public static String StatusInfo_FavorCount = "favourCount";
     public static String StatusInfo_CommentCount = "commentCount";
     public static String StatusInfo_IsDeleted = "deleted";
     public static String StatusInfo_CreatedAt = "createdAt";
@@ -283,6 +284,7 @@ public class Constants {
     public static String StatusInfo_StatusPosition = "statusPosition";
     public static String StatusInfo_DiyLocation = "diyLocation";
     public static String StatusInfo_HidePosition = "hidePosition";
+    public static String StatusInfo_IsFavorited = "isFavorited";
 
 
     //LabelInfo表

@@ -67,6 +67,7 @@
                     android:layout_height="match_parent"
                     android:maxLines="1"
                     android:ellipsize="end"
+                    android:text="XXX 神秘大学"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:textSize="10sp"

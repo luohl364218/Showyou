@@ -71,9 +71,6 @@ public class VerifyStatusActivity extends BaseActivity implements IUserVerifyInf
     ImageButton mMenuBtn;
 
 
-
-
-
     ParseUser currentUser;
     UserVerifyInfoImpl userVerifyInfoImpl;
     VerifyInfo mVerifyInfo;

@@ -209,6 +209,15 @@ public class MeInfoView extends LinearLayout {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null){
+            //如果是游客，隐藏一些信息
+            if (currentUser.getInt(Constants.User_identityType) == IdentityType.LOOK_AROUND_USER.getIdentityId()){
+                mTypeLayout.setVisibility(GONE);
+                mSchoolLayout.setVisibility(GONE);
+                mGradeLayout.setVisibility(GONE);
+                mMajorLayout.setVisibility(GONE);
+            }
+
+
 
             //显示当前头像
             mUserAvatar.setImageURI(currentUser.getString(Constants.User_imgUrl));

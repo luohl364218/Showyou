@@ -25,6 +25,7 @@ import com.zju.campustour.model.util.SharePreferenceManager;
 import com.zju.campustour.presenter.chatting.tools.NativeImageLoader;
 import com.zju.campustour.presenter.protocal.event.LogoutEvent;
 import com.zju.campustour.view.chatting.widget.SlipButton;
+import com.zju.campustour.view.widget.ActivityCollector;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -163,8 +164,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                     Logout();
                                     cancelNotification();
                                     NativeImageLoader.getInstance().releaseCache();
-                                    finish();
+                                    ActivityCollector.finishAll();
                                     mDialog.cancel();
+
                                     break;
                             }
                         }

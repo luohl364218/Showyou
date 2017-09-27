@@ -14,10 +14,10 @@ public class StatusInfoModel {
     String content;
     String userId;
     User user;
-    Date createdTime;
+    Date createdAt;
     int favourCount;
     int commentCount;
-    boolean isDeleted;
+    boolean deleted;
     String labelId;
     String labelContent;
     String province;
@@ -28,6 +28,7 @@ public class StatusInfoModel {
     PositionModel statusPosition;
     String diyLocation;
     boolean hidePosition;
+    private boolean isFavorited;
 
     public StatusInfoModel(){}
 
@@ -36,10 +37,10 @@ public class StatusInfoModel {
                             String mContent,
                             String mUserId,
                             User mUser,
-                            Date mCreatedTime,
+                            Date mCreatedAt,
                             int mFavourCount,
                             int mCommentCount,
-                            boolean mIsDeleted,
+                            boolean mDeleted,
                             String mLabelId,
                             String mLabelContent,
                             String mProvince,
@@ -52,10 +53,10 @@ public class StatusInfoModel {
         content = mContent;
         userId = mUserId;
         user = mUser;
-        createdTime = mCreatedTime;
+        createdAt = mCreatedAt;
         favourCount = mFavourCount;
         commentCount = mCommentCount;
-        isDeleted = mIsDeleted;
+        deleted = mDeleted;
         labelId = mLabelId;
         labelContent = mLabelContent;
         province = mProvince;
@@ -73,10 +74,10 @@ public class StatusInfoModel {
                            String mContent,
                            String mUserId,
                            User mUser,
-                           Date mCreatedTime,
+                           Date mCreatedAt,
                            int mFavourCount,
                            int mCommentCount,
-                           boolean mIsDeleted,
+                           boolean mDeleted,
                            String mLabelId,
                            String mCity,
                            String mDistrict,
@@ -87,10 +88,10 @@ public class StatusInfoModel {
         content = mContent;
         userId = mUserId;
         user = mUser;
-        createdTime = mCreatedTime;
+        createdAt = mCreatedAt;
         favourCount = mFavourCount;
         commentCount = mCommentCount;
-        isDeleted = mIsDeleted;
+        deleted = mDeleted;
         labelId = mLabelId;
         city = mCity;
         district = mDistrict;
@@ -139,12 +140,12 @@ public class StatusInfoModel {
         user = mUser;
     }
 
-    public Date getCreatedTime() {
-        return createdTime;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedTime(Date mCreatedTime) {
-        createdTime = mCreatedTime;
+    public void setCreatedAt(Date mCreatedAt) {
+        createdAt = mCreatedAt;
     }
 
     public int getFavourCount() {
@@ -165,11 +166,11 @@ public class StatusInfoModel {
 
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean mDeleted) {
-        isDeleted = mDeleted;
+        deleted = mDeleted;
     }
 
     public String getLabelId() {
@@ -251,5 +252,13 @@ public class StatusInfoModel {
 
     public void setHidePosition(boolean mHidePosition) {
         hidePosition = mHidePosition;
+    }
+
+    public boolean isFavorited() {
+        return isFavorited;
+    }
+
+    public void setFavorited(boolean mFavorited) {
+        isFavorited = mFavorited;
     }
 }

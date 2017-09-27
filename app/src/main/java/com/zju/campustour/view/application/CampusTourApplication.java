@@ -11,6 +11,8 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zju.campustour.model.bean.UserEntry;
 import com.zju.campustour.presenter.receiver.NotificationClickEventReceiver;
 
+import org.litepal.LitePal;
+
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.jpush.android.api.JPushInterface;
@@ -30,7 +32,7 @@ public class CampusTourApplication extends com.activeandroid.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //LitePal.initialize(this);
+        LitePal.initialize(this);
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("CampusTour")
                 .server("http://119.23.248.205:1337/parse/")

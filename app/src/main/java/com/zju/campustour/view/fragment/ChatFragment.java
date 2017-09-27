@@ -244,7 +244,6 @@ public class ChatFragment extends BaseFragment {
                             intent.putExtra("fromGroup", true);
                             intent.putExtra(Constants.MEMBERS_COUNT, 1);
                             intent.putExtra(Constants.GROUP_ID, groupId);
-                            //// TODO: 2017/5/30 在这之后要写ChatActivity
                             intent.setClass(mContext, ChatActivity.class);
                             mContext.startActivity(intent);
                         } else {

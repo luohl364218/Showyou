@@ -338,6 +338,7 @@
     <string name="end_time">结束时间</string>
     <string name="jmui_logout_confirm">确定退出登录？</string>
     <string name="identity_confirm">确定修改身份类型？</string>
+    <string name="look_around_hint">您当前身份为游客，无法添加好友，请在“我的”->“个人信息”中修改身份类型</string>
     <string name="choose_deleteOrEdit">请选择您要进行的操作</string>
     <string name="delete_comfirm">确定删除？</string>
     <string name="delete">删除</string>

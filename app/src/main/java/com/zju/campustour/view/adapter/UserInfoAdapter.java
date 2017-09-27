@@ -105,7 +105,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
     public void onBindViewHolder(UserInfoAdapter.ViewHolder holder, int position) {
 
         User mItemInfo = mProviderUserItemInfos.get(position);
-        holder.studentIdView.setText(mItemInfo.getId());
+        holder.studentIdView.setText(mItemInfo.getObjectId());
         String url = mItemInfo.getImgUrl();
         boolean isFromNewServer = url.startsWith(Constants.URL_PREFIX_ALIYUN);
         //作过滤，如果是新服务器上的头像，则加载小图片

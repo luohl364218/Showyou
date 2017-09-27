@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
@@ -176,9 +177,19 @@ public class InfoWebActivity extends BaseActivity{
         }
     }
 
+    /**
+     *
+     使点击回退按钮不会直接退出整个应用程序而是返回上一个页面
+     *
+     * */
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && mWebView.canGoBack()){
+            mWebView.goBack();//返回上个页面
+            return
+                    true;
+        }
+        return super.onKeyDown(keyCode, event);//退出整个应用程序
     }
 
     @Override
