@@ -979,12 +979,8 @@ public class ProjectActivity extends BaseActivity implements IProjectInfoOperate
                 projectBookBtn.setText("活动结束");
                 projectBookBtn.setEnabled(false);
             }catch (Exception e){
-
             }
-
         }
-
-
     }
 
     @Override

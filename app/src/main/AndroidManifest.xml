@@ -314,6 +314,8 @@
         </activity>
         <activity android:name=".view.activity.UserStatusActivity">
         </activity>
+        <activity android:name=".view.activity.PrivateOrderActivity">
+        </activity>
     </application>
 
 </manifest>

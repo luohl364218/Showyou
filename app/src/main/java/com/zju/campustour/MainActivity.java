@@ -110,7 +110,6 @@ import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.UserInfo;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
 public class MainActivity extends BaseMainActivity
         implements IUserFocusView,IMajorInfoUpdateView{
 
@@ -197,9 +196,6 @@ public class MainActivity extends BaseMainActivity
         //huanxin
       /*  //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener(this));*/
-
-
-
     }
 
     @Override
@@ -236,7 +232,6 @@ public class MainActivity extends BaseMainActivity
      * 初始化数据库,本地化存储是否有初始过，保证只初始化一次
      */
     private void initDatabase() {
-
         sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         Boolean hasInited = sharedPreferences.getBoolean("init_database",false);
@@ -253,27 +248,22 @@ public class MainActivity extends BaseMainActivity
     public  void initMajorListViewData(List<MajorModel> mMajorModelList){
 
         groupList = new ArrayList<>(Arrays.asList(MajorData.majorGroup));
-
         Map<String, List<String>> majorGroup = new HashMap<>(groupList.size());
 
         for (MajorModel major : mMajorModelList){
-
             if (majorGroup.get(major.getMajorType()) == null){
                 List<String> majorList = new ArrayList<>();
                 majorList.add(major.getName());
                 majorGroup.put(major.getMajorType(),majorList);
             }
-            else
-            {
+            else {
                 majorGroup.get(major.getMajorType()).add(major.getName());
             }
-
         }
 
         for (String majorName : groupList){
             itemsList.add(majorGroup.get(majorName));
         }
-
         //android暂时不支持stream用法
     /*    for (int i = 0; i < groupList.size(); i++){
             String majorType = groupList.get(i);
@@ -332,13 +322,10 @@ public class MainActivity extends BaseMainActivity
             userType.setText(UserType.values()[currentLoginUser.getInt("userType")].getName());*/
             currentLoginUser.put("online",true);
             currentLoginUser.saveInBackground();
-
         }
-
         mBottomBar.setDefaultTabPosition(0);
         //初始化几个Fragment
         initViewPager();
-
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -375,7 +362,6 @@ public class MainActivity extends BaseMainActivity
                 }
             }
         });
-
     }
 
     private void initViewPager() {
@@ -391,7 +377,6 @@ public class MainActivity extends BaseMainActivity
         mInformFragment = new InformFragment();
         mMineFragment = new MineFragment();
 
-
         //主页
         fragmentList.add(mHomeFragment);
         //发现    校友和活动
@@ -405,27 +390,21 @@ public class MainActivity extends BaseMainActivity
         fragmentList.add(mMineFragment);
         //fragmentList.add(mInformFragment);
 
-
-
         //让viewPager缓存一定的页面，不要销毁
         mViewPager.setOffscreenPageLimit(4);
-
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
                 mBottomBar.selectTabAtPosition(position, true);
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -462,18 +441,12 @@ public class MainActivity extends BaseMainActivity
                 userEditLogo.setVisibility(View.VISIBLE);*/
                 SharePreferenceManager.putString(mContext,Constants.DB_USERIMG_ONLINE, img);
                 SharePreferenceManager.putString(mContext,Constants.DB_USERNAME, currentLoginUser.getUsername());
-
                 FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
                 mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
-
-
             }catch (Exception e){
-
             }
-
         }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onLogoutEvent(LogoutEvent event) {
@@ -510,7 +483,6 @@ public class MainActivity extends BaseMainActivity
     public void onEditUserInfoDoneEvent(EditUserInfoDone event) {
         if (event.isDone()){
             try{
-
                 currentLoginUser = ParseUser.getCurrentUser();
                  /*从1.4版本开始废弃DrawerLayout*/
                 /*userName.setText(currentLoginUser.getUsername());
@@ -521,23 +493,18 @@ public class MainActivity extends BaseMainActivity
                     img = Constants.URL_DEFAULT_MAN_IMG;
                 }
                 userImg.setImageURI(Uri.parse(img));*/
-
                 FocusMapOpPresenterImpl mFocusMapOpPresenter = new FocusMapOpPresenterImpl(this,this);
                 mFocusMapOpPresenter.queryFansNum(currentLoginUser.getObjectId());
             }catch (Exception e){
-
             }
-
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onToolbarItemClickEvent(ToolbarItemClickEvent event) {
         int id = event.getItemId();
-
         //点击二维码扫描
         if (id == R.id.fragment_home_right_btn) {
-
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
@@ -545,9 +512,7 @@ public class MainActivity extends BaseMainActivity
                 Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
             }
-
         }
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -583,12 +548,10 @@ public class MainActivity extends BaseMainActivity
 
     @Override
     public void onFocusActionError(boolean flag) {
-
     }
 
     @Override
     public void onQueryFansOrFocusDone(boolean isFocus, List<UserFocusMap> userFocusList) {
-
     }
 
     @Override
@@ -599,39 +562,29 @@ public class MainActivity extends BaseMainActivity
 
     @Override
     public void onQueryMyFansDone(List<User> fansList) {
-
     }
 
     @Override
     public void onQueryMyFocusDone(List<User> focusList) {
-
     }
 
     @Override
     public void onAllMajorInfoGot(List<MajorModel> mMajorModelList) {
         if (mMajorModelList.size() == 0){
             //todo 如果获取的专业数据为空，则要禁止首页的专业点击跳转动作
-
             return;
         }
 
         sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
         MajorFIlesDao majorFIlesDao = new MajorFIlesDao(this);
-
         majorFIlesDao.init(mMajorModelList);
-
         Log.d(TAG,"init database");
-
         editor.putBoolean("init_database",true);
         Date updateTime = new Date();
         editor.putLong("update_time", updateTime.getTime());
         editor.apply();
-
-
         initMajorListViewData(mMajorModelList);
-
     }
 
     @Override
@@ -639,19 +592,15 @@ public class MainActivity extends BaseMainActivity
         sharedPreferences = getSharedPreferences("loginInfo",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         MajorFIlesDao majorFIlesDao = new MajorFIlesDao(this);
-
         if (mMajorModelList.size() != 0){
             //如果获取的专业数据为空，没有需要更新的专业
             majorFIlesDao.updateMajorInfo(mMajorModelList);
-
             Log.d(TAG,"update database");
-
             editor.putBoolean("init_database",true);
             Date updateTime = new Date();
             editor.putLong("update_time", updateTime.getTime());
             editor.apply();
         }
-
         //初始化grouplist和更新后的itemList
         groupList = new ArrayList<>(Arrays.asList(MajorData.majorGroup));
         if (itemsList.size() > 0){
@@ -669,7 +618,6 @@ public class MainActivity extends BaseMainActivity
 
                 itemsList.add(majorList);
             }
-
             if (null != majorCursor) {
                 majorCursor.close();
             }
@@ -681,7 +629,6 @@ public class MainActivity extends BaseMainActivity
     @Override
     public void onGetMajorInfoError(Exception e) {
         //todo 如果获取的专业数据失败，则要禁止首页的专业点击跳转动作
-
     }
 
 
@@ -689,12 +636,10 @@ public class MainActivity extends BaseMainActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetworkUtil.isNetworkAvailable(mContext)){
-
                 // 当前所连接的网络可用
                 isNetworkUseful = true;
                 EventBus.getDefault().post(new NetworkChangeEvent(true));
                 initUserCloudInfo();
-
             }
             else {
                 isNetworkUseful = false;
@@ -707,7 +652,6 @@ public class MainActivity extends BaseMainActivity
     }
 
     private void initUserCloudInfo() {
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -730,7 +674,6 @@ public class MainActivity extends BaseMainActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if (new Date().getTime() - lastPressTime < 2000)
                 ActivityCollector.finishAll();
@@ -739,9 +682,7 @@ public class MainActivity extends BaseMainActivity
                 showToast("再按一次返回键退出");
             }
             return true;
-
         }
-
         return super.onKeyDown(keyCode, event);
     }
 
@@ -765,9 +706,7 @@ public class MainActivity extends BaseMainActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         switch (requestCode) {
-
             case 1:
                 /**
                  * 处理二维码扫描结果
@@ -788,7 +727,5 @@ public class MainActivity extends BaseMainActivity
                 break;
             default:
         }
-
-
     }
 }
